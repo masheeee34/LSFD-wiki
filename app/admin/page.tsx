@@ -11,48 +11,48 @@ export const metadata = { title: 'Administration — LSFD Medilog' };
 const CATEGORY_STYLES: Record<RecordCategory, { label: string; bg: string; text: string; border: string }> = {
   protocol: {
     label: 'Protocole',
-    bg: 'rgba(59, 130, 246, 0.1)',
-    text: '#60a5fa',
-    border: 'rgba(59, 130, 246, 0.25)',
+    bg: 'var(--color-cat-protocol-bg)',
+    text: 'var(--color-cat-protocol-text)',
+    border: 'var(--color-cat-protocol-border)',
   },
   medication: {
     label: 'Pharmacologie',
-    bg: 'rgba(6, 182, 212, 0.1)',
-    text: '#22d3ee',
-    border: 'rgba(6, 182, 212, 0.25)',
+    bg: 'var(--color-cat-med-bg)',
+    text: 'var(--color-cat-med-text)',
+    border: 'var(--color-cat-med-border)',
   },
   maneuver: {
     label: 'Manœuvre',
-    bg: 'rgba(245, 158, 11, 0.1)',
-    text: '#fbbf24',
-    border: 'rgba(245, 158, 11, 0.25)',
+    bg: 'var(--color-cat-maneuver-bg)',
+    text: 'var(--color-cat-maneuver-text)',
+    border: 'var(--color-cat-maneuver-border)',
   },
   equipment: {
     label: 'Matériel',
-    bg: 'rgba(34, 197, 94, 0.1)',
-    text: '#4ade80',
-    border: 'rgba(34, 197, 94, 0.25)',
+    bg: 'var(--color-cat-equip-bg)',
+    text: 'var(--color-cat-equip-text)',
+    border: 'var(--color-cat-equip-border)',
   },
 };
 
 const SEVERITY_STYLES: Record<string, { label: string; bg: string; text: string; border: string }> = {
   critical: {
     label: 'Critique',
-    bg: 'rgba(239, 68, 68, 0.12)',
-    text: '#f87171',
-    border: 'rgba(239, 68, 68, 0.3)',
+    bg: 'var(--badge-crit-bg)',
+    text: 'var(--badge-crit-text)',
+    border: 'var(--badge-crit-border)',
   },
   urgent: {
     label: 'Urgent',
-    bg: 'rgba(245, 158, 11, 0.12)',
-    text: '#fbbf24',
-    border: 'rgba(245, 158, 11, 0.3)',
+    bg: 'var(--badge-urgent-bg)',
+    text: 'var(--badge-urgent-text)',
+    border: 'var(--badge-urgent-border)',
   },
   routine: {
     label: 'Routine',
-    bg: 'rgba(59, 130, 246, 0.1)',
-    text: '#60a5fa',
-    border: 'rgba(59, 130, 246, 0.25)',
+    bg: 'var(--badge-routine-bg)',
+    text: 'var(--badge-routine-text)',
+    border: 'var(--badge-routine-border)',
   },
 };
 

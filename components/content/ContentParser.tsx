@@ -29,8 +29,8 @@ const renderInlineToken = (token: ParsedToken, key: string | number): React.Reac
             borderRadius: '4px',
             fontFamily: 'var(--font-mono)',
             fontSize: '12px',
-            color: 'var(--color-text-primary)',
-            fontWeight: 500,
+            color: 'var(--color-brand-red)',
+            fontWeight: 600,
           }}
         >
           {token.value}
@@ -67,7 +67,7 @@ const ContentParser: React.FC<ContentParserProps> = ({ content }) => {
               key={lineIdx}
               style={{
                 height: '1px',
-                background: 'rgba(255, 255, 255, 0.08)',
+                background: 'var(--color-border-subtle)',
                 margin: '20px 0',
               }}
             />
@@ -88,7 +88,7 @@ const ContentParser: React.FC<ContentParserProps> = ({ content }) => {
                   textTransform: 'uppercase',
                   letterSpacing: '0.08em',
                   color: 'var(--color-text-muted)',
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderBottom: '1px solid var(--color-border-subtle)',
                   paddingBottom: '6px',
                   marginTop: lineIdx > 0 ? '22px' : '0',
                   marginBottom: '10px',

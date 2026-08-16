@@ -30,25 +30,10 @@ const CATEGORY_NAMES: Record<string, string> = {
   equipment: 'Matériel',
 };
 
-const SEVERITY_STYLES: Record<string, { label: string; bg: string; text: string; border: string }> = {
-  critical: {
-    label: 'CRITIQUE',
-    bg: 'rgba(239, 68, 68, 0.12)',
-    text: '#f87171',
-    border: 'rgba(239, 68, 68, 0.28)',
-  },
-  urgent: {
-    label: 'URGENT',
-    bg: 'rgba(245, 158, 11, 0.12)',
-    text: '#fbbf24',
-    border: 'rgba(245, 158, 11, 0.25)',
-  },
-  routine: {
-    label: 'ROUTINE',
-    bg: 'rgba(56, 189, 248, 0.08)',
-    text: '#38bdf8',
-    border: 'rgba(56, 189, 248, 0.2)',
-  },
+const SEVERITY_INFO: Record<string, { label: string; badgeClass: string }> = {
+  critical: { label: 'CRITIQUE', badgeClass: 'badge-critical' },
+  urgent: { label: 'URGENT', badgeClass: 'badge-urgent' },
+  routine: { label: 'ROUTINE', badgeClass: 'badge-routine' },
 };
 
 export default async function RecordPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -68,7 +53,7 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
     day: '2-digit', month: '2-digit', year: 'numeric'
   });
 
-  const sevStyle = record.severity ? SEVERITY_STYLES[record.severity] : null;
+  const sevInfo = record.severity ? SEVERITY_INFO[record.severity] : null;
 
   return (
     <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', padding: '16px 20px 48px' }}>
@@ -134,34 +119,24 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
             borderRadius: '12px',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px', flexWrap: 'wrap' }}>
-              <span style={{
-                fontSize: '10px',
-                fontWeight: 600,
-                fontFamily: 'var(--font-mono)',
+              <span className="badge badge-category" style={{
+                fontSize: '10.5px',
                 padding: '2px 8px',
                 borderRadius: '4px',
-                backgroundColor: 'var(--color-bg-subtle)',
-                color: 'var(--color-text-secondary)',
-                border: '1px solid var(--color-border)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.04em',
               }}>
                 {CATEGORY_NAMES[record.category] || record.category}
               </span>
 
-              {sevStyle && (
-                <span style={{
-                  fontSize: '10px',
-                  fontWeight: 600,
-                  fontFamily: 'var(--font-mono)',
+              {sevInfo && (
+                <span className={`badge ${sevInfo.badgeClass}`} style={{
+                  fontSize: '10.5px',
                   padding: '2px 8px',
                   borderRadius: '4px',
-                  backgroundColor: sevStyle.bg,
-                  color: sevStyle.text,
-                  border: `1px solid ${sevStyle.border}`,
                   letterSpacing: '0.04em',
                 }}>
-                  {sevStyle.label}
+                  {sevInfo.label}
                 </span>
               )}
 
@@ -197,7 +172,7 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
 
             {/* Tags row */}
             {record.tags.length > 0 && (
-              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid var(--color-border-subtle)' }}>
                 {record.tags.map(tag => (
                   <Link
                     key={tag}
@@ -233,7 +208,7 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
 
             {/* Embedded Media if available */}
             {record.media && record.media.length > 0 && (
-              <div style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
+              <div style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid var(--color-border-subtle)' }}>
                 <div style={{
                   fontSize: '11px',
                   fontFamily: 'var(--font-mono)',
@@ -269,7 +244,7 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
               fontWeight: 700,
               marginBottom: '12px',
               paddingBottom: '8px',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+              borderBottom: '1px solid var(--color-border-subtle)',
             }}>
               Fiches Associées ({CATEGORY_NAMES[record.category] || record.category})
             </div>
@@ -341,7 +316,7 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
               fontWeight: 700,
               marginBottom: '12px',
               paddingBottom: '8px',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+              borderBottom: '1px solid var(--color-border-subtle)',
             }}>
               Spécifications Médicales
             </div>
@@ -359,13 +334,13 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
                 <span style={{ color: 'var(--color-text-muted)' }}>Identifiant fiche</span>
                 <span style={{ color: 'var(--color-text-secondary)', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>{record.id}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '6px', borderTop: '1px solid rgba(255, 255, 255, 0.04)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '6px', borderTop: '1px solid var(--color-border-subtle)' }}>
                 <span style={{ color: 'var(--color-text-muted)' }}>Statut opérationnel</span>
                 <span style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
-                  color: '#4ade80',
+                  color: 'var(--color-cat-equip-text)',
                   fontWeight: 600,
                   fontSize: '11.5px',
                   fontFamily: 'var(--font-mono)',
@@ -404,7 +379,7 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
           background-color: var(--color-bg-hover) !important;
         }
         .related-item-card:hover .related-arrow {
-          color: var(--color-text-primary) !important;
+          color: var(--color-brand-red) !important;
           transform: translateX(2px);
         }
         .related-arrow {

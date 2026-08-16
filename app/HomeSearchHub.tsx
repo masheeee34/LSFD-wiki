@@ -510,7 +510,7 @@ export default function HomeSearchHub({ allRecords }: Props) {
                 padding: '16px 18px',
                 borderRadius: '8px',
                 border: '1px solid rgba(239, 68, 68, 0.35)',
-                background: 'linear-gradient(180deg, rgba(239, 68, 68, 0.05) 0%, rgba(16, 22, 35, 0.7) 100%)',
+                background: 'var(--card-bg)',
                 boxShadow: '0 0 24px -4px rgba(239, 68, 68, 0.12)',
               }}
             >

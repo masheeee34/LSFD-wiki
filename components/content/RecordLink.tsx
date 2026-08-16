@@ -16,12 +16,12 @@ export const RecordLink: React.FC<RecordLinkProps> = ({ slug, label }) => {
         display: 'inline-flex',
         alignItems: 'center',
         gap: '3px',
-        color: '#f87171',
+        color: 'var(--color-brand-red)',
         fontWeight: 600,
         textDecoration: 'none',
         padding: '0 2px',
         borderRadius: '3px',
-        transition: 'color 120ms ease',
+        transition: 'all 120ms ease',
       }}
       className="wiki-record-link"
     >
