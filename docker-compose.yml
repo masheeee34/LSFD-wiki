@@ -1,0 +1,11 @@
+services:
+  lsfd-medilog:
+    build: .
+    container_name: lsfd-medilog
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - ADMIN_PASSWORD=LSFD2024!
+      - SESSION_SECRET=lsfd_super_secret_session_key_2026
