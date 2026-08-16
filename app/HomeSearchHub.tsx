@@ -504,21 +504,12 @@ export default function HomeSearchHub({ allRecords }: Props) {
             width: '100%',
           }} className="index-grid">
             {/* Col 1: ACLS & Soins (Priorité Vitale) */}
-            <div
-              className="linear-card"
-              style={{
-                padding: '16px 18px',
-                borderRadius: '8px',
-                border: '1px solid rgba(239, 68, 68, 0.35)',
-                background: 'var(--card-bg)',
-                boxShadow: '0 0 24px -4px rgba(239, 68, 68, 0.12)',
-              }}
-            >
+            <div className="linear-card" style={{ padding: '16px 18px', borderRadius: '8px' }}>
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                borderBottom: '1px solid rgba(239, 68, 68, 0.2)',
+                borderBottom: '1px solid var(--color-border-subtle)',
                 paddingBottom: '8px',
                 marginBottom: '10px',
               }}>
