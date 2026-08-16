@@ -1,0 +1,184 @@
+[
+  {
+    "id": "rec-001",
+    "slug": "cardiac-arrest-acls",
+    "title": "Arrêt Cardiaque — Protocole ACLS",
+    "category": "protocol",
+    "severity": "critical",
+    "summary": "Protocole de réanimation cardio-pulmonaire avancée (ACLS) pour adultes en arrêt cardiaque. Chaîne de survie, défibrillation précoce, et gestion des voies aériennes.",
+    "content": "## Définition\n\nL'arrêt cardiaque est une cessation soudaine de l'activité mécanique du cœur confirmée par l'absence de pouls, de conscience et de ventilation spontanée.\n\n---\n\n## Évaluation Initiale\n\n**Vérifier la réactivité** — stimulation verbale et douloureuse. Si absence de réponse :\n\n1. Appeler les renforts — activer le protocole de renfort médicalisé\n2. Commencer les compressions — 100–120/min, profondeur 5–6 cm\n3. Ratio 30:2 si voie aérienne non sécurisée\n\n---\n\n## Voie Aérienne\n\nSécuriser avec [[link:bag-valve-mask|BVM]] en attendant l'intubation. Viser une [[def:SpO₂ mesurée par oxymètre de pouls|saturation]] > 94% post-ROCS.\n\nSi intubation oro-trachéale indisponible : [[link:rapid-sequence-intubation|RSI]] ou dispositif supra-glottique.\n\n---\n\n## Défibrillation\n\nAnalyser le rythme toutes les 2 minutes avec l'[[link:aed-lifepak15|AED/Lifepak 15]].\n\n- **FV / TV sans pouls** → Choc biphasique 200 J, reprendre RCP immédiatement\n- **Asystolie / AESP** → Pas de choc, adresser causes réversibles (**4H/4T**)\n\n---\n\n## Médicaments\n\n- [[link:epinephrine|Épinéphrine]] 1 mg IV/IO toutes les 3–5 min\n- [[link:amiodarone|Amiodarone]] 300 mg IV en cas de FV/TV réfractaire (2ᵉ dose : 150 mg)\n\n---\n\n## Causes Réversibles — 4H/4T\n\n| 4H | 4T |\n|---|---|\n| Hypovolémie | Tamponnade cardiaque |\n| Hypoxie | Tension Pneumothorax |\n| Hypo/Hyperkaliémie | Thrombose (EP/SCA) |\n| Hypothermie | Toxiques |\n\n---\n\n## Post-ROCS\n\nMaintenir PAM ≥ 65 mmHg. Cibler normocapnie (EtCO₂ 35–45 mmHg). Préparer transfert vers centre de cathétérisme.",
+    "tags": ["ACLS", "RCP", "défibrillation", "FV", "TV", "arrêt cardiaque", "épinéphrine", "ROCS"],
+    "media": [
+      {
+        "id": "med-001",
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=CoVBRCkFelc",
+        "caption": "Démonstration RCP adulte — American Heart Association"
+      }
+    ],
+    "updatedAt": "2026-08-16T14:30:00.000Z"
+  },
+  {
+    "id": "rec-002",
+    "slug": "polytrauma-management",
+    "title": "Polytraumatisme — Approche ABCDE",
+    "category": "protocol",
+    "severity": "critical",
+    "summary": "Évaluation primaire et stabilisation systématique du patient polytraumatisé selon le standard ATLS / PHTLS. Alignement rachidien strict et bilan lésionnel rapide.",
+    "content": "## Principes Généraux\n\nTout traumatisé grave doit être pris en charge selon la séquence standardisée **X-ABCDE** avec maintien de l'axe tête-cou-tronc en position neutre.\n\n---\n\n## Séquence d'Évaluation Primaire\n\n### X — Hémorragie Exsanguinante (eXsanguinating hemorrhage)\n- Pose immédiate de **garrot de membre** pour toute hémorragie active incontrôlable à la compression directe.\n- Pansement compressif ou hémostatique (packing) pour les plaies jonctionnelles.\n\n### A — Airway & Contrôle Rachidien\n- Maintien manuel de l'axe rachidien, pose du collier cervical rigide.\n- Désobstruction pharyngée, aspiration des sécrétions/débris.\n- [[link:bag-valve-mask|BVM]] avec oxygène 15 L/min.\n- Si [[def:Score de Glasgow Coma Scale évaluant la conscience|GCS]] ≤ 8 : [[link:rapid-sequence-intubation|RSI (Intubation en Séquence Rapide)]].\n\n### B — Breathing & Ventilation\n- Inspection symétrie thoracique, recherche d'emphysème sous-cutané.\n- Éliminer d'urgence un [[link:tension-pneumothorax|Pneumothorax sous Tension]] → [[link:needle-decompression|Décompression à l'Aiguille]].\n- Pansement 3 côtés pour pneumothorax ouvert.\n\n### C — Circulation & Gestion du Choc\n- Évaluation pouls périphériques, temps de recoloration cutanée, pression artérielle.\n- Prise en charge du [[link:hemorrhagic-shock|Choc Hémorragique]] : hypotension permissive (PAS 80–90 mmHg).\n- 2 VVP gros calibre (14–16G) ou accès intra-osseux.\n- Acide Tranexamique 1 g IV dans les 3 premières heures.\n\n### D — Disability (Bilan Neurologique)\n- Évaluation [[link:glasgow-coma-scale|Score de Glasgow (GCS)]], réactivité pupillaire (taille, symétrie, réflexe photomoteur).\n- Glycémie capillaire systématique.\n\n### E — Exposure & Hypothermie\n- Déshabillage complet pour inspection corporelle puis réchauffement immédiat (couverture isotherme).",
+    "tags": ["polytraumatisme", "ATLS", "PHTLS", "ABCDE", "rachis", "trauma", "garrot"],
+    "media": [],
+    "updatedAt": "2026-08-16T11:00:00.000Z"
+  },
+  {
+    "id": "rec-003",
+    "slug": "rapid-sequence-intubation",
+    "title": "Intubation en Séquence Rapide (RSI)",
+    "category": "maneuver",
+    "severity": "critical",
+    "summary": "Technique de sécurisation des voies aériennes par intubation oro-trachéale sous induction anesthésique et curarisation. Prévention active du risque d'inhalation pulmonaire.",
+    "content": "## Indications\n\n- Perte de réflexes de protection des voies aériennes ([[link:glasgow-coma-scale|GCS]] ≤ 8)\n- Hypoxémie sévère réfractaire malgré O₂ haut débit\n- Détresse respiratoire aiguë en épuisement imminent\n- Obstruction anatomique progressive ou lésion maxillo-faciale majeure\n\n---\n\n## Les 7 Étapes de la RSI\n\n1. **Préparation** : Vérification lame laryngoscope, sonde (7,5–8,0 H / 7,0–7,5 F), mandrin rigide, aspiration prête sous tension, monitorage ECG/EtCO₂.\n2. **Pré-oxygénation** : FiO₂ 100% au masque haute concentration pendant 3–5 min ou ventilation au [[link:bag-valve-mask|BVM]].\n3. **Prémédication** : Fentanyl 1–2 µg/kg ou Lidocaïne si suspicion d'HTIC.\n4. **Paralysie et Induction** :\n   - Étomidate 0,3 mg/kg IVD ou Kétamine 1,5–2 mg/kg IVD\n   - Succinylcholine 1,5 mg/kg IVD (ou Rocuronium 1,2 mg/kg si contre-indication)\n5. **Positionnement & Protection** : Alignement des axes, manœuvre de Sellick (pression cricoïde).\n6. **Passage de la Sonde** : Visualisation directe des cordes vocales, insertion sous contrôle de la vue. Gonflage du ballonnet à 20–25 cmH₂O.\n7. **Contrôle Post-Intubation** : Capnographie quantitative continue (courbe EtCO₂ obligatoire), auscultation 5 points, fixation rigide.\n\n---\n\n## Vigilance Spécifique\n\nContre-indications Succinylcholine : brûlures > 48h, crush syndrome, hyperkaliémie, myopathie connue. Remplacer par Rocuronium à forte dose (1,2 mg/kg).",
+    "tags": ["RSI", "intubation", "voies aériennes", "sédation", "curare", "laryngoscopie", "EtCO₂"],
+    "media": [
+      {
+        "id": "med-002",
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=JVSdGxS9dAY",
+        "caption": "Technique RSI et laryngoscopie directe"
+      }
+    ],
+    "updatedAt": "2026-08-15T18:20:00.000Z"
+  },
+  {
+    "id": "rec-004",
+    "slug": "severe-burns-management",
+    "title": "Brûlures Graves — Évaluation & Formule de Parkland",
+    "category": "protocol",
+    "severity": "critical",
+    "summary": "Protocole préhospitalier de prise en charge des brûlures thermiques et chimiques étendues. Calcul de la surface corporelle brûlée (SCB) et réanimation hydro-électrolytique.",
+    "content": "## Évaluation Initiale de la Gravité\n\n1. **Arrêt du processus de brûlure** : Refroidissement à l'eau tempérée (15–20°C) pendant 10–15 min max sur surface < 20% pour éviter l'hypothermie.\n2. **Recherche de lésions d'inhalation** : Brûlures faciales, vibrisses brûlées, suie oropharyngée, voix rauque, stridor → [[link:rapid-sequence-intubation|RSI]] précoce avant œdème obstructif.\n\n---\n\n## Règle des 9 de Wallace (Adulte)\n\n| Région anatomique | Surface Corporelle (% SCB) |\n|---|---|\n| Tête et cou | 9% |\n| Membre supérieur droit | 9% |\n| Membre supérieur gauche | 9% |\n| Face antérieure du tronc | 18% |\n| Face postérieure du tronc | 18% |\n| Membre inférieur droit | 18% |\n| Membre inférieur gauche | 18% |\n| Organes génitaux externes | 1% |\n\n---\n\n## Remplissage Vasculaire — Formule de Parkland Modifiée\n\nPour toute brûlure du 2ᵉ et 3ᵉ degré > 15–20% de SCB :\n\n$$\\text{Volume total (24h)} = 4\\,\\text{mL} \\times \\text{Poids (kg)} \\times \\%\\,\\text{SCB}$$\n\n- **Soluté de choix** : Ringer Lactate uniquement.\n- **Répartition** :\n  - $50\\%$ du volume calculé perfusé sur les **8 premières heures** (à compter de l'heure du sinistre).\n  - $50\\%$ restant perfusé sur les **16 heures suivantes**.\n\n---\n\n## Soins Locaux & Analgésie\n\n- Emballage stérile sec non adhérent (champs stériles ou métallines).\n- Ne jamais appliquer de corps gras ou topiques colorés.\n- Analgésie multimodale intraveineuse précoce (Morphine titrée ou Kétamine antalgique).\n- Prévention systématique de l'hypothermie.",
+    "tags": ["brûlures", "Parkland", "Wallace", "inhalation", "Ringer Lactate", "traumatologie", "réanimation"],
+    "media": [],
+    "updatedAt": "2026-08-16T09:00:00.000Z"
+  },
+  {
+    "id": "rec-005",
+    "slug": "tension-pneumothorax",
+    "title": "Pneumothorax sous Tension",
+    "category": "protocol",
+    "severity": "critical",
+    "summary": "Urgence vitale absolue. Accumulation d'air sous pression dans l'espace pleural comprimant le médiastin. Décompression immédiate par aiguille requise.",
+    "content": "## Physiopathologie\n\nL'air entre dans l'espace pleural sans pouvoir ressortir, créant un mécanisme de valve unidirectionnelle. La pression croissante comprime le médiastin, dévie la trachée et obstrue le retour veineux.\n\n---\n\n## Triade Clinique\n\n- **Détresse respiratoire** sévère et progressive\n- **Déviation trachéale** contro-latérale (signe tardif)\n- **Absence de murmure vésiculaire** du côté atteint\n- **Turgescence jugulaire** (absente si hypovolémie associée)\n- [[def:Hypotension artérielle avec tachycardie sinusale > 120 bpm|Choc obstructif]]\n\n---\n\n## Traitement — Décompression à l'Aiguille\n\nNe pas attendre la radio — **diagnostic clinique, traitement immédiat.**\n\nSuivre le protocole [[link:needle-decompression|Décompression Needle]].\n\n**Site d'insertion :** 2ᵉ espace intercostal, ligne médio-claviculaire, bord supérieur de la côte inférieure (éviter le paquet vasculo-nerveux).\n\n**Matériel :** Cathéter IV 14G, longueur ≥ 8 cm pour les patients obèses.\n\n---\n\n## Post-Décompression\n\nMise en place d'un drain thoracique ([[def:Drain inséré dans l'espace pleural pour évacuer air ou liquide|chest tube]]) par le médecin.\n\nSurveiller : retour du murmure vésiculaire, amélioration hémodynamique, EtCO₂.",
+    "tags": ["pneumothorax", "décompression", "aiguille", "thorax", "traumatologie", "choc obstructif"],
+    "media": [],
+    "updatedAt": "2026-08-14T09:15:00.000Z"
+  },
+  {
+    "id": "rec-006",
+    "slug": "epinephrine",
+    "title": "Épinéphrine (Adrénaline)",
+    "category": "medication",
+    "severity": "critical",
+    "summary": "Catécholamine endogène — agoniste α et β-adrénergique. Vasoconstricteur et inotrope positif. Indispensable dans l'arrêt cardiaque et l'anaphylaxie.",
+    "content": "## Présentation\n\n- Ampoule 1 mg/mL — solution injectable 1:1000\n- Ampoule 0,1 mg/mL — solution injectable 1:10 000 (dilution IV pré-calculée)\n- Auto-injecteur 0,3 mg/0,3 mL (EpiPen) pour usage préhospitalier\n\n---\n\n## Mécanisme d'Action\n\nStimulation des récepteurs α₁ (vasoconstriction périphérique ↑ PAS), β₁ (chronotrope et inotrope positifs) et β₂ (bronchodilatation).\n\n---\n\n## Indications & Posologies\n\n### [[link:cardiac-arrest-acls|Arrêt Cardiaque]]\n**1 mg IV/IO** toutes les **3–5 min**. Diluer dans 10 mL NaCl 0,9% si voie périphérique.\n\n### Anaphylaxie sévère\n**0,3–0,5 mg IM** face antéro-latérale cuisse (vaste externe). Répéter après 5–15 min si nécessaire.\n\n### Choc réfractaire (perfusion)\n**0,1–1 µg/kg/min** IV IVSE — titration selon PAM cible ≥ 65 mmHg.\n\n---\n\n## Contre-indications Relatives\n\n- Tachycardie supra-ventriculaire non traitée\n- Angor instable (sauf indication vitale)\n- HTA sévère non contrôlée\n\n---\n\n## Effets Indésirables\n\n[[def:Troubles du rythme cardiaque liés à la stimulation β₁ excessive|Arythmies]], céphalées, tremblements, anxiété, nécrose aux sites d'injection IM répétés.\n\n---\n\n## Précautions\n\nSurveillance continue : ECG, SpO₂, PA non invasive toutes les 5 min. Voie IV périphérique de gros calibre ou [[def:Voie intra-osseuse — accès vasculaire en urgence via la cavité médullaire|voie IO]] en cas d'accès difficile.",
+    "tags": ["épinéphrine", "adrénaline", "catécholamine", "anaphylaxie", "arrêt cardiaque", "vasopresseur"],
+    "media": [],
+    "updatedAt": "2026-08-15T16:00:00.000Z"
+  },
+  {
+    "id": "rec-007",
+    "slug": "amiodarone",
+    "title": "Amiodarone",
+    "category": "medication",
+    "severity": "urgent",
+    "summary": "Antiarythmique de classe III. Utilisé en première intention pour la FV/TV réfractaire à la défibrillation. Ralentit la conduction dans les tissus excitables.",
+    "content": "## Présentation\n\n- Flacon 150 mg/3 mL (50 mg/mL)\n- Dilution pour IV lente : dans G5% uniquement (incompatible avec NaCl 0,9%)\n\n---\n\n## Mécanisme\n\nBloqueur des canaux potassiques → allongement de la repolarisation (↑ QT). Effets secondaires sur canaux Na⁺ et Ca²⁺. Propriétés β-bloquantes et α-bloquantes.\n\n---\n\n## Indications\n\n### FV/TV sans pouls réfractaire — [[link:cardiac-arrest-acls|Protocole ACLS]]\n\n- **1ère dose :** 300 mg IV direct (dilués dans 20 mL G5%)\n- **2ème dose :** 150 mg IV si FV/TV persiste après 2ème choc\n\n### TV avec pouls, mal tolérée\n\n**150 mg IV** sur **10 minutes**, puis IVSE 1 mg/min pendant 6h.\n\n---\n\n## Effets Indésirables Aigus\n\n- Hypotension (fréquente si injection trop rapide)\n- Bradycardie, BAV\n- [[def:Allongement de l'intervalle QT pouvant induire une torsade de pointes|Allongement QT]]\n\n---\n\n## À Surveiller\n\nMonitoring ECG continu obligatoire. Avoir [[link:epinephrine|épinéphrine]] et atropine disponibles.",
+    "tags": ["amiodarone", "antiarythmique", "FV", "TV", "QT", "défibrillation réfractaire"],
+    "media": [],
+    "updatedAt": "2026-08-12T11:45:00.000Z"
+  },
+  {
+    "id": "rec-008",
+    "slug": "naloxone",
+    "title": "Naloxone (Narcan)",
+    "category": "medication",
+    "severity": "urgent",
+    "summary": "Antagoniste pur des récepteurs opioïdes µ. Antidote des surdosages aux opiacés (fentanyl, morphine, héroïne). Titration prudente pour éviter le syndrome de sevrage brutal.",
+    "content": "## Présentation\n\n- Ampoule 0,4 mg/mL — 1 mL\n- Spray nasal 4 mg/0,1 mL (Narcan® nasal — usage préhospitalier)\n\n---\n\n## Mécanisme\n\nCompétition et déplacement des opioïdes sur les récepteurs µ, δ et κ. Demi-vie courte (30–90 min) : **risque de re-narcotisation** après dissipation.\n\n---\n\n## Indications\n\nSurdosage aux opioïdes caractérisé par la **triade :**\n- Myosis bilatéral serré\n- Dépression respiratoire (FR < 12/min ou apnée)\n- Altération de la conscience ([[def:Score de Glasgow Coma Scale évaluant la conscience|GCS]] < 12)\n\n---\n\n## Posologie\n\n### IV/IO\n**0,4 mg** toutes les **2–3 min** jusqu'à FR ≥ 12/min. Ne pas viser le réveil complet (risque d'agitation et d'OAP).\n\n### Voie nasale\n**4 mg** dans une narine. Répéter après 2–3 min dans l'autre narine si inefficace.\n\n### Perfusion continue\nSi re-narcotisation : 2/3 de la dose de réveil/heure en IVSE.\n\n---\n\n## Précautions\n\nPréparer le patient à un sevrage brutal possible (agitation, vomissements, tachycardie). Surveiller pendant **au moins 2h** après la dernière dose.",
+    "tags": ["naloxone", "narcan", "opioïdes", "surdosage", "antidote", "fentanyl", "morphine"],
+    "media": [],
+    "updatedAt": "2026-08-13T08:20:00.000Z"
+  },
+  {
+    "id": "rec-009",
+    "slug": "needle-decompression",
+    "title": "Décompression à l'Aiguille",
+    "category": "maneuver",
+    "severity": "critical",
+    "summary": "Geste salvateur en urgence pour traiter le pneumothorax sous tension. Insertion d'un cathéter pour libérer l'air sous pression dans l'espace pleural.",
+    "content": "## Indications\n\nDiagnostic clinique de [[link:tension-pneumothorax|Pneumothorax sous Tension]] : détresse respiratoire + absence de MV unilatérale + instabilité hémodynamique.\n\n---\n\n## Matériel Nécessaire\n\n- Cathéter IV **14G** (longueur ≥ 8 cm recommandée chez l'adulte)\n- Antiseptique (povidone iodée ou chlorhexidine)\n- Gants stériles\n- Sparadrap pour sécuriser le cathéter\n\n---\n\n## Technique — Site Antérieur (Préférentiel)\n\n1. **Repérer** le 2ème espace intercostal (IC2), ligne médio-claviculaire côté atteint\n2. **Désinfecter** la zone en spirale (intérieur → extérieur)\n3. **Insérer** le cathéter perpendiculairement au thorax, **au-dessus du bord supérieur de la 3ème côte** (éviter le paquet vasculo-nerveux situé sous la côte inférieure)\n4. **Avancer** jusqu'à sentir une résistance puis un soulagement ('pop') avec sortie d'air audible\n5. **Retirer** le mandrin, laisser le cathéter en place\n6. **Fixer** le cathéter à la peau\n\n---\n\n## Site Alternatif (Latéral)\n\n4ème–5ème espace IC, [[def:Ligne axillaire antérieure passant par le bord antérieur de l'aisselle|ligne axillaire antérieure]]. Privilégier chez les patients obèses.\n\n---\n\n## Confirmation du Geste\n\n- Sortie d'air ou de sang lors du retrait du mandrin\n- Amélioration clinique immédiate : ↑ SpO₂, ↓ fréquence respiratoire, retour hémodynamique\n- Retour du MV à l'auscultation\n\n---\n\n## Suivi\n\nPose d'un [[def:Drain thoracique permettant l'évacuation continue de l'air|drain thoracique]] en milieu hospitalier.",
+    "tags": ["needle decompression", "pneumothorax", "cathéter", "thorax", "décompression", "urgence"],
+    "media": [],
+    "updatedAt": "2026-08-11T13:00:00.000Z"
+  },
+  {
+    "id": "rec-010",
+    "slug": "bag-valve-mask",
+    "title": "Ballon Masque (BVM / Bag-Valve-Mask)",
+    "category": "equipment",
+    "severity": "urgent",
+    "summary": "Dispositif de ventilation manuelle à pression positive. Utilisé pour l'assistance ventilatoire et la pré-oxygénation avant intubation. Nécessite une bonne technique d'étanchéité.",
+    "content": "## Description\n\nLe BVM est composé de :\n- Un **ballon autoremplissable** (volume 1,5 L adulte, 0,5 L pédiatrique)\n- Une **valve unidirectionnelle** anti-retour\n- Un **masque facial** avec coussin gonflable\n- Un **réservoir d'oxygène** (augmente FiO₂ jusqu'à 90–100%)\n\n---\n\n## Indications\n\n- Pré-oxygénation avant [[link:rapid-sequence-intubation|RSI]]\n- Ventilation de sauvetage en [[link:cardiac-arrest-acls|arrêt cardiaque]] (ratio 30:2)\n- Insuffisance respiratoire aiguë en attente d'intubation\n\n---\n\n## Technique EC (1 Opérateur)\n\nPouce + index forment le **E**, les 3 autres doigts soulèvent la mandibule (**C**).\n\nÉtanchéité masque-visage indispensable. En cas de difficulté : 2 opérateurs (1 masque, 1 ballon).\n\n---\n\n## Paramètres de Ventilation\n\n| Paramètre | Valeur |\n|---|---|\n| Fréquence adulte | 10–12/min |\n| Fréquence pédiatrique | 12–20/min |\n| Volume courant | 500–600 mL (visible soulèvement thoracique) |\n| Durée insufflation | 1 seconde |\n| FiO₂ avec réservoir | 90–100% |\n\n---\n\n## Pièges Fréquents\n\n- **Hyperventilation** → alcalose respiratoire, ↑ pression intrathoracique, ↓ retour veineux\n- **Mauvaise étanchéité** → insufflation gastrique → vomissements → inhalation\n- **Tête insuffisamment en extension** → obstruction pharyngée",
+    "tags": ["BVM", "ballon masque", "ventilation", "oxygène", "pré-oxygénation", "voies aériennes"],
+    "media": [],
+    "updatedAt": "2026-08-07T15:30:00.000Z"
+  },
+  {
+    "id": "rec-011",
+    "slug": "aed-lifepak15",
+    "title": "Défibrillateur — LifePak 15",
+    "category": "equipment",
+    "severity": "critical",
+    "summary": "Moniteur-défibrillateur multiparamétrique de dotation opérationnelle LSFD. Fonctions : défibrillation manuelle/DAE, cardioversion synchronisée, entraînement électrosystolique et capnographie.",
+    "content": "## Description Générale\n\nLe **LifePak 15** (Physio-Control / Stryker) est le moniteur-défibrillateur de référence en préhospitalier LSFD. Il combine :\n\n- Défibrillation **manuelle et DAE**\n- Cardioversion synchronisée\n- Stimulation cardiaque externe ([[def:Pacing transcutané utilisé en cas de bradycardie symptomatique|pacing transcutané]])\n- ECG 12 dérivations avec interprétation automatique\n- Capnographie ([[def:Mesure continue du CO₂ en fin d'expiration|EtCO₂]])\n- Oxymétrie de pouls (SpO₂) et SpCO\n\n---\n\n## Procédure de Défibrillation\n\n1. Allumer l'appareil\n2. Connecter les électrodes ou palettes (position apex-sternum)\n3. Sélectionner mode **ANALYZE** (DAE) ou mode **MANUEL**\n4. Sélectionner énergie : **200 J** biphasique pour FV/TV\n5. Charger → s'assurer de la sécurité périphérique → délivrer le choc\n6. Reprendre immédiatement la RCP — **ne pas vérifier le pouls avant 2 min**\n\n---\n\n## Énergie de Cardioversion Synchronisée\n\n| Arythmie | Énergie Initiale |\n|---|---|\n| FA/Flutter | 100–200 J |\n| TV avec pouls | 100 J |\n| TSV | 50–100 J |",
+    "tags": ["défibrillateur", "LifePak 15", "DAE", "ECG", "cardioversion", "pacing", "EtCO₂"],
+    "media": [],
+    "updatedAt": "2026-08-06T12:00:00.000Z"
+  },
+  {
+    "id": "rec-012",
+    "slug": "hemorrhagic-shock",
+    "title": "Choc Hémorragique & Damage Control",
+    "category": "protocol",
+    "severity": "critical",
+    "summary": "Protocole de prise en charge préhospitalière de l'hémorragie massive et du choc hypovolémique d'origine traumatique. Hémostase précoce et réanimation à volume restreint.",
+    "content": "## Classification ATLS de l'Hémorragie\n\n| Classe | Perte sanguine | FC | PAS | Conscience |\n|---|---|---|---|---|\n| I | < 750 mL (< 15%) | < 100 | Normale | Normale |\n| II | 750–1500 mL (15–30%) | 100–120 | Normale | Anxieux |\n| III | 1500–2000 mL (30–40%) | 120–140 | ↓ | Confus |\n| IV | > 2000 mL (> 40%) | > 140 | Très ↓ | Léthargique |\n\n---\n\n## Principes de Réanimation Hémostatique\n\n**Hémostase avant réplétion.** Éviter la dilution et l'hypertension qui déstabilisent le caillot primitif.\n\n1. **Arrêt du saignement** : Garrot de membre serré jusqu'à disparition du pouls distal, pansement compressif.\n2. **Hypotension permissive** : Cibler une PAM ~ 65 mmHg (PAS 80–90 mmHg) chez le traumatisé sans traumatisme crânien associé.\n3. **Voies veineuses** : 2 VVP 14G ou abord intra-osseux proximal.\n4. **Acide Tranexamique** : 1 g IV sur 10 min dans les 3h suivant le traumatisme.\n5. **Prévention de la triade létale** : [[def:Hypothermie, acidose et coagulopathie se renforçant mutuellement|Hypothermie + Acidose + Coagulopathie]]. Réchauffer le patient systématiquement.",
+    "tags": ["choc hémorragique", "traumatologie", "ATLS", "garrot", "acide tranexamique", "damage control"],
+    "media": [],
+    "updatedAt": "2026-08-15T17:00:00.000Z"
+  },
+  {
+    "id": "rec-013",
+    "slug": "adenosine",
+    "title": "Adénosine",
+    "category": "medication",
+    "severity": "urgent",
+    "summary": "Antiarythmique de première ligne pour les tachycardies supra-ventriculaires (TSV) à QRS fin. Bloque transitoirement la conduction auriculo-ventriculaire. Demi-vie ultra-courte (< 10 s).",
+    "content": "## Présentation\n\n- Ampoule 6 mg/2 mL (3 mg/mL)\n- À conserver à température ambiante (sensible à la lumière)\n\n---\n\n## Mécanisme\n\nAgoniste des récepteurs A1 de l'adénosine → hyperpolarisation des cellules du nœud AV → bloc AV transitoire (3–5 secondes) interrompant les circuits de réentrée nodaux.\n\n---\n\n## Indications\n\n**TSV à QRS fin**, régulière, hémodynamiquement stable, résistante aux manœuvres vagales ([[def:Manœuvre de Valsalva modifiée ou massage sino-carotidien|Valsalva]]).\n\n---\n\n## Posologie\n\n**Injection IVD ultrarapide obligatoire** (< 2 secondes), en VVP proximale ou voie centrale. Flush immédiat avec 20 mL NaCl 0,9%.\n\n- 1ère dose : **6 mg IVD**\n- 2ème dose (si échec 1–2 min) : **12 mg IVD**\n- 3ème dose (si échec) : **12 mg IVD**\n\n---\n\n## Effets Indésirables Attendus\n\nFlush, dyspnée, douleur thoracique, sensation de mort imminente — transitoires (< 30 s). Informer le patient avant injection.\n\n---\n\n## Contre-indications\n\n- Asthme sévère (bronchospasme)\n- BAV 2ème–3ème degré sans pacemaker\n- Syndrome de Wolff-Parkinson-White ([[def:Pré-excitation ventriculaire par faisceau accessoire|WPW]])",
+    "tags": ["adénosine", "TSV", "antiarythmique", "bloc AV", "tachycardie", "cardiologie"],
+    "media": [],
+    "updatedAt": "2026-08-05T09:30:00.000Z"
+  },
+  {
+    "id": "rec-014",
+    "slug": "glasgow-coma-scale",
+    "title": "Score de Glasgow (GCS)",
+    "category": "protocol",
+    "severity": "routine",
+    "summary": "Échelle neurologique standardisée d'évaluation de la conscience. Trois paramètres : ouverture des yeux, réponse verbale, réponse motrice. Score de 3 (coma profond) à 15 (conscience normale).",
+    "content": "## Composantes du Score\n\n### Ouverture des Yeux (Y)\n\n| Score | Réponse |\n|---|---|\n| 4 | Spontanée |\n| 3 | À la voix |\n| 2 | À la douleur |\n| 1 | Aucune |\n\n### Réponse Verbale (V)\n\n| Score | Réponse |\n|---|---|\n| 5 | Orientée, cohérente |\n| 4 | Confuse |\n| 3 | Mots inappropriés |\n| 2 | Sons incompréhensibles |\n| 1 | Aucune |\n\n### Réponse Motrice (M)\n\n| Score | Réponse |\n|---|---|\n| 6 | Obéit aux ordres |\n| 5 | Localise la douleur |\n| 4 | Retrait à la douleur |\n| 3 | Flexion anormale (décortication) |\n| 2 | Extension anormale (décérébration) |\n| 1 | Aucune |\n\n---\n\n## Interprétation\n\n| GCS | Sévérité |\n|---|---|\n| 13–15 | Traumatiseur crânien léger |\n| 9–12 | Traumatiseur crânien modéré |\n| ≤ 8 | Traumatiseur crânien grave → [[link:rapid-sequence-intubation|RSI]] indiqué |\n| 3 | Coma profond |",
+    "tags": ["Glasgow", "GCS", "neurologie", "conscience", "traumatisme crânien", "coma", "évaluation"],
+    "media": [],
+    "updatedAt": "2026-08-04T14:00:00.000Z"
+  }
+]
