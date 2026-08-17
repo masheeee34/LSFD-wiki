@@ -1,25 +1,5 @@
 [
   {
-    "id": "rec-014",
-    "slug": "glasgow-coma-scale",
-    "title": "Score de Glasgow (GCS)",
-    "category": "protocol",
-    "severity": "routine",
-    "summary": "Échelle neurologique standardisée d'évaluation de la conscience. Trois paramètres : ouverture des yeux, réponse verbale, réponse motrice. Score de 3 (coma profond) à 15 (conscience normale).",
-    "content": "## Composantes du Score\n\n### Ouverture des Yeux (Y)\n\n| Score | Réponse |\n|---|---|\n| 4 | Spontanée |\n| 3 | À la voix |\n| 2 | À la douleur |\n| 1 | Aucune |\n\n### Réponse Verbale (V)\n\n| Score | Réponse |\n|---|---|\n| 5 | Orientée, cohérente |\n| 4 | Confuse |\n| 3 | Mots inappropriés |\n| 2 | Sons incompréhensibles |\n| 1 | Aucune |\n\n### Réponse Motrice (M)\n\n| Score | Réponse |\n|---|---|\n| 6 | Obéit aux ordres |\n| 5 | Localise la douleur |\n| 4 | Retrait à la douleur |\n| 3 | Flexion anormale (décortication) |\n| 2 | Extension anormale (décérébration) |\n| 1 | Aucune |\n\n---\n\n## Interprétation\n\n| GCS | Sévérité |\n|---|---|\n| 13–15 | Traumatiseur crânien léger |\n| 9–12 | Traumatiseur crânien modéré |\n| ≤ 8 | Traumatiseur crânien grave → [[link:rapid-sequence-intubation|RSI]] indiqué |\n| 3 | Coma profond |",
-    "tags": [
-      "Glasgow",
-      "GCS",
-      "neurologie",
-      "conscience",
-      "traumatisme crânien",
-      "coma",
-      "évaluation"
-    ],
-    "media": [],
-    "updatedAt": "2026-08-04T14:00:00.000Z"
-  },
-  {
     "title": "Évaluation de la scène d'intervention",
     "slug": "evaluation-de-la-scene-d-intervention",
     "category": "protocol",
