@@ -129,5 +129,22 @@
     },
     "id": "bfc169f4-42a5-4bcb-b824-2259f834010f",
     "updatedAt": "2026-08-17T21:23:45.502Z"
+  },
+  {
+    "title": "Scènes de crime et suicides suspectés",
+    "slug": "scenes-de-crime-et-suicides-suspectes",
+    "category": "protocol",
+    "severity": "routine",
+    "summary": "Méthodologie de la gestion d'une scène de crime.",
+    "content": "> [!CRITICAL] La responsabilité de la gestion de la scène revient au personnel disposant des qualifications médicales les plus élevées.\nL’autorité de la gestion de la scène revient, si possible, aux forces de l’ordre présentes. Cela signifie également que les pompiers sur place doivent demander une assistance à ces derniers pour assurer la sécurité de l’intervention.\nSi les forces de l’ordre ne sont pas présentes, il est nécessaire de les contacter et  d’assurer la sécurité de l’intervention jusqu’à leur arrivée.\n",
+    "tags": [],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "cb7a63f6-1b4c-4720-9ca8-756a723d27aa",
+    "updatedAt": "2026-08-17T21:29:18.263Z"
   }
 ]
