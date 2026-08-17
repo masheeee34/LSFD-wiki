@@ -4,12 +4,8 @@ export type CertificationLevel = 'all' | 'bls' | 'als' | 'olmc';
 
 export interface MedicalSpecs {
   organization?: string;
-  echelon?: string;
-  minCertification?: CertificationLevel;
+  echelon?: string; // 'BLS', 'ALS', 'OLMC', 'Tous'
   operationalStatus?: string;
-  escalationRule?: string;
-  allowedGestures?: string;
-  forbiddenGestures?: string;
 }
 
 export interface MediaItem {

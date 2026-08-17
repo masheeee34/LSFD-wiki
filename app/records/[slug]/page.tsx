@@ -329,7 +329,7 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
                 <span style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>{organization}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: 'var(--color-text-muted)' }}>Échelon d'engagement</span>
+                <span style={{ color: 'var(--color-text-muted)' }}>Habilitation requise</span>
                 <span style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>{echelon}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

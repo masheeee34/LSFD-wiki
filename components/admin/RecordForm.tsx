@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import type { WikiRecord, RecordCategory, SeverityLevel, MediaItem, MedicalSpecs, CertificationLevel } from '@/types';
+import type { WikiRecord, RecordCategory, SeverityLevel, MediaItem, MedicalSpecs } from '@/types';
 import ContentParser from '@/components/content/ContentParser';
 import EditorToolbar from './EditorToolbar';
 
@@ -32,10 +32,9 @@ export default function RecordForm({ initialData, onSubmit, isLoading = false }:
   const [tagInput, setTagInput] = useState('');
   const [media, setMedia] = useState<MediaItem[]>(initialData?.media || []);
   
-  // Custom Medical Specs
+  // Custom Medical Specs (3 clear non-redundant fields)
   const [organization, setOrganization] = useState(initialData?.specs?.organization || 'LSFD EMS');
-  const [echelon, setEchelon] = useState(initialData?.specs?.echelon || (initialData?.category === 'medication' ? 'ALS / Paramedic' : 'BLS & ALS'));
-  const [minCertification, setMinCertification] = useState<CertificationLevel>(initialData?.specs?.minCertification || 'bls');
+  const [echelon, setEchelon] = useState(initialData?.specs?.echelon || (initialData?.category === 'medication' ? 'ALS' : 'BLS'));
   const [operationalStatus, setOperationalStatus] = useState(initialData?.specs?.operationalStatus || 'ACTIF 2026');
 
   const [showSpecsSection, setShowSpecsSection] = useState(true);
@@ -92,8 +91,7 @@ export default function RecordForm({ initialData, onSubmit, isLoading = false }:
     
     const specs: MedicalSpecs = {
       organization: organization.trim() || 'LSFD EMS',
-      echelon: echelon.trim() || 'ALS / Paramedic',
-      minCertification,
+      echelon: echelon.trim() || 'ALS',
       operationalStatus: operationalStatus.trim() || 'ACTIF 2026',
     };
 
@@ -177,7 +175,7 @@ export default function RecordForm({ initialData, onSubmit, isLoading = false }:
           </div>
         </div>
 
-        {/* Custom Medical Specs */}
+        {/* Custom Medical Specs (No duplicates) */}
         <div style={{
           backgroundColor: 'var(--color-bg-surface)',
           border: '1px solid var(--color-border)',
@@ -209,7 +207,7 @@ export default function RecordForm({ initialData, onSubmit, isLoading = false }:
           </div>
 
           {showSpecsSection && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', paddingTop: '8px', borderTop: '1px solid var(--color-border-subtle)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', paddingTop: '8px', borderTop: '1px solid var(--color-border-subtle)' }}>
               <div>
                 <label style={{ display: 'block', marginBottom: '4px', fontSize: '11.5px', color: 'var(--color-text-secondary)', fontWeight: 600 }}>
                   Organisation
@@ -225,31 +223,18 @@ export default function RecordForm({ initialData, onSubmit, isLoading = false }:
               </div>
               <div>
                 <label style={{ display: 'block', marginBottom: '4px', fontSize: '11.5px', color: 'var(--color-text-secondary)', fontWeight: 600 }}>
-                  Échelon d'engagement
-                </label>
-                <input
-                  type="text"
-                  value={echelon}
-                  onChange={e => setEchelon(e.target.value)}
-                  placeholder="ALS / Paramedic"
-                  className="input form-input-control"
-                  style={{ fontSize: '12px' }}
-                />
-              </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '11.5px', color: 'var(--color-text-secondary)', fontWeight: 600 }}>
-                  Habilitation Requise
+                  Habilitation / Échelon Requis
                 </label>
                 <select
-                  value={minCertification}
-                  onChange={e => setMinCertification(e.target.value as CertificationLevel)}
+                  value={echelon}
+                  onChange={e => setEchelon(e.target.value)}
                   className="select form-input-control"
-                  style={{ fontSize: '12px' }}
+                  style={{ fontSize: '12px', fontWeight: 600 }}
                 >
-                  <option value="all">Tous</option>
-                  <option value="bls">BLS</option>
-                  <option value="als">ALS</option>
-                  <option value="olmc">OLMC</option>
+                  <option value="Tous">Tous</option>
+                  <option value="BLS">BLS</option>
+                  <option value="ALS">ALS</option>
+                  <option value="OLMC">OLMC</option>
                 </select>
               </div>
               <div>
