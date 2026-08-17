@@ -1,37 +1,5 @@
 [
   {
-    "id": "rec-003",
-    "slug": "rapid-sequence-intubation",
-    "title": "Intubation en Séquence Rapide (RSI)",
-    "category": "maneuver",
-    "severity": "critical",
-    "summary": "Technique de sécurisation des voies aériennes par intubation oro-trachéale sous induction anesthésique et curarisation. Prévention active du risque d'inhalation pulmonaire.",
-    "content": "## Indications\n\n- Perte de réflexes de protection des voies aériennes ([[link:glasgow-coma-scale|GCS]] ≤ 8)\n- Hypoxémie sévère réfractaire malgré O₂ haut débit\n- Détresse respiratoire aiguë en épuisement imminent\n- Obstruction anatomique progressive ou lésion maxillo-faciale majeure\n\n---\n\n## Les 7 Étapes de la RSI\n\n1. **Préparation** : Vérification lame laryngoscope, sonde (7,5–8,0 H / 7,0–7,5 F), mandrin rigide, aspiration prête sous tension, monitorage ECG/EtCO₂.\n2. **Pré-oxygénation** : FiO₂ 100% au masque haute concentration pendant 3–5 min ou ventilation au [[link:bag-valve-mask|BVM]].\n3. **Prémédication** : Fentanyl 1–2 µg/kg ou Lidocaïne si suspicion d'HTIC.\n4. **Paralysie et Induction** :\n   - Étomidate 0,3 mg/kg IVD ou Kétamine 1,5–2 mg/kg IVD\n   - Succinylcholine 1,5 mg/kg IVD (ou Rocuronium 1,2 mg/kg si contre-indication)\n5. **Positionnement & Protection** : Alignement des axes, manœuvre de Sellick (pression cricoïde).\n6. **Passage de la Sonde** : Visualisation directe des cordes vocales, insertion sous contrôle de la vue. Gonflage du ballonnet à 20–25 cmH₂O.\n7. **Contrôle Post-Intubation** : Capnographie quantitative continue (courbe EtCO₂ obligatoire), auscultation 5 points, fixation rigide.\n\n---\n\n## Vigilance Spécifique\n\nContre-indications Succinylcholine : brûlures > 48h, crush syndrome, hyperkaliémie, myopathie connue. Remplacer par Rocuronium à forte dose (1,2 mg/kg).",
-    "tags": [
-      "RSI",
-      "intubation",
-      "voies aériennes",
-      "sédation",
-      "curare",
-      "laryngoscopie",
-      "EtCO₂"
-    ],
-    "media": [
-      {
-        "id": "med-002",
-        "type": "video",
-        "url": "https://www.youtube.com/watch?v=JVSdGxS9dAY",
-        "caption": "Technique RSI et laryngoscopie directe"
-      }
-    ],
-    "updatedAt": "2026-08-17T15:12:39.808Z",
-    "specs": {
-      "organization": "LSFD EMS",
-      "echelon": "BLS",
-      "operationalStatus": "ACTIF 2026"
-    }
-  },
-  {
     "id": "rec-004",
     "slug": "severe-burns-management",
     "title": "Brûlures Graves — Évaluation & Formule de Parkland",
