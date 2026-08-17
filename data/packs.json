@@ -1,20 +1,5 @@
 [
   {
-    "id": "pack-004",
-    "slug": "bilan-initial-scene",
-    "code": "PACK-04",
-    "title": "Bilan Initial & Évaluation Clinique",
-    "description": "Sécurisation de la zone d'intervention, approche systématique de la victime et évaluation de la conscience (Échelle AVPU & Glasgow).",
-    "badgeLabel": "BLS / TOUS",
-    "recordSlugs": [
-      "evaluation-de-la-scene-d-intervention",
-      "evaluation-initiale",
-      "echelle-avpu",
-      "glasgow-coma-scale"
-    ],
-    "updatedAt": "2026-08-17T15:00:00.000Z"
-  },
-  {
     "title": "test",
     "slug": "test",
     "code": "PACK-01",
