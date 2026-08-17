@@ -16,9 +16,23 @@ const renderInline = (token: InlineToken, key: string | number): React.ReactNode
     case 'text':
       return <span key={key}>{token.value}</span>;
     case 'bold':
-      return <strong key={key} style={{ fontWeight: 700, color: 'var(--color-text-primary)' }}>{token.value}</strong>;
+      return (
+        <strong key={key} style={{ fontWeight: 700, color: 'inherit' }}>
+          {token.tokens ? token.tokens.map((t, i) => renderInline(t, `${key}-b-${i}`)) : token.value}
+        </strong>
+      );
     case 'italic':
-      return <em key={key} style={{ color: 'var(--color-text-secondary)', fontStyle: 'italic' }}>{token.value}</em>;
+      return (
+        <em key={key} style={{ fontStyle: 'italic', color: 'inherit' }}>
+          {token.tokens ? token.tokens.map((t, i) => renderInline(t, `${key}-i-${i}`)) : token.value}
+        </em>
+      );
+    case 'color':
+      return (
+        <span key={key} style={{ color: token.color, fontWeight: 'inherit' }}>
+          {token.tokens ? token.tokens.map((t, i) => renderInline(t, `${key}-c-${i}`)) : token.value}
+        </span>
+      );
     case 'code':
       return (
         <code
@@ -36,12 +50,6 @@ const renderInline = (token: InlineToken, key: string | number): React.ReactNode
         >
           {token.value}
         </code>
-      );
-    case 'color':
-      return (
-        <span key={key} style={{ color: token.color, fontWeight: 600 }}>
-          {token.value}
-        </span>
       );
     case 'link':
       return <RecordLink key={key} slug={token.slug} label={token.label} />;

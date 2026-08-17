@@ -2,9 +2,9 @@ export type InlineToken =
   | { type: 'text'; value: string }
   | { type: 'link'; slug: string; label: string }
   | { type: 'definition'; explanation: string; word: string }
-  | { type: 'color'; color: string; value: string; tokens?: InlineToken[] }
-  | { type: 'bold'; value: string }
-  | { type: 'italic'; value: string }
+  | { type: 'color'; color: string; value?: string; tokens: InlineToken[] }
+  | { type: 'bold'; value?: string; tokens: InlineToken[] }
+  | { type: 'italic'; value?: string; tokens: InlineToken[] }
   | { type: 'code'; value: string };
 
 export type BlockToken =
@@ -74,11 +74,11 @@ export function tokenizeInline(text: string): InlineToken[] {
       handler: (m) => ({ type: 'definition', explanation: m[1].trim(), word: m[2].trim() }),
     },
     {
-      re: /\[\[color:([^|\]]+)\|([^\]]+)\]\]/,
+      re: /\[\[color:([^|\]]+)\|([\s\S]+?)\]\]/,
       handler: (m) => ({
         type: 'color',
         color: resolveColor(m[1]),
-        value: m[2],
+        tokens: tokenizeInline(m[2]),
       }),
     },
     // HTML span style="color:..."
@@ -87,7 +87,7 @@ export function tokenizeInline(text: string): InlineToken[] {
       handler: (m) => ({
         type: 'color',
         color: resolveColor(m[1]),
-        value: m[2],
+        tokens: tokenizeInline(m[2]),
       }),
     },
     // HTML font color="..."
@@ -96,16 +96,22 @@ export function tokenizeInline(text: string): InlineToken[] {
       handler: (m) => ({
         type: 'color',
         color: resolveColor(m[1]),
-        value: m[2],
+        tokens: tokenizeInline(m[2]),
       }),
     },
     {
       re: /\*\*(.+?)\*\*/,
-      handler: (m) => ({ type: 'bold', value: m[1] }),
+      handler: (m) => ({
+        type: 'bold',
+        tokens: tokenizeInline(m[1]),
+      }),
     },
     {
       re: /(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/,
-      handler: (m) => ({ type: 'italic', value: m[1] }),
+      handler: (m) => ({
+        type: 'italic',
+        tokens: tokenizeInline(m[1]),
+      }),
     },
     {
       re: /`([^`]+)`/,
