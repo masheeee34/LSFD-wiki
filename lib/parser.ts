@@ -56,6 +56,25 @@ export function resolveColor(col: string): string {
   return '#ef4444';
 }
 
+export function resolveColorAndStyles(param: string): { color: string; isBold: boolean; isItalic: boolean } {
+  const parts = param.toLowerCase().split(/[,;|\s]+/).map(p => p.trim());
+  let color = '#ef4444';
+  let isBold = false;
+  let isItalic = false;
+
+  for (const part of parts) {
+    if (part === 'bold' || part === 'gras' || part === 'b') {
+      isBold = true;
+    } else if (part === 'italic' || part === 'italique' || part === 'i') {
+      isItalic = true;
+    } else if (part) {
+      color = resolveColor(part);
+    }
+  }
+
+  return { color, isBold, isItalic };
+}
+
 export function tokenizeInline(text: string): InlineToken[] {
   const tokens: InlineToken[] = [];
   let remaining = text;
@@ -75,29 +94,45 @@ export function tokenizeInline(text: string): InlineToken[] {
     },
     {
       re: /\[\[color:([^|\]]+)\|([\s\S]+?)\]\]/,
-      handler: (m) => ({
-        type: 'color',
-        color: resolveColor(m[1]),
-        tokens: tokenizeInline(m[2]),
-      }),
+      handler: (m) => {
+        const { color, isBold, isItalic } = resolveColorAndStyles(m[1]);
+        let innerTokens = tokenizeInline(m[2]);
+        if (isItalic) {
+          innerTokens = [{ type: 'italic', tokens: innerTokens }];
+        }
+        if (isBold) {
+          innerTokens = [{ type: 'bold', tokens: innerTokens }];
+        }
+        return {
+          type: 'color',
+          color,
+          tokens: innerTokens,
+        };
+      },
     },
     // HTML span style="color:..."
     {
       re: /<span\s+style=["']color:\s*([^"';]+)["']>([\s\S]*?)<\/span>/i,
-      handler: (m) => ({
-        type: 'color',
-        color: resolveColor(m[1]),
-        tokens: tokenizeInline(m[2]),
-      }),
+      handler: (m) => {
+        const color = resolveColor(m[1]);
+        return {
+          type: 'color',
+          color,
+          tokens: tokenizeInline(m[2]),
+        };
+      },
     },
     // HTML font color="..."
     {
       re: /<font\s+color=["']([^"']+)["']>([\s\S]*?)<\/font>/i,
-      handler: (m) => ({
-        type: 'color',
-        color: resolveColor(m[1]),
-        tokens: tokenizeInline(m[2]),
-      }),
+      handler: (m) => {
+        const color = resolveColor(m[1]);
+        return {
+          type: 'color',
+          color,
+          tokens: tokenizeInline(m[2]),
+        };
+      },
     },
     {
       re: /\*\*(.+?)\*\*/,

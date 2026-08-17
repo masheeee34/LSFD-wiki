@@ -9,13 +9,18 @@ type EditorToolbarProps = {
 };
 
 const COLOR_OPTIONS = [
-  { name: 'Rouge', key: 'red', hex: '#ef4444' },
-  { name: 'Bleu', key: 'blue', hex: '#3b82f6' },
-  { name: 'Vert', key: 'green', hex: '#10b981' },
-  { name: 'Or / Jaune', key: 'gold', hex: '#f59e0b' },
-  { name: 'Violet', key: 'purple', hex: '#a855f7' },
-  { name: 'Cyan', key: 'cyan', hex: '#06b6d4' },
-  { name: 'Orange', key: 'orange', hex: '#f97316' },
+  { name: 'Rouge', key: 'red', hex: '#ef4444', isBold: false },
+  { name: 'Rouge Gras', key: 'red,bold', hex: '#ef4444', isBold: true },
+  { name: 'Bleu', key: 'blue', hex: '#3b82f6', isBold: false },
+  { name: 'Bleu Gras', key: 'blue,bold', hex: '#3b82f6', isBold: true },
+  { name: 'Vert', key: 'green', hex: '#10b981', isBold: false },
+  { name: 'Vert Gras', key: 'green,bold', hex: '#10b981', isBold: true },
+  { name: 'Or / Jaune', key: 'gold', hex: '#f59e0b', isBold: false },
+  { name: 'Or Gras', key: 'gold,bold', hex: '#f59e0b', isBold: true },
+  { name: 'Violet', key: 'purple', hex: '#a855f7', isBold: false },
+  { name: 'Violet Gras', key: 'purple,bold', hex: '#a855f7', isBold: true },
+  { name: 'Cyan', key: 'cyan', hex: '#06b6d4', isBold: false },
+  { name: 'Cyan Gras', key: 'cyan,bold', hex: '#06b6d4', isBold: true },
 ];
 
 export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarProps) {
@@ -34,7 +39,6 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
   const [imageUrl, setImageUrl] = useState('');
   const [imageAlt, setImageAlt] = useState('');
 
-  // Fetch list of records for instant auto-complete in link modal
   useEffect(() => {
     fetch('/api/records', { cache: 'no-store' })
       .then(res => res.json())
@@ -79,7 +83,6 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
     const { selected } = getSelectedTextInfo();
     if (selected.trim()) {
       setLinkLabel(selected.trim());
-      // Check if selected matches an existing slug
       const found = allRecords.find(r => 
         r.title.toLowerCase().includes(selected.toLowerCase()) || 
         r.slug.toLowerCase().includes(selected.toLowerCase())
@@ -229,10 +232,10 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
             border: '1px solid var(--color-border)',
             borderRadius: '6px',
             padding: '6px',
-            display: 'flex',
-            flexDirection: 'column',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
             gap: '4px',
-            minWidth: '130px',
+            minWidth: '240px',
             boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
             marginTop: '4px',
           }}>
@@ -244,19 +247,20 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  padding: '4px 8px',
+                  gap: '6px',
+                  padding: '4px 6px',
                   background: 'transparent',
                   border: 'none',
                   color: 'var(--color-text-primary)',
                   fontSize: '11.5px',
+                  fontWeight: c.isBold ? 700 : 400,
                   cursor: 'pointer',
                   borderRadius: '4px',
                   textAlign: 'left',
                 }}
                 className="color-option-btn"
               >
-                <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: c.hex }} />
+                <span style={{ width: '9px', height: '9px', borderRadius: '50%', backgroundColor: c.hex, flexShrink: 0 }} />
                 <span>{c.name}</span>
               </button>
             ))}
