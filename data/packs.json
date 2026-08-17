@@ -57,5 +57,20 @@
       "glasgow-coma-scale"
     ],
     "updatedAt": "2026-08-17T15:00:00.000Z"
+  },
+  {
+    "title": "test",
+    "slug": "test",
+    "code": "PACK-01",
+    "description": "test",
+    "badgeLabel": "URGENCE VITALE",
+    "recordSlugs": [
+      "polytrauma-management",
+      "epinephrine",
+      "tension-pneumothorax",
+      "rapid-sequence-intubation"
+    ],
+    "id": "pack-bb352b21",
+    "updatedAt": "2026-08-17T15:15:12.021Z"
   }
 ]
