@@ -97,5 +97,21 @@
     },
     "id": "58ffb01a-2775-4565-9494-5ba8afc92775",
     "updatedAt": "2026-08-17T20:55:20.298Z"
+  },
+  {
+    "title": "Patient en détention",
+    "slug": "patient-en-detention",
+    "category": "protocol",
+    "summary": "Concerne les interventions avec un patient détenu, qu'il soit en cellule, simplement menotté ou qu'il nécessite d'être maîtrisé avec des moyens de contention.",
+    "content": "## INFORMATIONS IMPORTANTES\nLes intervenants doivent réaliser une évaluation initiale et ciblée complète, incluant :\n\n\n- Les constantes vitales,\n- Les signes négatifs pertinents,\n- Un compte rendu précisant le motif principal et/ou la raison de l’appel au 9-1-1.\n\nIl est rappelé que l’évaluation chez ces patients peut être peu fiable, en raison de :\n\n- Une possible consommation de substances illicites,\n- Un accès limité à leurs traitements habituels,\n- Ou de traumatismes sans signes évidents.\n\n# TRANSPORT\nLe matériel de contention (menottes, attaches plastiques, ou entraves type “hobble”) mis en place par les forces de l’ordre doit respecter les règles suivantes :\n\nDoit laisser un jeu suffisant pour permettre une ventilation efficace.\n\n- Nécessite la présence continue d’un agent  (dans l’ambulance).\n- Ne doit pas compromettre les fonctions respiratoires ou circulatoires\n- Ne doit entraîner aucune atteinte vasculaire, neurologique ou respiratoire.\n\nLes membres immobilisés doivent être surveillés pour :\n\n\n- La qualité du pouls,\n- Le remplissage capillaire,\n- La couleur de leur peau et la température,\n- La fonction nerveuse et motrice.\n\nLes dispositifs de contention peuvent être fixés au châssis du brancard, mais pas aux barrières latérales mobiles.\n\n",
+    "tags": [],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "c3d3e59c-5cd4-44ef-9ff4-d7d66225db82",
+    "updatedAt": "2026-08-17T21:15:15.525Z"
   }
 ]
