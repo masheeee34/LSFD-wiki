@@ -1,24 +1,5 @@
 [
   {
-    "id": "rec-005",
-    "slug": "tension-pneumothorax",
-    "title": "Pneumothorax sous Tension",
-    "category": "protocol",
-    "severity": "critical",
-    "summary": "Urgence vitale absolue. Accumulation d'air sous pression dans l'espace pleural comprimant le médiastin. Décompression immédiate par aiguille requise.",
-    "content": "## Physiopathologie\n\nL'air entre dans l'espace pleural sans pouvoir ressortir, créant un mécanisme de valve unidirectionnelle. La pression croissante comprime le médiastin, dévie la trachée et obstrue le retour veineux.\n\n---\n\n## Triade Clinique\n\n- **Détresse respiratoire** sévère et progressive\n- **Déviation trachéale** contro-latérale (signe tardif)\n- **Absence de murmure vésiculaire** du côté atteint\n- **Turgescence jugulaire** (absente si hypovolémie associée)\n- [[def:Hypotension artérielle avec tachycardie sinusale > 120 bpm|Choc obstructif]]\n\n---\n\n## Traitement — Décompression à l'Aiguille\n\nNe pas attendre la radio — **diagnostic clinique, traitement immédiat.**\n\nSuivre le protocole [[link:needle-decompression|Décompression Needle]].\n\n**Site d'insertion :** 2ᵉ espace intercostal, ligne médio-claviculaire, bord supérieur de la côte inférieure (éviter le paquet vasculo-nerveux).\n\n**Matériel :** Cathéter IV 14G, longueur ≥ 8 cm pour les patients obèses.\n\n---\n\n## Post-Décompression\n\nMise en place d'un drain thoracique ([[def:Drain inséré dans l'espace pleural pour évacuer air ou liquide|chest tube]]) par le médecin.\n\nSurveiller : retour du murmure vésiculaire, amélioration hémodynamique, EtCO₂.",
-    "tags": [
-      "pneumothorax",
-      "décompression",
-      "aiguille",
-      "thorax",
-      "traumatologie",
-      "choc obstructif"
-    ],
-    "media": [],
-    "updatedAt": "2026-08-14T09:15:00.000Z"
-  },
-  {
     "id": "rec-006",
     "slug": "epinephrine",
     "title": "Épinéphrine (Adrénaline)",
