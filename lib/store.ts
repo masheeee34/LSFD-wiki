@@ -2,16 +2,21 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import { v4 as uuidv4 } from 'uuid';
-import type { WikiRecord, SearchResult } from '@/types';
+import type { WikiRecord, InterventionPack, SearchResult } from '@/types';
 import defaultRecords from '@/data/records.json';
+import defaultPacks from '@/data/packs.json';
 
 declare global {
   // eslint-disable-next-line no-var
   var __lsfd_records_store: WikiRecord[] | undefined;
+  // eslint-disable-next-line no-var
+  var __lsfd_packs_store: InterventionPack[] | undefined;
 }
 
 const LOCAL_DATA_FILE = path.join(process.cwd(), 'data', 'records.json');
+const LOCAL_PACKS_FILE = path.join(process.cwd(), 'data', 'packs.json');
 const TMP_DATA_FILE = path.join(os.tmpdir(), 'lsfd-records.json');
+const TMP_PACKS_FILE = path.join(os.tmpdir(), 'lsfd-packs.json');
 
 const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
 const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
@@ -28,14 +33,14 @@ function normalizeText(text: string): string {
     .trim();
 }
 
-// Ultra-fast Local SSD & Memory Store (0ms latency)
+// ----------------------------------------------------
+// RECORDS STORE (0ms local NVMe SSD & Memory)
+// ----------------------------------------------------
 function loadLocalStore(): WikiRecord[] {
-  // 1. In-memory global cache (fastest: 0.001ms)
   if (globalThis.__lsfd_records_store && Array.isArray(globalThis.__lsfd_records_store) && globalThis.__lsfd_records_store.length > 0) {
     return globalThis.__lsfd_records_store;
   }
 
-  // 2. Read from local data/records.json on NVMe SSD (< 0.1ms)
   try {
     if (fs.existsSync(LOCAL_DATA_FILE)) {
       const raw = fs.readFileSync(LOCAL_DATA_FILE, 'utf-8');
@@ -47,7 +52,6 @@ function loadLocalStore(): WikiRecord[] {
     }
   } catch {}
 
-  // 3. Try reading from /tmp/lsfd-records.json
   try {
     if (fs.existsSync(TMP_DATA_FILE)) {
       const raw = fs.readFileSync(TMP_DATA_FILE, 'utf-8');
@@ -59,7 +63,6 @@ function loadLocalStore(): WikiRecord[] {
     }
   } catch {}
 
-  // 4. Fallback to bundled JSON
   const initial = Array.isArray(defaultRecords) ? [...(defaultRecords as WikiRecord[])] : [];
   globalThis.__lsfd_records_store = initial;
   return initial;
@@ -67,25 +70,68 @@ function loadLocalStore(): WikiRecord[] {
 
 function persistLocalStore(records: WikiRecord[]): void {
   globalThis.__lsfd_records_store = records;
-
-  // Persist to local disk
   try {
     const dir = path.dirname(LOCAL_DATA_FILE);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(LOCAL_DATA_FILE, JSON.stringify(records, null, 2), 'utf-8');
   } catch {}
-
-  // Persist to /tmp
   try {
     fs.writeFileSync(TMP_DATA_FILE, JSON.stringify(records, null, 2), 'utf-8');
   } catch {}
 }
 
+// ----------------------------------------------------
+// PACKS STORE (0ms local NVMe SSD & Memory)
+// ----------------------------------------------------
+function loadLocalPacks(): InterventionPack[] {
+  if (globalThis.__lsfd_packs_store && Array.isArray(globalThis.__lsfd_packs_store) && globalThis.__lsfd_packs_store.length > 0) {
+    return globalThis.__lsfd_packs_store;
+  }
+
+  try {
+    if (fs.existsSync(LOCAL_PACKS_FILE)) {
+      const raw = fs.readFileSync(LOCAL_PACKS_FILE, 'utf-8');
+      const parsed = JSON.parse(raw) as InterventionPack[];
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        globalThis.__lsfd_packs_store = parsed;
+        return parsed;
+      }
+    }
+  } catch {}
+
+  try {
+    if (fs.existsSync(TMP_PACKS_FILE)) {
+      const raw = fs.readFileSync(TMP_PACKS_FILE, 'utf-8');
+      const parsed = JSON.parse(raw) as InterventionPack[];
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        globalThis.__lsfd_packs_store = parsed;
+        return parsed;
+      }
+    }
+  } catch {}
+
+  const initial = Array.isArray(defaultPacks) ? [...(defaultPacks as InterventionPack[])] : [];
+  globalThis.__lsfd_packs_store = initial;
+  return initial;
+}
+
+function persistLocalPacks(packs: InterventionPack[]): void {
+  globalThis.__lsfd_packs_store = packs;
+  try {
+    const dir = path.dirname(LOCAL_PACKS_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(LOCAL_PACKS_FILE, JSON.stringify(packs, null, 2), 'utf-8');
+  } catch {}
+  try {
+    fs.writeFileSync(TMP_PACKS_FILE, JSON.stringify(packs, null, 2), 'utf-8');
+  } catch {}
+}
+
 // Background async GitHub Commit helper
-async function commitToGitHubAsync(records: WikiRecord[]): Promise<boolean> {
+async function commitToGitHubAsync(filePath: string, contentJson: unknown, commitMsg: string): Promise<boolean> {
   if (!GITHUB_TOKEN) return false;
   try {
-    const fileRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data/records.json?t=${Date.now()}`, {
+    const fileRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}?t=${Date.now()}`, {
       headers: {
         Authorization: `Bearer ${GITHUB_TOKEN}`,
         Accept: 'application/vnd.github+json',
@@ -100,8 +146,8 @@ async function commitToGitHubAsync(records: WikiRecord[]): Promise<boolean> {
       sha = fileData.sha;
     }
 
-    const contentBase64 = Buffer.from(JSON.stringify(records, null, 2), 'utf-8').toString('base64');
-    const updateRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data/records.json`, {
+    const contentBase64 = Buffer.from(JSON.stringify(contentJson, null, 2), 'utf-8').toString('base64');
+    const updateRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}`, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${GITHUB_TOKEN}`,
@@ -110,7 +156,7 @@ async function commitToGitHubAsync(records: WikiRecord[]): Promise<boolean> {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        message: 'chore(wiki): auto-sync records from admin portal',
+        message: commitMsg,
         content: contentBase64,
         sha,
       }),
@@ -123,27 +169,10 @@ async function commitToGitHubAsync(records: WikiRecord[]): Promise<boolean> {
   }
 }
 
-// Background Redis save helper
-async function saveRemoteRedisAsync(records: WikiRecord[]): Promise<boolean> {
-  if (!UPSTASH_URL || !UPSTASH_TOKEN) return false;
-  try {
-    const res = await fetch(`${UPSTASH_URL}/set/lsfd_records`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${UPSTASH_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(JSON.stringify(records)),
-      cache: 'no-store',
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
-
+// ----------------------------------------------------
+// RECORDS API
+// ----------------------------------------------------
 export async function getAll(): Promise<WikiRecord[]> {
-  // Ultra-fast 0ms local read from SSD & memory
   return loadLocalStore();
 }
 
@@ -168,10 +197,7 @@ export async function create(data: Omit<WikiRecord, 'id' | 'updatedAt'>): Promis
   records.push(record);
   persistLocalStore(records);
 
-  // Background non-blocking sync
-  saveRemoteRedisAsync(records).catch(() => {});
-  commitToGitHubAsync(records).catch(() => {});
-
+  commitToGitHubAsync('data/records.json', records, 'chore(wiki): auto-sync records').catch(() => {});
   return record;
 }
 
@@ -182,10 +208,7 @@ export async function update(id: string, data: Partial<Omit<WikiRecord, 'id'>>):
   records[idx] = { ...records[idx], ...data, id: records[idx].id, updatedAt: new Date().toISOString() };
   persistLocalStore(records);
 
-  // Background non-blocking sync
-  saveRemoteRedisAsync(records).catch(() => {});
-  commitToGitHubAsync(records).catch(() => {});
-
+  commitToGitHubAsync('data/records.json', records, 'chore(wiki): auto-sync update record').catch(() => {});
   return records[idx];
 }
 
@@ -196,13 +219,69 @@ export async function remove(idOrSlug: string): Promise<boolean> {
     records.splice(idx, 1);
     persistLocalStore(records);
 
-    // Background non-blocking sync
-    saveRemoteRedisAsync(records).catch(() => {});
-    commitToGitHubAsync(records).catch(() => {});
+    commitToGitHubAsync('data/records.json', records, 'chore(wiki): auto-sync delete record').catch(() => {});
   }
   return true;
 }
 
+// ----------------------------------------------------
+// PACKS API
+// ----------------------------------------------------
+export async function getPacks(): Promise<InterventionPack[]> {
+  return loadLocalPacks();
+}
+
+export async function getPackBySlug(slug: string): Promise<InterventionPack | undefined> {
+  const packs = await getPacks();
+  const normSlug = normalizeText(slug);
+  return packs.find((p) => p.slug === slug || p.id === slug || normalizeText(p.slug) === normSlug);
+}
+
+export async function getPackById(id: string): Promise<InterventionPack | undefined> {
+  const packs = await getPacks();
+  return packs.find((p) => p.id === id || p.slug === id);
+}
+
+export async function createPack(data: Omit<InterventionPack, 'id' | 'updatedAt'>): Promise<InterventionPack> {
+  const packs = [...(await getPacks())];
+  const pack: InterventionPack = {
+    ...data,
+    id: `pack-${uuidv4().slice(0, 8)}`,
+    updatedAt: new Date().toISOString(),
+  };
+  packs.push(pack);
+  persistLocalPacks(packs);
+
+  commitToGitHubAsync('data/packs.json', packs, 'chore(packs): auto-sync create pack').catch(() => {});
+  return pack;
+}
+
+export async function updatePack(id: string, data: Partial<Omit<InterventionPack, 'id'>>): Promise<InterventionPack | null> {
+  const packs = [...(await getPacks())];
+  const idx = packs.findIndex((p) => p.id === id || p.slug === id);
+  if (idx === -1) return null;
+  packs[idx] = { ...packs[idx], ...data, id: packs[idx].id, updatedAt: new Date().toISOString() };
+  persistLocalPacks(packs);
+
+  commitToGitHubAsync('data/packs.json', packs, 'chore(packs): auto-sync update pack').catch(() => {});
+  return packs[idx];
+}
+
+export async function removePack(idOrSlug: string): Promise<boolean> {
+  const packs = [...(await getPacks())];
+  const idx = packs.findIndex((p) => p.id === idOrSlug || p.slug === idOrSlug);
+  if (idx !== -1) {
+    packs.splice(idx, 1);
+    persistLocalPacks(packs);
+
+    commitToGitHubAsync('data/packs.json', packs, 'chore(packs): auto-sync delete pack').catch(() => {});
+  }
+  return true;
+}
+
+// ----------------------------------------------------
+// SEARCH
+// ----------------------------------------------------
 function extractSnippet(text: string, query: string, windowSize = 120): string {
   const normText = normalizeText(text);
   const normQuery = normalizeText(query);

@@ -29,6 +29,17 @@ export interface WikiRecord {
   updatedAt: string;
 }
 
+export interface InterventionPack {
+  id: string;
+  slug: string;
+  code: string;
+  title: string;
+  description: string;
+  badgeLabel?: string;
+  recordSlugs: string[];
+  updatedAt: string;
+}
+
 export interface SearchResult {
   record: WikiRecord;
   snippet: string;

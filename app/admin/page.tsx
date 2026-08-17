@@ -1,9 +1,10 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { getAll } from '@/lib/store';
+import { getAll, getPacks } from '@/lib/store';
 import { SESSION_COOKIE, verifySession } from '@/lib/auth';
 import AdminTableClient from '@/components/admin/AdminTableClient';
+import PacksTableClient from '@/components/admin/PacksTableClient';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -11,14 +12,13 @@ export const revalidate = 0;
 export const metadata = { title: 'Administration — LSFD Medilog' };
 
 export default async function AdminPage() {
-  // BUG-01 FIX: Enforce authentication before rendering admin page
   const jar = await cookies();
   const token = jar.get(SESSION_COOKIE)?.value;
   if (!token || !verifySession(token)) {
     redirect('/admin/login');
   }
 
-  const records = await getAll();
+  const [records, packs] = await Promise.all([getAll(), getPacks()]);
 
   const counts = {
     protocol: records.filter(r => r.category === 'protocol').length,
@@ -64,11 +64,24 @@ export default async function AdminPage() {
             </span>
           </div>
           <p style={{ color: 'var(--color-text-muted)', fontSize: '12.5px', marginTop: '4px', margin: 0 }}>
-            {records.length} fiches répertoriées · Base de données active LSFD
+            {records.length} fiches répertoriées · {packs.length} packs d'intervention · Base active LSFD
           </p>
         </div>
 
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <Link
+            href="/admin/packs/new"
+            className="btn btn-secondary"
+            style={{
+              padding: '7px 14px',
+              fontSize: '12.5px',
+              fontWeight: 600,
+              letterSpacing: '-0.01em',
+            }}
+          >
+            + Nouveau pack
+          </Link>
+
           <Link
             href="/admin/new"
             className="btn btn-primary"
@@ -148,6 +161,9 @@ export default async function AdminPage() {
 
       {/* Reactive Client Admin Table with Instant UI update */}
       <AdminTableClient initialRecords={records} />
+
+      {/* Reactive Packs Table */}
+      <PacksTableClient initialPacks={packs} />
 
       <style>{`
         .btn-logout:hover {

@@ -4,10 +4,11 @@ import { useState, useMemo, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import type { SearchResult, WikiRecord } from '@/types';
+import type { SearchResult, WikiRecord, InterventionPack } from '@/types';
 
 interface Props {
   allRecords: WikiRecord[];
+  allPacks?: InterventionPack[];
 }
 
 const CATEGORY_MAP: Record<string, string> = {
@@ -82,7 +83,7 @@ function searchInMemory(records: WikiRecord[], query: string): SearchResult[] {
   return scored.slice(0, 8);
 }
 
-export default function HomeSearchHub({ allRecords }: Props) {
+export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -253,7 +254,7 @@ export default function HomeSearchHub({ allRecords }: Props) {
             fontWeight: 400,
             letterSpacing: '0.01em',
           }}>
-            Portail de recherche clinique et protocoles d'intervention préhospitalière
+            Portail clinique et protocoles d'intervention opérationnels du Los Santos Fire Department
           </p>
         </div>
 
@@ -464,7 +465,7 @@ export default function HomeSearchHub({ allRecords }: Props) {
             justifyContent: 'center',
             gap: '8px',
             flexWrap: 'wrap',
-            marginBottom: '28px',
+            marginBottom: '24px',
           }}>
             <span style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontWeight: 500 }}>
               Raccourcis réflexes :
@@ -501,6 +502,121 @@ export default function HomeSearchHub({ allRecords }: Props) {
                 <span>{item.title}</span>
               </Link>
             ))}
+          </div>
+        )}
+
+        {/* CLASSEURS D'INTERVENTION CLINIQUE (PACKS MULTI-FICHES) */}
+        {allPacks.length > 0 && (
+          <div style={{ width: '100%', marginBottom: '24px' }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '10px',
+              padding: '0 4px',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '13px' }}>📑</span>
+                <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-brand-red)', textTransform: 'uppercase', letterSpacing: '0.04em', fontFamily: 'var(--font-mono)' }}>
+                  CLASSEURS D'INTERVENTION & PACKS PROTOCOLES ({allPacks.length})
+                </span>
+              </div>
+              <span style={{ fontSize: '11.5px', color: 'var(--color-text-muted)' }}>
+                Séquences d'urgence multi-fiches avec navigation par onglets
+              </span>
+            </div>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '12px',
+            }} className="packs-grid">
+              {allPacks.map(pack => (
+                <Link
+                  key={pack.id}
+                  href={`/packs/${pack.slug}`}
+                  style={{
+                    textDecoration: 'none',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: '16px 18px',
+                    borderRadius: '8px',
+                    backgroundColor: 'var(--color-bg-surface)',
+                    border: '1px solid var(--color-border)',
+                    borderLeft: '4px solid var(--color-brand-red)',
+                    transition: 'all 120ms ease',
+                  }}
+                  className="pack-card-link"
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{
+                        fontSize: '11px',
+                        fontFamily: 'var(--font-mono)',
+                        fontWeight: 700,
+                        color: 'var(--color-brand-red)',
+                      }}>
+                        {pack.code || 'PACK'}
+                      </span>
+                      {pack.badgeLabel && (
+                        <span className="badge badge-critical" style={{ fontSize: '9px', padding: '1px 6px' }}>
+                          {pack.badgeLabel}
+                        </span>
+                      )}
+                    </div>
+
+                    <span style={{
+                      fontSize: '11px',
+                      fontFamily: 'var(--font-mono)',
+                      color: 'var(--color-text-muted)',
+                      backgroundColor: 'var(--color-bg-subtle)',
+                      padding: '2px 6px',
+                      borderRadius: '4px',
+                      border: '1px solid var(--color-border)',
+                    }}>
+                      {pack.recordSlugs.length} protocoles
+                    </span>
+                  </div>
+
+                  <div style={{
+                    fontSize: '14px',
+                    fontWeight: 700,
+                    color: 'var(--color-text-primary)',
+                    marginBottom: '4px',
+                  }}>
+                    {pack.title}
+                  </div>
+
+                  <div style={{
+                    fontSize: '12px',
+                    color: 'var(--color-text-secondary)',
+                    lineHeight: 1.4,
+                    marginBottom: '10px',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                  }}>
+                    {pack.description}
+                  </div>
+
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginTop: 'auto',
+                    paddingTop: '8px',
+                    borderTop: '1px solid var(--color-border-subtle)',
+                    fontSize: '11.5px',
+                    color: 'var(--color-brand-red)',
+                    fontWeight: 600,
+                  }}>
+                    <span>Ouvrir la séquence d'intervention</span>
+                    <span className="pack-arrow">→</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         )}
 
@@ -751,6 +867,18 @@ export default function HomeSearchHub({ allRecords }: Props) {
           color: var(--color-text-primary) !important;
           background-color: var(--color-bg-hover) !important;
         }
+        .pack-card-link:hover {
+          border-color: var(--color-border-hover) !important;
+          background-color: var(--color-bg-hover) !important;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .pack-card-link:hover .pack-arrow {
+          transform: translateX(4px);
+        }
+        .pack-arrow {
+          transition: transform 120ms ease;
+        }
         .dense-link {
           transition: all 120ms ease;
         }
@@ -777,6 +905,9 @@ export default function HomeSearchHub({ allRecords }: Props) {
         @media (max-width: 960px) {
           .index-grid {
             grid-template-columns: repeat(2, 1fr) !important;
+          }
+          .packs-grid {
+            grid-template-columns: 1fr !important;
           }
         }
         @media (max-width: 540px) {
