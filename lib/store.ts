@@ -13,7 +13,93 @@ declare global {
 const LOCAL_DATA_FILE = path.join(process.cwd(), 'data', 'records.json');
 const TMP_DATA_FILE = path.join(os.tmpdir(), 'lsfd-records.json');
 
-function initStore(): WikiRecord[] {
+const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+const GITHUB_REPO = process.env.GITHUB_REPO || 'masheeee34/LSFD-wiki';
+
+// Remote Redis fetch helper
+async function fetchRemoteRedis(): Promise<WikiRecord[] | null> {
+  if (!UPSTASH_URL || !UPSTASH_TOKEN) return null;
+  try {
+    const res = await fetch(`${UPSTASH_URL}/get/lsfd_records`, {
+      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+      cache: 'no-store',
+    });
+    if (!res.ok) return null;
+    const data = await res.json() as { result?: string };
+    if (data.result) {
+      const parsed = typeof data.result === 'string' ? JSON.parse(data.result) : data.result;
+      if (Array.isArray(parsed)) return parsed as WikiRecord[];
+    }
+  } catch (e) {
+    console.warn('Redis fetch error:', e);
+  }
+  return null;
+}
+
+// Remote Redis save helper
+async function saveRemoteRedis(records: WikiRecord[]): Promise<boolean> {
+  if (!UPSTASH_URL || !UPSTASH_TOKEN) return false;
+  try {
+    const res = await fetch(`${UPSTASH_URL}/set/lsfd_records`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${UPSTASH_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(JSON.stringify(records)),
+    });
+    return res.ok;
+  } catch (e) {
+    console.warn('Redis save error:', e);
+    return false;
+  }
+}
+
+// Remote GitHub Commit helper (Auto-commits to GitHub repo if token is provided)
+async function commitToGitHub(records: WikiRecord[]): Promise<boolean> {
+  if (!GITHUB_TOKEN) return false;
+  try {
+    // 1. Get current file SHA
+    const fileRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data/records.json`, {
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        Accept: 'application/vnd.github+json',
+      },
+      cache: 'no-store',
+    });
+
+    let sha: string | undefined;
+    if (fileRes.ok) {
+      const fileData = await fileRes.json() as { sha?: string };
+      sha = fileData.sha;
+    }
+
+    // 2. Commit updated JSON
+    const contentBase64 = Buffer.from(JSON.stringify(records, null, 2), 'utf-8').toString('base64');
+    const updateRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data/records.json`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        Accept: 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: 'chore(wiki): auto-sync records from admin portal',
+        content: contentBase64,
+        sha,
+      }),
+    });
+
+    return updateRes.ok;
+  } catch (e) {
+    console.warn('GitHub sync error:', e);
+    return false;
+  }
+}
+
+function loadLocalStore(): WikiRecord[] {
   if (globalThis.__lsfd_records_store && Array.isArray(globalThis.__lsfd_records_store)) {
     return globalThis.__lsfd_records_store;
   }
@@ -28,9 +114,7 @@ function initStore(): WikiRecord[] {
         return parsed;
       }
     }
-  } catch (e) {
-    console.warn('Failed to read from tmp store:', e);
-  }
+  } catch {}
 
   // 2. Try reading from local data file
   try {
@@ -42,9 +126,7 @@ function initStore(): WikiRecord[] {
         return parsed;
       }
     }
-  } catch (e) {
-    console.warn('Failed to read from local file:', e);
-  }
+  } catch {}
 
   // 3. Fallback to bundled JSON
   const initial = Array.isArray(defaultRecords) ? [...(defaultRecords as WikiRecord[])] : [];
@@ -52,65 +134,74 @@ function initStore(): WikiRecord[] {
   return initial;
 }
 
-function writeRecords(records: WikiRecord[]): void {
+function persistLocalStore(records: WikiRecord[]): void {
   globalThis.__lsfd_records_store = records;
 
-  // Attempt to persist to /tmp (always writable in Netlify / Lambda / Linux)
+  // Persist to /tmp (always writable in serverless)
   try {
     fs.writeFileSync(TMP_DATA_FILE, JSON.stringify(records, null, 2), 'utf-8');
-  } catch (e) {
-    console.warn('Could not write to tmp store:', e);
-  }
+  } catch {}
 
-  // Attempt to persist to local file if writable
+  // Persist to local disk if writable
   try {
     const dir = path.dirname(LOCAL_DATA_FILE);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(LOCAL_DATA_FILE, JSON.stringify(records, null, 2), 'utf-8');
-  } catch {
-    // Silently ignore EROFS in read-only serverless environments
-  }
+  } catch {}
 }
 
 export async function getAll(): Promise<WikiRecord[]> {
-  return initStore();
+  const remote = await fetchRemoteRedis();
+  if (remote) {
+    globalThis.__lsfd_records_store = remote;
+    return remote;
+  }
+  return loadLocalStore();
 }
 
 export async function getBySlug(slug: string): Promise<WikiRecord | undefined> {
-  return initStore().find((r) => r.slug === slug || r.id === slug);
+  const records = await getAll();
+  return records.find((r) => r.slug === slug || r.id === slug);
 }
 
 export async function getById(id: string): Promise<WikiRecord | undefined> {
-  return initStore().find((r) => r.id === id || r.slug === id);
+  const records = await getAll();
+  return records.find((r) => r.id === id || r.slug === id);
 }
 
 export async function create(data: Omit<WikiRecord, 'id' | 'updatedAt'>): Promise<WikiRecord> {
-  const records = [...initStore()];
+  const records = [...(await getAll())];
   const record: WikiRecord = {
     ...data,
     id: uuidv4(),
     updatedAt: new Date().toISOString(),
   };
   records.push(record);
-  writeRecords(records);
+  persistLocalStore(records);
+  await saveRemoteRedis(records);
+  commitToGitHub(records).catch(() => {});
   return record;
 }
 
 export async function update(id: string, data: Partial<Omit<WikiRecord, 'id'>>): Promise<WikiRecord | null> {
-  const records = [...initStore()];
+  const records = [...(await getAll())];
   const idx = records.findIndex((r) => r.id === id || r.slug === id);
   if (idx === -1) return null;
   records[idx] = { ...records[idx], ...data, id: records[idx].id, updatedAt: new Date().toISOString() };
-  writeRecords(records);
+  persistLocalStore(records);
+  await saveRemoteRedis(records);
+  commitToGitHub(records).catch(() => {});
   return records[idx];
 }
 
 export async function remove(idOrSlug: string): Promise<boolean> {
-  const records = [...initStore()];
+  const records = [...(await getAll())];
   const idx = records.findIndex((r) => r.id === idOrSlug || r.slug === idOrSlug);
   if (idx !== -1) {
     records.splice(idx, 1);
-    writeRecords(records);
+    persistLocalStore(records);
+    await saveRemoteRedis(records);
+    commitToGitHub(records).catch(() => {});
   }
   return true;
 }
@@ -126,7 +217,7 @@ function extractSnippet(text: string, query: string, windowSize = 120): string {
 
 export async function search(query: string): Promise<SearchResult[]> {
   if (!query.trim()) return [];
-  const records = initStore();
+  const records = await getAll();
   const q = query.toLowerCase();
   const results: SearchResult[] = [];
 
