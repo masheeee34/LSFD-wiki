@@ -1,17 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import type { WikiRecord } from '@/types';
 
 type EditorToolbarProps = {
   onInsert: (content: string) => void;
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
 };
 
+const COLOR_OPTIONS = [
+  { name: 'Rouge', key: 'red', hex: '#ef4444' },
+  { name: 'Bleu', key: 'blue', hex: '#3b82f6' },
+  { name: 'Vert', key: 'green', hex: '#10b981' },
+  { name: 'Or / Jaune', key: 'gold', hex: '#f59e0b' },
+  { name: 'Violet', key: 'purple', hex: '#a855f7' },
+  { name: 'Cyan', key: 'cyan', hex: '#06b6d4' },
+  { name: 'Orange', key: 'orange', hex: '#f97316' },
+];
+
 export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarProps) {
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [showDefModal, setShowDefModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState(false);
   
+  const [allRecords, setAllRecords] = useState<Array<{ slug: string; title: string }>>([]);
   const [linkSlug, setLinkSlug] = useState('');
   const [linkLabel, setLinkLabel] = useState('');
   
@@ -20,6 +33,28 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
 
   const [imageUrl, setImageUrl] = useState('');
   const [imageAlt, setImageAlt] = useState('');
+
+  // Fetch list of records for instant auto-complete in link modal
+  useEffect(() => {
+    fetch('/api/records', { cache: 'no-store' })
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setAllRecords(data.map((r: WikiRecord) => ({ slug: r.slug, title: r.title })));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const getSelectedTextInfo = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return { start: 0, end: 0, text: '', selected: '' };
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = textarea.value;
+    const selected = text.substring(start, end);
+    return { start, end, text, selected };
+  };
 
   const insertText = (before: string, after: string = '') => {
     const textarea = textareaRef.current;
@@ -40,20 +75,84 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
     }, 0);
   };
 
+  const handleOpenLinkModal = () => {
+    const { selected } = getSelectedTextInfo();
+    if (selected.trim()) {
+      setLinkLabel(selected.trim());
+      // Check if selected matches an existing slug
+      const found = allRecords.find(r => 
+        r.title.toLowerCase().includes(selected.toLowerCase()) || 
+        r.slug.toLowerCase().includes(selected.toLowerCase())
+      );
+      if (found) {
+        setLinkSlug(found.slug);
+      } else {
+        setLinkSlug('');
+      }
+    } else {
+      setLinkLabel('');
+      setLinkSlug('');
+    }
+    setShowLinkModal(true);
+  };
+
   const handleInsertLink = () => {
     if (linkSlug) {
-      const text = `[[link:${linkSlug}${linkLabel ? `|${linkLabel}` : ''}]]`;
-      insertText(text);
+      const textarea = textareaRef.current;
+      if (textarea) {
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const fullText = textarea.value;
+        const tag = `[[link:${linkSlug}${linkLabel ? `|${linkLabel}` : ''}]]`;
+        const newText = fullText.substring(0, start) + tag + fullText.substring(end);
+        onInsert(newText);
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(start + tag.length, start + tag.length);
+        }, 0);
+      }
     }
     setShowLinkModal(false);
     setLinkSlug('');
     setLinkLabel('');
   };
 
+  const handleApplyColor = (colorKey: string) => {
+    const { selected } = getSelectedTextInfo();
+    if (selected) {
+      insertText(`[[color:${colorKey}|`, ']]');
+    } else {
+      insertText(`[[color:${colorKey}|Texte en couleur]]`);
+    }
+    setShowColorPicker(false);
+  };
+
+  const handleOpenDefModal = () => {
+    const { selected } = getSelectedTextInfo();
+    if (selected.trim()) {
+      setDefWord(selected.trim());
+    } else {
+      setDefWord('');
+    }
+    setDefExplanation('');
+    setShowDefModal(true);
+  };
+
   const handleInsertDef = () => {
     if (defExplanation && defWord) {
-      const text = `[[def:${defExplanation}|${defWord}]]`;
-      insertText(text);
+      const textarea = textareaRef.current;
+      if (textarea) {
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const fullText = textarea.value;
+        const tag = `[[def:${defExplanation}|${defWord}]]`;
+        const newText = fullText.substring(0, start) + tag + fullText.substring(end);
+        onInsert(newText);
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(start + tag.length, start + tag.length);
+        }, 0);
+      }
     }
     setShowDefModal(false);
     setDefExplanation('');
@@ -98,19 +197,77 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
       alignItems: 'center',
       flexWrap: 'wrap',
     }}>
-      <button type="button" onClick={() => insertText('**', '**')} style={buttonStyle} title="Gras" className="tb-btn">
+      <button type="button" onClick={() => insertText('**', '**')} style={buttonStyle} title="Gras (**texte**)" className="tb-btn">
         <strong>B</strong>
       </button>
-      <button type="button" onClick={() => insertText('*', '*')} style={buttonStyle} title="Italique" className="tb-btn">
+      <button type="button" onClick={() => insertText('*', '*')} style={buttonStyle} title="Italique (*texte*)" className="tb-btn">
         <em>I</em>
       </button>
-      <button type="button" onClick={() => insertText('`', '`')} style={buttonStyle} title="Code" className="tb-btn">
+      <button type="button" onClick={() => insertText('`', '`')} style={buttonStyle} title="Code (`code`)" className="tb-btn">
         code
       </button>
-      <button type="button" onClick={() => insertText('## ')} style={buttonStyle} title="Titre de Section" className="tb-btn">
+
+      {/* Text Colors Dropdown */}
+      <div style={{ position: 'relative' }}>
+        <button
+          type="button"
+          onClick={() => setShowColorPicker(!showColorPicker)}
+          style={{ ...buttonStyle, color: showColorPicker ? '#ef4444' : 'var(--color-text-secondary)' }}
+          title="Couleur du texte"
+          className="tb-btn"
+        >
+          🎨 Couleur ▾
+        </button>
+
+        {showColorPicker && (
+          <div style={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            zIndex: 30,
+            backgroundColor: 'var(--color-bg-surface)',
+            border: '1px solid var(--color-border)',
+            borderRadius: '6px',
+            padding: '6px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px',
+            minWidth: '130px',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+            marginTop: '4px',
+          }}>
+            {COLOR_OPTIONS.map((c) => (
+              <button
+                key={c.key}
+                type="button"
+                onClick={() => handleApplyColor(c.key)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '4px 8px',
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--color-text-primary)',
+                  fontSize: '11.5px',
+                  cursor: 'pointer',
+                  borderRadius: '4px',
+                  textAlign: 'left',
+                }}
+                className="color-option-btn"
+              >
+                <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: c.hex }} />
+                <span>{c.name}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <button type="button" onClick={() => insertText('## ')} style={buttonStyle} title="Titre H2" className="tb-btn">
         H2
       </button>
-      <button type="button" onClick={() => insertText('### ')} style={buttonStyle} title="Sous-Titre" className="tb-btn">
+      <button type="button" onClick={() => insertText('### ')} style={buttonStyle} title="Sous-Titre H3" className="tb-btn">
         H3
       </button>
 
@@ -145,12 +302,12 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
 
       <div style={{ height: '14px', width: '1px', background: 'var(--color-border)', margin: '0 2px' }} />
 
-      {/* Wiki Tags */}
-      <button type="button" onClick={() => setShowLinkModal(true)} style={{ ...buttonStyle, color: showLinkModal ? 'var(--color-brand-red)' : 'var(--color-text-secondary)' }} title="Lien interne de fiche" className="tb-btn">
-        [[lien]]
+      {/* Smart Wiki Tags */}
+      <button type="button" onClick={handleOpenLinkModal} style={{ ...buttonStyle, color: showLinkModal ? 'var(--color-brand-red)' : 'var(--color-text-secondary)' }} title="Lien intelligent vers une autre fiche" className="tb-btn">
+        🔗 [[lien]]
       </button>
-      <button type="button" onClick={() => setShowDefModal(true)} style={{ ...buttonStyle, color: showDefModal ? 'var(--color-brand-red)' : 'var(--color-text-secondary)' }} title="Définition / Infobulle" className="tb-btn">
-        [[définition]]
+      <button type="button" onClick={handleOpenDefModal} style={{ ...buttonStyle, color: showDefModal ? 'var(--color-brand-red)' : 'var(--color-text-secondary)' }} title="Définition / Infobulle" className="tb-btn">
+        📖 [[définition]]
       </button>
 
       {/* Insert Image Mini Modal */}
@@ -159,7 +316,7 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
           position: 'absolute',
           top: '100%',
           left: '8px',
-          zIndex: 20,
+          zIndex: 30,
           backgroundColor: 'var(--color-bg-surface)',
           border: '1px solid var(--color-border)',
           padding: '10px',
@@ -167,7 +324,7 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
           display: 'flex',
           gap: '6px',
           marginTop: '4px',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
         }}>
           <input
             type="text"
@@ -194,44 +351,90 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
         </div>
       )}
 
-      {/* Insert Link Mini Modal */}
+      {/* Smart Insert Link Modal */}
       {showLinkModal && (
         <div style={{
           position: 'absolute',
           top: '100%',
           left: '8px',
-          zIndex: 20,
+          zIndex: 30,
           backgroundColor: 'var(--color-bg-surface)',
           border: '1px solid var(--color-border)',
-          padding: '10px',
-          borderRadius: '6px',
+          padding: '12px',
+          borderRadius: '8px',
           display: 'flex',
-          gap: '6px',
+          flexDirection: 'column',
+          gap: '8px',
           marginTop: '4px',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
+          minWidth: '320px',
         }}>
-          <input
-            type="text"
-            placeholder="Slug (ex: cardiac-arrest-acls)"
-            value={linkSlug}
-            onChange={(e) => setLinkSlug(e.target.value)}
-            className="input"
-            style={{ padding: '4px 8px', fontSize: '12px', fontFamily: 'var(--font-mono)' }}
-          />
-          <input
-            type="text"
-            placeholder="Texte affiché (opt)"
-            value={linkLabel}
-            onChange={(e) => setLinkLabel(e.target.value)}
-            className="input"
-            style={{ padding: '4px 8px', fontSize: '12px' }}
-          />
-          <button type="button" onClick={handleInsertLink} className="btn btn-primary" style={{ padding: '4px 10px', fontSize: '11px' }}>
-            Insérer
-          </button>
-          <button type="button" onClick={() => setShowLinkModal(false)} className="btn btn-secondary" style={{ padding: '4px 8px', fontSize: '11px' }}>
-            ✕
-          </button>
+          <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)', fontWeight: 700 }}>
+            🔗 CRÉER UN LIEN VERS UNE FICHE
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '10.5px', color: 'var(--color-text-secondary)', marginBottom: '3px' }}>
+              Choisir une fiche existante :
+            </label>
+            <select
+              value={linkSlug}
+              onChange={(e) => {
+                const s = e.target.value;
+                setLinkSlug(s);
+                if (!linkLabel) {
+                  const rec = allRecords.find(r => r.slug === s);
+                  if (rec) setLinkLabel(rec.title);
+                }
+              }}
+              className="input"
+              style={{ padding: '5px 8px', fontSize: '12px', width: '100%' }}
+            >
+              <option value="">-- Sélectionner dans la liste --</option>
+              {allRecords.map(r => (
+                <option key={r.slug} value={r.slug}>
+                  {r.title} ({r.slug})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '10.5px', color: 'var(--color-text-secondary)', marginBottom: '3px' }}>
+              Ou saisir manuellement le slug :
+            </label>
+            <input
+              type="text"
+              placeholder="ex: echelle-avpu ou evaluation-initiale"
+              value={linkSlug}
+              onChange={(e) => setLinkSlug(e.target.value)}
+              className="input"
+              style={{ padding: '5px 8px', fontSize: '12px', fontFamily: 'var(--font-mono)', width: '100%' }}
+            />
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '10.5px', color: 'var(--color-text-secondary)', marginBottom: '3px' }}>
+              Texte du lien affiché (remplace la sélection) :
+            </label>
+            <input
+              type="text"
+              placeholder="ex: AVPU ou voir protocole"
+              value={linkLabel}
+              onChange={(e) => setLinkLabel(e.target.value)}
+              className="input"
+              style={{ padding: '5px 8px', fontSize: '12px', width: '100%' }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '6px', marginTop: '4px' }}>
+            <button type="button" onClick={() => setShowLinkModal(false)} className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }}>
+              Annuler
+            </button>
+            <button type="button" onClick={handleInsertLink} disabled={!linkSlug} className="btn btn-primary" style={{ padding: '4px 12px', fontSize: '11px' }}>
+              Insérer Lien
+            </button>
+          </div>
         </div>
       )}
 
@@ -241,44 +444,67 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
           position: 'absolute',
           top: '100%',
           left: '8px',
-          zIndex: 20,
+          zIndex: 30,
           backgroundColor: 'var(--color-bg-surface)',
           border: '1px solid var(--color-border)',
-          padding: '10px',
-          borderRadius: '6px',
+          padding: '12px',
+          borderRadius: '8px',
           display: 'flex',
-          gap: '6px',
+          flexDirection: 'column',
+          gap: '8px',
           marginTop: '4px',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
+          minWidth: '300px',
         }}>
-          <input
-            type="text"
-            placeholder="Terme médical (ex: GCS)"
-            value={defWord}
-            onChange={(e) => setDefWord(e.target.value)}
-            className="input"
-            style={{ padding: '4px 8px', fontSize: '12px' }}
-          />
-          <input
-            type="text"
-            placeholder="Explication clinique..."
-            value={defExplanation}
-            onChange={(e) => setDefExplanation(e.target.value)}
-            className="input"
-            style={{ padding: '4px 8px', fontSize: '12px' }}
-          />
-          <button type="button" onClick={handleInsertDef} className="btn btn-primary" style={{ padding: '4px 10px', fontSize: '11px' }}>
-            Insérer
-          </button>
-          <button type="button" onClick={() => setShowDefModal(false)} className="btn btn-secondary" style={{ padding: '4px 8px', fontSize: '11px' }}>
-            ✕
-          </button>
+          <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)', fontWeight: 700 }}>
+            📖 DÉFINITION / INFOBULLE CLINIQUE
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '10.5px', color: 'var(--color-text-secondary)', marginBottom: '3px' }}>
+              Mot ou terme médical :
+            </label>
+            <input
+              type="text"
+              placeholder="ex: GCS ou RSI ou AVC"
+              value={defWord}
+              onChange={(e) => setDefWord(e.target.value)}
+              className="input"
+              style={{ padding: '5px 8px', fontSize: '12px', width: '100%' }}
+            />
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '10.5px', color: 'var(--color-text-secondary)', marginBottom: '3px' }}>
+              Explication de l'infobulle :
+            </label>
+            <input
+              type="text"
+              placeholder="ex: Glasgow Coma Scale, score neurologique..."
+              value={defExplanation}
+              onChange={(e) => setDefExplanation(e.target.value)}
+              className="input"
+              style={{ padding: '5px 8px', fontSize: '12px', width: '100%' }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '6px', marginTop: '4px' }}>
+            <button type="button" onClick={() => setShowDefModal(false)} className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px' }}>
+              Annuler
+            </button>
+            <button type="button" onClick={handleInsertDef} disabled={!defWord || !defExplanation} className="btn btn-primary" style={{ padding: '4px 12px', fontSize: '11px' }}>
+              Insérer Définition
+            </button>
+          </div>
         </div>
       )}
       
       <style>{`
         .tb-btn:hover {
           color: var(--color-text-primary) !important;
+          background-color: var(--color-bg-hover) !important;
+        }
+        .color-option-btn:hover {
           background-color: var(--color-bg-hover) !important;
         }
       `}</style>

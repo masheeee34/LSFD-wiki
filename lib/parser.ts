@@ -2,6 +2,7 @@ export type InlineToken =
   | { type: 'text'; value: string }
   | { type: 'link'; slug: string; label: string }
   | { type: 'definition'; explanation: string; word: string }
+  | { type: 'color'; color: string; value: string; tokens?: InlineToken[] }
   | { type: 'bold'; value: string }
   | { type: 'italic'; value: string }
   | { type: 'code'; value: string };
@@ -19,6 +20,42 @@ export type BlockToken =
 
 export type ParsedToken = InlineToken | BlockToken;
 
+const COLOR_MAP: Record<string, string> = {
+  red: '#ef4444',
+  rouge: '#ef4444',
+  danger: '#ef4444',
+  blue: '#3b82f6',
+  bleu: '#3b82f6',
+  info: '#3b82f6',
+  green: '#10b981',
+  vert: '#10b981',
+  success: '#10b981',
+  yellow: '#f59e0b',
+  jaune: '#f59e0b',
+  gold: '#f59e0b',
+  or: '#f59e0b',
+  warning: '#f59e0b',
+  orange: '#f97316',
+  purple: '#a855f7',
+  violet: '#a855f7',
+  cyan: '#06b6d4',
+  teal: '#14b8a6',
+  pink: '#ec4899',
+  rose: '#ec4899',
+  white: '#ffffff',
+  blanc: '#ffffff',
+  muted: '#94a3b8',
+  gris: '#94a3b8',
+};
+
+export function resolveColor(col: string): string {
+  const c = col.trim().toLowerCase();
+  if (COLOR_MAP[c]) return COLOR_MAP[c];
+  if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(col.trim())) return col.trim();
+  if (/^(rgb|hsl)/i.test(col.trim())) return col.trim();
+  return '#ef4444';
+}
+
 export function tokenizeInline(text: string): InlineToken[] {
   const tokens: InlineToken[] = [];
   let remaining = text;
@@ -35,6 +72,32 @@ export function tokenizeInline(text: string): InlineToken[] {
     {
       re: /\[\[def:([^|\]]+)\|([^\]]+)\]\]/,
       handler: (m) => ({ type: 'definition', explanation: m[1].trim(), word: m[2].trim() }),
+    },
+    {
+      re: /\[\[color:([^|\]]+)\|([^\]]+)\]\]/,
+      handler: (m) => ({
+        type: 'color',
+        color: resolveColor(m[1]),
+        value: m[2],
+      }),
+    },
+    // HTML span style="color:..."
+    {
+      re: /<span\s+style=["']color:\s*([^"';]+)["']>([\s\S]*?)<\/span>/i,
+      handler: (m) => ({
+        type: 'color',
+        color: resolveColor(m[1]),
+        value: m[2],
+      }),
+    },
+    // HTML font color="..."
+    {
+      re: /<font\s+color=["']([^"']+)["']>([\s\S]*?)<\/font>/i,
+      handler: (m) => ({
+        type: 'color',
+        color: resolveColor(m[1]),
+        value: m[2],
+      }),
     },
     {
       re: /\*\*(.+?)\*\*/,
@@ -75,7 +138,6 @@ export function tokenizeInline(text: string): InlineToken[] {
   return tokens;
 }
 
-// Backward compatibility alias
 export const tokenizeLine = tokenizeInline;
 
 export function parseMarkdownBlocks(markdown: string): BlockToken[] {
@@ -158,7 +220,6 @@ export function parseMarkdownBlocks(markdown: string): BlockToken[] {
       const items: InlineToken[][] = [];
       while (i < lines.length) {
         const line = lines[i];
-        // BUG-02 FIX: skip blank lines between ordered list items
         if (line.trim() === '') { i++; continue; }
         const itemMatch = line.match(/^\s*(\d+)\s*[\.\)]\s*(.+)$/);
         if (!itemMatch) break;
@@ -198,7 +259,7 @@ export function parseMarkdownBlocks(markdown: string): BlockToken[] {
           .map((h) => h.trim());
         const headers = rawHeaders.map((h) => tokenizeInline(h));
 
-        // Row 1 is divider (|---|---| or |:---|:---:|)
+        // Row 1 is divider
         const rowLines = tableLines.slice(2);
         const rows: InlineToken[][][] = rowLines.map((r) => {
           const cells = r
@@ -224,7 +285,6 @@ export function parseMarkdownBlocks(markdown: string): BlockToken[] {
   return blocks;
 }
 
-// Backward compatibility legacy array-of-lines parser
 export function parseMarkdown(markdown: string): ParsedToken[][] {
   const blocks = parseMarkdownBlocks(markdown);
   return blocks.map((b) => [b]);

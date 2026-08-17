@@ -37,6 +37,12 @@ const renderInline = (token: InlineToken, key: string | number): React.ReactNode
           {token.value}
         </code>
       );
+    case 'color':
+      return (
+        <span key={key} style={{ color: token.color, fontWeight: 600 }}>
+          {token.value}
+        </span>
+      );
     case 'link':
       return <RecordLink key={key} slug={token.slug} label={token.label} />;
     case 'definition':

@@ -4,7 +4,7 @@ import { getAll, getBySlug } from '@/lib/store';
 import ContentParser from '@/components/content/ContentParser';
 import MediaGallery from '@/components/content/MediaGallery';
 
-export const dynamic = 'force-dynamic'; // BUG-13 FIX: Show newly created articles immediately, not after 1h ISR
+export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams() {
   const records = await getAll();
@@ -45,12 +45,36 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
   }
 
   const allRecords = await getAll();
-  const relatedRecords = allRecords
-    .filter((r) => r.category === record.category && r.id !== record.id)
+
+  // 1. Backlinks: Other records that cite/link to this record
+  const currentSlugNorm = record.slug.toLowerCase().trim();
+  const citingRecords = allRecords.filter((r) => {
+    if (r.id === record.id) return false;
+    const content = (r.content || '').toLowerCase();
+    return (
+      content.includes(`[[link:${currentSlugNorm}`) ||
+      content.includes(`/records/${currentSlugNorm}`) ||
+      (r.summary && r.summary.toLowerCase().includes(currentSlugNorm))
+    );
+  });
+
+  // 2. Outgoing References: Records that this article links to
+  const linkMatches = Array.from((record.content || '').matchAll(/\[\[link:([^|\]]+)/g)).map((m) => m[1].trim().toLowerCase());
+  const citedRecords = allRecords.filter((r) => {
+    if (r.id === record.id) return false;
+    return linkMatches.includes(r.slug.toLowerCase()) || linkMatches.includes(r.id.toLowerCase());
+  });
+
+  // 3. Category Related Records (excluding current and already cited)
+  const excludeIds = new Set([record.id, ...citingRecords.map((r) => r.id), ...citedRecords.map((r) => r.id)]);
+  const categoryRelated = allRecords
+    .filter((r) => r.category === record.category && !excludeIds.has(r.id))
     .slice(0, 4);
 
   const formattedDate = new Date(record.updatedAt).toLocaleDateString('fr-FR', {
-    day: '2-digit', month: '2-digit', year: 'numeric'
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
   });
 
   const sevInfo = record.severity ? SEVERITY_INFO[record.severity] : null;
@@ -161,17 +185,19 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
               {record.title}
             </h1>
 
-            <p style={{
-              fontSize: '14px',
-              color: 'var(--color-text-secondary)',
-              lineHeight: 1.6,
-              margin: '0 0 16px',
-            }}>
-              {record.summary}
-            </p>
+            {record.summary && (
+              <p style={{
+                fontSize: '14px',
+                color: 'var(--color-text-secondary)',
+                lineHeight: 1.6,
+                margin: '0 0 16px',
+              }}>
+                {record.summary}
+              </p>
+            )}
 
             {/* Tags row */}
-            {record.tags.length > 0 && (
+            {record.tags && record.tags.length > 0 && (
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid var(--color-border-subtle)' }}>
                 {record.tags.map(tag => (
                   <Link
@@ -228,7 +254,157 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
 
         {/* Sidebar Column (4 cols on desktop) */}
         <aside style={{ gridColumn: 'span 4', display: 'flex', flexDirection: 'column', gap: '16px' }} className="record-sidebar-col">
-          {/* Fiches associées */}
+          
+          {/* 1. Backlinks: Fiches qui citent ce protocole */}
+          {citingRecords.length > 0 && (
+            <div className="linear-card" style={{
+              padding: '16px 18px',
+              backgroundColor: 'var(--color-bg-surface)',
+              border: '1px solid var(--color-border)',
+              borderRadius: '12px',
+              borderLeft: '3px solid var(--color-brand-red)',
+            }}>
+              <div style={{
+                fontSize: '11px',
+                fontFamily: 'var(--font-mono)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                color: 'var(--color-brand-red)',
+                fontWeight: 700,
+                marginBottom: '10px',
+                paddingBottom: '6px',
+                borderBottom: '1px solid var(--color-border-subtle)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+                <span>🔗 Citée dans ({citingRecords.length})</span>
+                <span style={{ fontSize: '9.5px', color: 'var(--color-text-muted)', textTransform: 'none' }}>Rétroliens</span>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {citingRecords.map(cite => (
+                  <Link
+                    key={cite.id}
+                    href={`/records/${cite.slug}`}
+                    style={{
+                      padding: '9px 12px',
+                      borderRadius: '8px',
+                      background: 'var(--color-bg-subtle)',
+                      border: '1px solid var(--color-border)',
+                      textDecoration: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '8px',
+                      transition: 'all 120ms ease',
+                    }}
+                    className="related-item-card"
+                  >
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div style={{
+                        fontSize: '12.5px',
+                        fontWeight: 600,
+                        color: 'var(--color-text-primary)',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}>
+                        {cite.title}
+                      </div>
+                      <div style={{
+                        fontSize: '10.5px',
+                        fontFamily: 'var(--font-mono)',
+                        color: 'var(--color-text-muted)',
+                        marginTop: '1px',
+                      }}>
+                        {CATEGORY_NAMES[cite.category] || cite.category}
+                      </div>
+                    </div>
+                    <span style={{ fontSize: '12px', color: 'var(--color-brand-red)', flexShrink: 0 }} className="related-arrow">
+                      →
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 2. Outgoing references: Fiches citées dans cet article */}
+          {citedRecords.length > 0 && (
+            <div className="linear-card" style={{
+              padding: '16px 18px',
+              backgroundColor: 'var(--color-bg-surface)',
+              border: '1px solid var(--color-border)',
+              borderRadius: '12px',
+              borderLeft: '3px solid var(--color-brand-blue)',
+            }}>
+              <div style={{
+                fontSize: '11px',
+                fontFamily: 'var(--font-mono)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                color: 'var(--color-brand-blue)',
+                fontWeight: 700,
+                marginBottom: '10px',
+                paddingBottom: '6px',
+                borderBottom: '1px solid var(--color-border-subtle)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+                <span>📑 Références citées ({citedRecords.length})</span>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {citedRecords.map(c => (
+                  <Link
+                    key={c.id}
+                    href={`/records/${c.slug}`}
+                    style={{
+                      padding: '9px 12px',
+                      borderRadius: '8px',
+                      background: 'var(--color-bg-subtle)',
+                      border: '1px solid var(--color-border)',
+                      textDecoration: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '8px',
+                      transition: 'all 120ms ease',
+                    }}
+                    className="related-item-card"
+                  >
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div style={{
+                        fontSize: '12.5px',
+                        fontWeight: 600,
+                        color: 'var(--color-text-primary)',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}>
+                        {c.title}
+                      </div>
+                      <div style={{
+                        fontSize: '10.5px',
+                        fontFamily: 'var(--font-mono)',
+                        color: 'var(--color-text-muted)',
+                        marginTop: '1px',
+                      }}>
+                        {CATEGORY_NAMES[c.category] || c.category}
+                      </div>
+                    </div>
+                    <span style={{ fontSize: '12px', color: 'var(--color-brand-blue)', flexShrink: 0 }} className="related-arrow">
+                      →
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 3. Fiches de même catégorie */}
           <div className="linear-card" style={{
             padding: '16px 18px',
             backgroundColor: 'var(--color-bg-surface)',
@@ -250,8 +426,8 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {relatedRecords.length > 0 ? (
-                relatedRecords.map(rel => (
+              {categoryRelated.length > 0 ? (
+                categoryRelated.map(rel => (
                   <Link
                     key={rel.id}
                     href={`/records/${rel.slug}`}
