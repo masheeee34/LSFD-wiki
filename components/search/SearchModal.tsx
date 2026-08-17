@@ -9,9 +9,19 @@ interface Props {
   onClose: () => void;
 }
 
+function normalizeText(text: string): string {
+  if (!text) return '';
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+}
+
 function highlightSnippet(text: string, query: string): React.ReactNode {
-  if (!query) return text;
-  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if (!query || !text) return text;
+  const normText = normalizeText(text);
+  const normQuery = normalizeText(query);
+  const idx = normText.indexOf(normQuery);
   if (idx === -1) return text;
   return (
     <>
@@ -81,7 +91,9 @@ export default function SearchModal({ isOpen, onClose }: Props) {
     if (!q.trim()) { setResults([]); return; }
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/records?q=${encodeURIComponent(q)}`);
+      const res = await fetch(`/api/records?q=${encodeURIComponent(q)}`, {
+        cache: 'no-store',
+      });
       if (res.ok) {
         const data = await res.json() as SearchResult[];
         setResults(data);
@@ -95,7 +107,7 @@ export default function SearchModal({ isOpen, onClose }: Props) {
   }, []);
 
   useEffect(() => {
-    const t = setTimeout(() => doSearch(query), 120);
+    const t = setTimeout(() => doSearch(query), 100);
     return () => clearTimeout(t);
   }, [query, doSearch]);
 
@@ -205,7 +217,7 @@ export default function SearchModal({ isOpen, onClose }: Props) {
                 Aucun résultat pour "{query}"
               </p>
               <p style={{ color: 'var(--color-text-muted)', fontSize: '12px', marginTop: '4px' }}>
-                Vérifiez l'orthographe ou saisissez un mot-clé (ex: ACLS, Choc, IV).
+                Vérifiez l'orthographe ou saisissez un mot-clé (ex: ACLS, Évaluation, Choc, IV).
               </p>
             </div>
           )}

@@ -18,6 +18,16 @@ const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_RES
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
 const GITHUB_REPO = process.env.GITHUB_REPO || 'masheeee34/LSFD-wiki';
 
+// Helper to remove accents for fuzzy French search (e.g. "evaluation" matches "Évaluation")
+function normalizeText(text: string): string {
+  if (!text) return '';
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
+
 // Remote Redis fetch helper
 async function fetchRemoteRedis(): Promise<WikiRecord[] | null> {
   if (!UPSTASH_URL || !UPSTASH_TOKEN) return null;
@@ -85,7 +95,6 @@ async function fetchFromGitHub(): Promise<WikiRecord[] | null> {
 async function commitToGitHub(records: WikiRecord[]): Promise<boolean> {
   if (!GITHUB_TOKEN) return false;
   try {
-    // 1. Get current file SHA
     const fileRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data/records.json?t=${Date.now()}`, {
       headers: {
         Authorization: `Bearer ${GITHUB_TOKEN}`,
@@ -101,7 +110,6 @@ async function commitToGitHub(records: WikiRecord[]): Promise<boolean> {
       sha = fileData.sha;
     }
 
-    // 2. Commit updated JSON
     const contentBase64 = Buffer.from(JSON.stringify(records, null, 2), 'utf-8').toString('base64');
     const updateRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data/records.json`, {
       method: 'PUT',
@@ -195,7 +203,8 @@ export async function getAll(): Promise<WikiRecord[]> {
 
 export async function getBySlug(slug: string): Promise<WikiRecord | undefined> {
   const records = await getAll();
-  return records.find((r) => r.slug === slug || r.id === slug);
+  const normSlug = normalizeText(slug);
+  return records.find((r) => r.slug === slug || r.id === slug || normalizeText(r.slug) === normSlug);
 }
 
 export async function getById(id: string): Promise<WikiRecord | undefined> {
@@ -241,32 +250,33 @@ export async function remove(idOrSlug: string): Promise<boolean> {
 }
 
 function extractSnippet(text: string, query: string, windowSize = 120): string {
-  const lower = text.toLowerCase();
-  const idx = lower.indexOf(query.toLowerCase());
-  if (idx === -1) return text.slice(0, windowSize) + '…';
-  const start = Math.max(0, idx - 40);
-  const end = Math.min(text.length, idx + query.length + windowSize - 40);
+  const normText = normalizeText(text);
+  const normQuery = normalizeText(query);
+  const idx = normText.indexOf(normQuery);
+  if (idx === -1) return text.slice(0, windowSize) + (text.length > windowSize ? '…' : '');
+  const start = Math.max(0, idx - 30);
+  const end = Math.min(text.length, idx + query.length + windowSize - 30);
   return (start > 0 ? '…' : '') + text.slice(start, end) + (end < text.length ? '…' : '');
 }
 
 export async function search(query: string): Promise<SearchResult[]> {
   if (!query.trim()) return [];
   const records = await getAll();
-  const q = query.toLowerCase();
+  const qNorm = normalizeText(query);
   const results: SearchResult[] = [];
 
   for (const record of records) {
     const fields: Array<{ key: string; value: string }> = [
-      { key: 'title', value: record.title },
-      { key: 'slug', value: record.slug },
-      { key: 'summary', value: record.summary },
-      { key: 'content', value: record.content },
+      { key: 'title', value: record.title || '' },
+      { key: 'slug', value: record.slug || '' },
+      { key: 'summary', value: record.summary || '' },
+      { key: 'content', value: record.content || '' },
       { key: 'tags', value: (record.tags || []).join(' ') },
-      { key: 'category', value: record.category },
+      { key: 'category', value: record.category || '' },
     ];
 
     for (const { key, value } of fields) {
-      if (value && value.toLowerCase().includes(q)) {
+      if (value && normalizeText(value).includes(qNorm)) {
         results.push({
           record,
           snippet: extractSnippet(value, query),
