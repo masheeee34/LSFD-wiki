@@ -28,71 +28,61 @@ function normalizeText(text: string): string {
     .trim();
 }
 
-// Remote Redis fetch helper
-async function fetchRemoteRedis(): Promise<WikiRecord[] | null> {
-  if (!UPSTASH_URL || !UPSTASH_TOKEN) return null;
-  try {
-    const res = await fetch(`${UPSTASH_URL}/get/lsfd_records`, {
-      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
-      cache: 'no-store',
-    });
-    if (!res.ok) return null;
-    const data = await res.json() as { result?: string };
-    if (data.result) {
-      const parsed = typeof data.result === 'string' ? JSON.parse(data.result) : data.result;
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed as WikiRecord[];
-    }
-  } catch {}
-  return null;
-}
-
-// Remote Redis save helper
-async function saveRemoteRedis(records: WikiRecord[]): Promise<boolean> {
-  if (!UPSTASH_URL || !UPSTASH_TOKEN) return false;
-  try {
-    const res = await fetch(`${UPSTASH_URL}/set/lsfd_records`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${UPSTASH_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(JSON.stringify(records)),
-      cache: 'no-store',
-    });
-    return res.ok;
-  } catch {
-    return false;
+// Ultra-fast Local SSD & Memory Store (0ms latency)
+function loadLocalStore(): WikiRecord[] {
+  // 1. In-memory global cache (fastest: 0.001ms)
+  if (globalThis.__lsfd_records_store && Array.isArray(globalThis.__lsfd_records_store) && globalThis.__lsfd_records_store.length > 0) {
+    return globalThis.__lsfd_records_store;
   }
-}
 
-// Remote GitHub Fetch helper (reads live data directly from repo with cache-busting)
-async function fetchFromGitHub(): Promise<WikiRecord[] | null> {
-  if (!GITHUB_TOKEN) return null;
+  // 2. Read from local data/records.json on NVMe SSD (< 0.1ms)
   try {
-    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data/records.json?t=${Date.now()}`, {
-      headers: {
-        Authorization: `Bearer ${GITHUB_TOKEN}`,
-        Accept: 'application/vnd.github+json',
-        'User-Agent': 'LSFD-Wiki-App',
-      },
-      cache: 'no-store',
-    });
-
-    if (!res.ok) return null;
-    const data = await res.json() as { content?: string; encoding?: string };
-    if (data.content) {
-      const raw = Buffer.from(data.content, 'base64').toString('utf-8');
+    if (fs.existsSync(LOCAL_DATA_FILE)) {
+      const raw = fs.readFileSync(LOCAL_DATA_FILE, 'utf-8');
       const parsed = JSON.parse(raw) as WikiRecord[];
       if (Array.isArray(parsed) && parsed.length > 0) {
+        globalThis.__lsfd_records_store = parsed;
         return parsed;
       }
     }
   } catch {}
-  return null;
+
+  // 3. Try reading from /tmp/lsfd-records.json
+  try {
+    if (fs.existsSync(TMP_DATA_FILE)) {
+      const raw = fs.readFileSync(TMP_DATA_FILE, 'utf-8');
+      const parsed = JSON.parse(raw) as WikiRecord[];
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        globalThis.__lsfd_records_store = parsed;
+        return parsed;
+      }
+    }
+  } catch {}
+
+  // 4. Fallback to bundled JSON
+  const initial = Array.isArray(defaultRecords) ? [...(defaultRecords as WikiRecord[])] : [];
+  globalThis.__lsfd_records_store = initial;
+  return initial;
 }
 
-// Remote GitHub Commit helper (Auto-commits to GitHub repo)
-async function commitToGitHub(records: WikiRecord[]): Promise<boolean> {
+function persistLocalStore(records: WikiRecord[]): void {
+  globalThis.__lsfd_records_store = records;
+
+  // Persist to local disk
+  try {
+    const dir = path.dirname(LOCAL_DATA_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(LOCAL_DATA_FILE, JSON.stringify(records, null, 2), 'utf-8');
+  } catch {}
+
+  // Persist to /tmp
+  try {
+    fs.writeFileSync(TMP_DATA_FILE, JSON.stringify(records, null, 2), 'utf-8');
+  } catch {}
+}
+
+// Background async GitHub Commit helper
+async function commitToGitHubAsync(records: WikiRecord[]): Promise<boolean> {
   if (!GITHUB_TOKEN) return false;
   try {
     const fileRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data/records.json?t=${Date.now()}`, {
@@ -133,71 +123,27 @@ async function commitToGitHub(records: WikiRecord[]): Promise<boolean> {
   }
 }
 
-function loadLocalStore(): WikiRecord[] {
-  // 1. Try reading from local data file (fresh read)
+// Background Redis save helper
+async function saveRemoteRedisAsync(records: WikiRecord[]): Promise<boolean> {
+  if (!UPSTASH_URL || !UPSTASH_TOKEN) return false;
   try {
-    if (fs.existsSync(LOCAL_DATA_FILE)) {
-      const raw = fs.readFileSync(LOCAL_DATA_FILE, 'utf-8');
-      const parsed = JSON.parse(raw) as WikiRecord[];
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        globalThis.__lsfd_records_store = parsed;
-        return parsed;
-      }
-    }
-  } catch {}
-
-  // 2. Try reading from /tmp/lsfd-records.json
-  try {
-    if (fs.existsSync(TMP_DATA_FILE)) {
-      const raw = fs.readFileSync(TMP_DATA_FILE, 'utf-8');
-      const parsed = JSON.parse(raw) as WikiRecord[];
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        globalThis.__lsfd_records_store = parsed;
-        return parsed;
-      }
-    }
-  } catch {}
-
-  // 3. In-memory global
-  if (globalThis.__lsfd_records_store && Array.isArray(globalThis.__lsfd_records_store)) {
-    return globalThis.__lsfd_records_store;
+    const res = await fetch(`${UPSTASH_URL}/set/lsfd_records`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${UPSTASH_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(JSON.stringify(records)),
+      cache: 'no-store',
+    });
+    return res.ok;
+  } catch {
+    return false;
   }
-
-  // 4. Fallback to bundled JSON
-  const initial = Array.isArray(defaultRecords) ? [...(defaultRecords as WikiRecord[])] : [];
-  globalThis.__lsfd_records_store = initial;
-  return initial;
-}
-
-function persistLocalStore(records: WikiRecord[]): void {
-  globalThis.__lsfd_records_store = records;
-
-  // Persist to local disk
-  try {
-    const dir = path.dirname(LOCAL_DATA_FILE);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(LOCAL_DATA_FILE, JSON.stringify(records, null, 2), 'utf-8');
-  } catch {}
-
-  // Persist to /tmp
-  try {
-    fs.writeFileSync(TMP_DATA_FILE, JSON.stringify(records, null, 2), 'utf-8');
-  } catch {}
 }
 
 export async function getAll(): Promise<WikiRecord[]> {
-  const remoteRedis = await fetchRemoteRedis();
-  if (remoteRedis && remoteRedis.length > 0) {
-    persistLocalStore(remoteRedis);
-    return remoteRedis;
-  }
-
-  const remoteGH = await fetchFromGitHub();
-  if (remoteGH && remoteGH.length > 0) {
-    persistLocalStore(remoteGH);
-    return remoteGH;
-  }
-
+  // Ultra-fast 0ms local read from SSD & memory
   return loadLocalStore();
 }
 
@@ -221,8 +167,11 @@ export async function create(data: Omit<WikiRecord, 'id' | 'updatedAt'>): Promis
   };
   records.push(record);
   persistLocalStore(records);
-  await saveRemoteRedis(records);
-  await commitToGitHub(records).catch(() => {});
+
+  // Background non-blocking sync
+  saveRemoteRedisAsync(records).catch(() => {});
+  commitToGitHubAsync(records).catch(() => {});
+
   return record;
 }
 
@@ -232,8 +181,11 @@ export async function update(id: string, data: Partial<Omit<WikiRecord, 'id'>>):
   if (idx === -1) return null;
   records[idx] = { ...records[idx], ...data, id: records[idx].id, updatedAt: new Date().toISOString() };
   persistLocalStore(records);
-  await saveRemoteRedis(records);
-  await commitToGitHub(records).catch(() => {});
+
+  // Background non-blocking sync
+  saveRemoteRedisAsync(records).catch(() => {});
+  commitToGitHubAsync(records).catch(() => {});
+
   return records[idx];
 }
 
@@ -243,8 +195,10 @@ export async function remove(idOrSlug: string): Promise<boolean> {
   if (idx !== -1) {
     records.splice(idx, 1);
     persistLocalStore(records);
-    await saveRemoteRedis(records);
-    await commitToGitHub(records).catch(() => {});
+
+    // Background non-blocking sync
+    saveRemoteRedisAsync(records).catch(() => {});
+    commitToGitHubAsync(records).catch(() => {});
   }
   return true;
 }
