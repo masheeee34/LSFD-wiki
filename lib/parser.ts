@@ -132,9 +132,9 @@ export function parseMarkdownBlocks(markdown: string): BlockToken[] {
       let calloutText = trimmed.replace(/^>\s*/, '');
       let variant: 'critical' | 'urgent' | 'info' = 'info';
 
-      if (/^\[!(CRITICAL|URGENT|DANGER|ATTENTION)\]/i.test(calloutText)) {
+      if (/^\[!(CRITICAL|DANGER|ATTENTION)\]/i.test(calloutText)) {
         variant = 'critical';
-        calloutText = calloutText.replace(/^\[!(CRITICAL|URGENT|DANGER|ATTENTION)\]\s*/i, '');
+        calloutText = calloutText.replace(/^\[!(CRITICAL|DANGER|ATTENTION)\]\s*/i, '');
       } else if (/^\[!(WARNING|AVERTISSEMENT|URGENT)\]/i.test(calloutText)) {
         variant = 'urgent';
         calloutText = calloutText.replace(/^\[!(WARNING|AVERTISSEMENT|URGENT)\]\s*/i, '');
@@ -157,7 +157,10 @@ export function parseMarkdownBlocks(markdown: string): BlockToken[] {
     if (orderedMatch) {
       const items: InlineToken[][] = [];
       while (i < lines.length) {
-        const itemMatch = lines[i].match(/^\s*(\d+)\s*[\.\)]\s*(.+)$/);
+        const line = lines[i];
+        // BUG-02 FIX: skip blank lines between ordered list items
+        if (line.trim() === '') { i++; continue; }
+        const itemMatch = line.match(/^\s*(\d+)\s*[\.\)]\s*(.+)$/);
         if (!itemMatch) break;
         items.push(tokenizeInline(itemMatch[2].trim()));
         i++;
@@ -181,25 +184,25 @@ export function parseMarkdownBlocks(markdown: string): BlockToken[] {
     }
 
     // Markdown Table (| Col 1 | Col 2 |)
-    if (trimmed.startsWith('|') && trimmed.endsWith('|') && trimmed.includes('|')) {
+    if (trimmed.startsWith('|') && trimmed.includes('|')) {
       const tableLines: string[] = [];
-      while (i < lines.length && lines[i].trim().startsWith('|') && lines[i].trim().endsWith('|')) {
+      while (i < lines.length && lines[i].trim().startsWith('|')) {
         tableLines.push(lines[i].trim());
         i++;
       }
 
       if (tableLines.length >= 2) {
         const rawHeaders = tableLines[0]
-          .slice(1, -1)
+          .replace(/^\|/, '').replace(/\|$/, '')
           .split('|')
           .map((h) => h.trim());
         const headers = rawHeaders.map((h) => tokenizeInline(h));
 
-        // Row 1 is divider (|---|---|)
+        // Row 1 is divider (|---|---| or |:---|:---:|)
         const rowLines = tableLines.slice(2);
         const rows: InlineToken[][][] = rowLines.map((r) => {
           const cells = r
-            .slice(1, -1)
+            .replace(/^\|/, '').replace(/\|$/, '')
             .split('|')
             .map((c) => c.trim());
           return cells.map((c) => tokenizeInline(c));

@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getAll } from '@/lib/store';
-import { SESSION_COOKIE } from '@/lib/auth';
+import { SESSION_COOKIE, verifySession } from '@/lib/auth';
 import AdminTableClient from '@/components/admin/AdminTableClient';
 
 export const dynamic = 'force-dynamic';
@@ -11,6 +11,13 @@ export const revalidate = 0;
 export const metadata = { title: 'Administration — LSFD Medilog' };
 
 export default async function AdminPage() {
+  // BUG-01 FIX: Enforce authentication before rendering admin page
+  const jar = await cookies();
+  const token = jar.get(SESSION_COOKIE)?.value;
+  if (!token || !verifySession(token)) {
+    redirect('/admin/login');
+  }
+
   const records = await getAll();
 
   const counts = {

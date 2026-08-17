@@ -4,7 +4,7 @@ import { getAll, getBySlug } from '@/lib/store';
 import ContentParser from '@/components/content/ContentParser';
 import MediaGallery from '@/components/content/MediaGallery';
 
-export const revalidate = 3600; // ISR: Incremental Static Regeneration every 1 hour
+export const dynamic = 'force-dynamic'; // BUG-13 FIX: Show newly created articles immediately, not after 1h ISR
 
 export async function generateStaticParams() {
   const records = await getAll();
