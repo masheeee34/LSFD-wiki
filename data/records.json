@@ -1,24 +1,5 @@
 [
   {
-    "id": "rec-006",
-    "slug": "epinephrine",
-    "title": "Épinéphrine (Adrénaline)",
-    "category": "medication",
-    "severity": "critical",
-    "summary": "Catécholamine endogène — agoniste α et β-adrénergique. Vasoconstricteur et inotrope positif. Indispensable dans l'arrêt cardiaque et l'anaphylaxie.",
-    "content": "## Présentation\n\n- Ampoule 1 mg/mL — solution injectable 1:1000\n- Ampoule 0,1 mg/mL — solution injectable 1:10 000 (dilution IV pré-calculée)\n- Auto-injecteur 0,3 mg/0,3 mL (EpiPen) pour usage préhospitalier\n\n---\n\n## Mécanisme d'Action\n\nStimulation des récepteurs α₁ (vasoconstriction périphérique ↑ PAS), β₁ (chronotrope et inotrope positifs) et β₂ (bronchodilatation).\n\n---\n\n## Indications & Posologies\n\n### [[link:cardiac-arrest-acls|Arrêt Cardiaque]]\n**1 mg IV/IO** toutes les **3–5 min**. Diluer dans 10 mL NaCl 0,9% si voie périphérique.\n\n### Anaphylaxie sévère\n**0,3–0,5 mg IM** face antéro-latérale cuisse (vaste externe). Répéter après 5–15 min si nécessaire.\n\n### Choc réfractaire (perfusion)\n**0,1–1 µg/kg/min** IV IVSE — titration selon PAM cible ≥ 65 mmHg.\n\n---\n\n## Contre-indications Relatives\n\n- Tachycardie supra-ventriculaire non traitée\n- Angor instable (sauf indication vitale)\n- HTA sévère non contrôlée\n\n---\n\n## Effets Indésirables\n\n[[def:Troubles du rythme cardiaque liés à la stimulation β₁ excessive|Arythmies]], céphalées, tremblements, anxiété, nécrose aux sites d'injection IM répétés.\n\n---\n\n## Précautions\n\nSurveillance continue : ECG, SpO₂, PA non invasive toutes les 5 min. Voie IV périphérique de gros calibre ou [[def:Voie intra-osseuse — accès vasculaire en urgence via la cavité médullaire|voie IO]] en cas d'accès difficile.",
-    "tags": [
-      "épinéphrine",
-      "adrénaline",
-      "catécholamine",
-      "anaphylaxie",
-      "arrêt cardiaque",
-      "vasopresseur"
-    ],
-    "media": [],
-    "updatedAt": "2026-08-15T16:00:00.000Z"
-  },
-  {
     "id": "rec-007",
     "slug": "amiodarone",
     "title": "Amiodarone",
