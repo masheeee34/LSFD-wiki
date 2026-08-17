@@ -1,24 +1,5 @@
 [
   {
-    "id": "rec-009",
-    "slug": "needle-decompression",
-    "title": "Décompression à l'Aiguille",
-    "category": "maneuver",
-    "severity": "critical",
-    "summary": "Geste salvateur en urgence pour traiter le pneumothorax sous tension. Insertion d'un cathéter pour libérer l'air sous pression dans l'espace pleural.",
-    "content": "## Indications\n\nDiagnostic clinique de [[link:tension-pneumothorax|Pneumothorax sous Tension]] : détresse respiratoire + absence de MV unilatérale + instabilité hémodynamique.\n\n---\n\n## Matériel Nécessaire\n\n- Cathéter IV **14G** (longueur ≥ 8 cm recommandée chez l'adulte)\n- Antiseptique (povidone iodée ou chlorhexidine)\n- Gants stériles\n- Sparadrap pour sécuriser le cathéter\n\n---\n\n## Technique — Site Antérieur (Préférentiel)\n\n1. **Repérer** le 2ème espace intercostal (IC2), ligne médio-claviculaire côté atteint\n2. **Désinfecter** la zone en spirale (intérieur → extérieur)\n3. **Insérer** le cathéter perpendiculairement au thorax, **au-dessus du bord supérieur de la 3ème côte** (éviter le paquet vasculo-nerveux situé sous la côte inférieure)\n4. **Avancer** jusqu'à sentir une résistance puis un soulagement ('pop') avec sortie d'air audible\n5. **Retirer** le mandrin, laisser le cathéter en place\n6. **Fixer** le cathéter à la peau\n\n---\n\n## Site Alternatif (Latéral)\n\n4ème–5ème espace IC, [[def:Ligne axillaire antérieure passant par le bord antérieur de l'aisselle|ligne axillaire antérieure]]. Privilégier chez les patients obèses.\n\n---\n\n## Confirmation du Geste\n\n- Sortie d'air ou de sang lors du retrait du mandrin\n- Amélioration clinique immédiate : ↑ SpO₂, ↓ fréquence respiratoire, retour hémodynamique\n- Retour du MV à l'auscultation\n\n---\n\n## Suivi\n\nPose d'un [[def:Drain thoracique permettant l'évacuation continue de l'air|drain thoracique]] en milieu hospitalier.",
-    "tags": [
-      "needle decompression",
-      "pneumothorax",
-      "cathéter",
-      "thorax",
-      "décompression",
-      "urgence"
-    ],
-    "media": [],
-    "updatedAt": "2026-08-11T13:00:00.000Z"
-  },
-  {
     "id": "rec-010",
     "slug": "bag-valve-mask",
     "title": "Ballon Masque (BVM / Bag-Valve-Mask)",
