@@ -3,58 +3,12 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getAll } from '@/lib/store';
 import { SESSION_COOKIE } from '@/lib/auth';
-import type { RecordCategory } from '@/types';
-import DeleteRecordButton from '@/components/admin/DeleteRecordButton';
+import AdminTableClient from '@/components/admin/AdminTableClient';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export const metadata = { title: 'Administration — LSFD Medilog' };
-
-const CATEGORY_STYLES: Record<RecordCategory, { label: string; bg: string; text: string; border: string }> = {
-  protocol: {
-    label: 'Protocole',
-    bg: 'var(--color-cat-protocol-bg)',
-    text: 'var(--color-cat-protocol-text)',
-    border: 'var(--color-cat-protocol-border)',
-  },
-  medication: {
-    label: 'Pharmacologie',
-    bg: 'var(--color-cat-med-bg)',
-    text: 'var(--color-cat-med-text)',
-    border: 'var(--color-cat-med-border)',
-  },
-  maneuver: {
-    label: 'Manœuvre',
-    bg: 'var(--color-cat-maneuver-bg)',
-    text: 'var(--color-cat-maneuver-text)',
-    border: 'var(--color-cat-maneuver-border)',
-  },
-  equipment: {
-    label: 'Matériel',
-    bg: 'var(--color-cat-equip-bg)',
-    text: 'var(--color-cat-equip-text)',
-    border: 'var(--color-cat-equip-border)',
-  },
-};
-
-const SEVERITY_STYLES: Record<string, { label: string; bg: string; text: string; border: string }> = {
-  critical: {
-    label: 'Critique',
-    bg: 'var(--badge-crit-bg)',
-    text: 'var(--badge-crit-text)',
-    border: 'var(--badge-crit-border)',
-  },
-  urgent: {
-    label: 'Urgent',
-    bg: 'var(--badge-urgent-bg)',
-    text: 'var(--badge-urgent-text)',
-    border: 'var(--badge-urgent-border)',
-  },
-  routine: {
-    label: 'Routine',
-    bg: 'var(--badge-routine-bg)',
-    text: 'var(--badge-routine-text)',
-    border: 'var(--badge-routine-border)',
-  },
-};
 
 export default async function AdminPage() {
   const records = await getAll();
@@ -103,42 +57,36 @@ export default async function AdminPage() {
             </span>
           </div>
           <p style={{ color: 'var(--color-text-muted)', fontSize: '12.5px', marginTop: '4px', margin: 0 }}>
-            {records.length} fiches répertoriées · Base de données locale LSFD
+            {records.length} fiches répertoriées · Base de données active LSFD
           </p>
         </div>
 
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <Link
             href="/admin/new"
+            className="btn btn-primary"
             style={{
-              textDecoration: 'none',
+              padding: '7px 14px',
               fontSize: '12.5px',
               fontWeight: 600,
-              padding: '7px 14px',
-              borderRadius: '6px',
-              backgroundColor: 'var(--color-brand-red)',
-              color: '#ffffff',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              transition: 'opacity 120ms ease',
+              letterSpacing: '-0.01em',
             }}
-            className="btn-new-fiche"
           >
             + Nouvelle fiche
           </Link>
+
           <form action={logout} style={{ margin: 0 }}>
             <button
               type="submit"
               style={{
-                fontSize: '12.5px',
-                fontWeight: 500,
-                padding: '6px 12px',
-                borderRadius: '6px',
-                backgroundColor: 'var(--color-bg-surface)',
+                background: 'var(--color-bg-surface)',
                 border: '1px solid var(--color-border)',
                 color: 'var(--color-text-secondary)',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                fontSize: '12px',
                 cursor: 'pointer',
+                fontFamily: 'var(--font-sans)',
                 transition: 'all 120ms ease',
               }}
               className="btn-logout"
@@ -149,191 +97,64 @@ export default async function AdminPage() {
         </div>
       </div>
 
-      {/* Stats row */}
+      {/* Category Stats Grid */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(4, 1fr)',
         gap: '12px',
-        marginBottom: '18px',
-      }}>
-        {(Object.entries(counts) as [RecordCategory, number][]).map(([cat, count]) => {
-          const style = CATEGORY_STYLES[cat];
-          return (
-            <div key={cat} className="linear-card" style={{
+        marginBottom: '20px',
+      }} className="admin-stats-grid">
+        {[
+          { label: 'Protocoles', count: counts.protocol, color: 'var(--color-cat-protocol-text)', href: '/search?category=protocol' },
+          { label: 'Pharmacologie', count: counts.medication, color: 'var(--color-cat-med-text)', href: '/search?category=medication' },
+          { label: 'Manœuvres', count: counts.maneuver, color: 'var(--color-cat-maneuver-text)', href: '/search?category=maneuver' },
+          { label: 'Matériel', count: counts.equipment, color: 'var(--color-cat-equip-text)', href: '/search?category=equipment' },
+        ].map(item => (
+          <Link
+            key={item.label}
+            href={item.href}
+            style={{
               padding: '14px 18px',
+              borderRadius: '8px',
+              background: 'var(--color-bg-surface)',
+              border: '1px solid var(--color-border)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              borderRadius: '8px',
-            }}>
-              <span style={{ fontSize: '13px', color: 'var(--color-text-secondary)', fontWeight: 600 }}>
-                {style.label}
-              </span>
-              <span style={{ fontSize: '17px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: style.text }}>
-                {count}
-              </span>
+              textDecoration: 'none',
+              transition: 'all 120ms ease',
+            }}
+            className="stat-card"
+          >
+            <div>
+              <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                {item.label}
+              </div>
+              <div style={{ fontSize: '20px', fontWeight: 800, color: item.color, marginTop: '2px', fontFamily: 'var(--font-mono)' }}>
+                {item.count}
+              </div>
             </div>
-          );
-        })}
+            <span style={{ fontSize: '14px', color: 'var(--color-text-faint)' }}>→</span>
+          </Link>
+        ))}
       </div>
 
-      {/* Registry Table Container */}
-      <div
-        className="linear-card"
-        style={{
-          borderRadius: '12px',
-          overflow: 'hidden',
-          border: '1px solid var(--color-border)',
-          backgroundColor: 'var(--color-bg-surface)',
-          boxShadow: 'var(--card-shadow)',
-        }}
-      >
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-            <thead>
-              <tr style={{
-                background: 'var(--color-bg-subtle)',
-                borderBottom: '1px solid var(--color-border)',
-              }}>
-                <th style={{ padding: '12px 18px', width: '130px', fontSize: '11px', fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  Catégorie
-                </th>
-                <th style={{ padding: '12px 18px', fontSize: '11px', fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  Intitulé
-                </th>
-                <th style={{ padding: '12px 18px', width: '110px', fontSize: '11px', fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  Sévérité
-                </th>
-                <th style={{ padding: '12px 18px', width: '120px', fontSize: '11px', fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  Mise à jour
-                </th>
-                <th style={{ padding: '12px 18px', width: '160px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.map((record) => {
-                const catStyle = CATEGORY_STYLES[record.category] || CATEGORY_STYLES.protocol;
-                const sevStyle = record.severity ? SEVERITY_STYLES[record.severity] : null;
-
-                return (
-                  <tr
-                    key={record.id}
-                    style={{
-                      borderBottom: '1px solid var(--color-border-subtle)',
-                      transition: 'background-color 100ms ease',
-                    }}
-                    className="admin-table-row"
-                  >
-                    <td style={{ padding: '13px 18px' }}>
-                      <span style={{
-                        display: 'inline-block',
-                        padding: '3px 8px',
-                        borderRadius: '4px',
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        backgroundColor: catStyle.bg,
-                        color: catStyle.text,
-                        border: `1px solid ${catStyle.border}`,
-                      }}>
-                        {catStyle.label}
-                      </span>
-                    </td>
-                    <td style={{ padding: '13px 18px' }}>
-                      <Link
-                        href={`/records/${record.slug}`}
-                        target="_blank"
-                        style={{
-                          color: 'var(--color-text-primary)',
-                          textDecoration: 'none',
-                          fontWeight: 600,
-                          fontSize: '13.5px',
-                          letterSpacing: '-0.01em',
-                          display: 'inline-block',
-                        }}
-                        className="admin-title-link"
-                      >
-                        {record.title}
-                      </Link>
-                      <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)', marginTop: '2px' }}>
-                        /{record.slug}
-                      </div>
-                    </td>
-                    <td style={{ padding: '13px 18px' }}>
-                      {sevStyle ? (
-                        <span style={{
-                          display: 'inline-block',
-                          padding: '2px 7px',
-                          borderRadius: '4px',
-                          fontSize: '10.5px',
-                          fontWeight: 600,
-                          backgroundColor: sevStyle.bg,
-                          color: sevStyle.text,
-                          border: `1px solid ${sevStyle.border}`,
-                        }}>
-                          {sevStyle.label}
-                        </span>
-                      ) : (
-                        <span style={{ color: 'var(--color-text-faint)', fontSize: '11px' }}>—</span>
-                      )}
-                    </td>
-                    <td style={{ padding: '13px 18px', fontSize: '12px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono)' }}>
-                      {new Date(record.updatedAt).toLocaleDateString('fr-FR')}
-                    </td>
-                    <td style={{ padding: '13px 18px', textAlign: 'right' }}>
-                      <div style={{ display: 'inline-flex', gap: '6px', alignItems: 'center' }}>
-                        <Link
-                          href={`/admin/edit/${record.id}`}
-                          style={{
-                            fontSize: '12px',
-                            fontWeight: 500,
-                            color: 'var(--color-text-secondary)',
-                            backgroundColor: 'var(--color-bg-subtle)',
-                            border: '1px solid var(--color-border)',
-                            padding: '4px 10px',
-                            borderRadius: '4px',
-                            textDecoration: 'none',
-                            transition: 'all 120ms ease',
-                          }}
-                          className="btn-edit-action"
-                        >
-                          Éditer
-                        </Link>
-                        <DeleteRecordButton id={record.id} title={record.title} />
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* Reactive Client Admin Table with Instant UI update */}
+      <AdminTableClient initialRecords={records} />
 
       <style>{`
-        .btn-new-fiche:hover {
-          opacity: 0.9;
-        }
         .btn-logout:hover {
           background-color: var(--color-bg-hover) !important;
           color: var(--color-text-primary) !important;
         }
-        .admin-table-row:hover {
-          background-color: var(--color-bg-hover) !important;
-        }
-        .admin-title-link:hover {
-          color: var(--color-brand-red) !important;
-        }
-        .btn-edit-action:hover {
-          color: var(--color-text-primary) !important;
-          background-color: var(--color-bg-hover) !important;
+        .stat-card:hover {
           border-color: var(--color-border-hover) !important;
+          background-color: var(--color-bg-hover) !important;
         }
-        .btn-delete-action:hover {
-          color: #ef4444 !important;
-          background-color: rgba(239, 68, 68, 0.1) !important;
-          border-color: rgba(239, 68, 68, 0.25) !important;
+        @media (max-width: 768px) {
+          .admin-stats-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
         }
       `}</style>
     </div>
