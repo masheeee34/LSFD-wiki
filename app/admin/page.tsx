@@ -35,7 +35,7 @@ export default async function AdminPage() {
   }
 
   return (
-    <div style={{ maxWidth: '1240px', margin: '0 auto', width: '100%', paddingBottom: '48px' }}>
+    <div style={{ maxWidth: '1240px', margin: '0 auto', width: '100%', padding: '24px 16px 48px' }}>
       {/* Top Header */}
       <div style={{
         display: 'flex',
@@ -68,7 +68,30 @@ export default async function AdminPage() {
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+          {/* Bouton de renvoi vers l'index */}
+          <Link
+            href="/"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '7px 12px',
+              fontSize: '12.5px',
+              fontWeight: 500,
+              color: 'var(--color-text-secondary)',
+              backgroundColor: 'var(--color-bg-surface)',
+              border: '1px solid var(--color-border)',
+              borderRadius: '6px',
+              textDecoration: 'none',
+              transition: 'all 120ms ease',
+            }}
+            className="btn-back-home"
+          >
+            <span>←</span>
+            <span>Retour au portail</span>
+          </Link>
+
           <Link
             href="/admin/packs/new"
             className="btn btn-secondary"
@@ -166,6 +189,11 @@ export default async function AdminPage() {
       <PacksTableClient initialPacks={packs} />
 
       <style>{`
+        .btn-back-home:hover {
+          background-color: var(--color-bg-hover) !important;
+          color: var(--color-text-primary) !important;
+          border-color: var(--color-border-hover) !important;
+        }
         .btn-logout:hover {
           background-color: var(--color-bg-hover) !important;
           color: var(--color-text-primary) !important;
