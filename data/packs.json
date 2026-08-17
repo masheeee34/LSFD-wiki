@@ -1,20 +1,5 @@
 [
   {
-    "id": "pack-001",
-    "slug": "polytraumatisme-grave",
-    "code": "PACK-01",
-    "title": "Prise en Charge du Polytraumatisé Grave",
-    "description": "Séquence d'intervention complète : démarche X-ABCDE, gestion du choc hémorragique, décompression thoracique et évaluation neurologique Glasgow.",
-    "badgeLabel": "URGENCE VITALE",
-    "recordSlugs": [
-      "polytrauma-management",
-      "hemorrhagic-shock",
-      "tension-pneumothorax",
-      "glasgow-coma-scale"
-    ],
-    "updatedAt": "2026-08-17T15:00:00.000Z"
-  },
-  {
     "id": "pack-002",
     "slug": "arret-cardio-respiratoire",
     "code": "PACK-02",
