@@ -1,6 +1,6 @@
 export type RecordCategory = 'protocol' | 'medication' | 'maneuver' | 'equipment';
 export type SeverityLevel = 'routine' | 'urgent' | 'critical';
-export type CertificationLevel = 'all' | 'emt' | 'aemt' | 'paramedic' | 'medical_director';
+export type CertificationLevel = 'all' | 'bls' | 'als' | 'olmc';
 
 export interface MedicalSpecs {
   organization?: string;

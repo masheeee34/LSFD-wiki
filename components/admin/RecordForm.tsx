@@ -35,7 +35,7 @@ export default function RecordForm({ initialData, onSubmit, isLoading = false }:
   // Custom Medical Specs & Scope of Practice
   const [organization, setOrganization] = useState(initialData?.specs?.organization || 'LSFD EMS');
   const [echelon, setEchelon] = useState(initialData?.specs?.echelon || (initialData?.category === 'medication' ? 'ALS / Paramedic' : 'BLS & ALS'));
-  const [minCertification, setMinCertification] = useState<CertificationLevel>(initialData?.specs?.minCertification || 'emt');
+  const [minCertification, setMinCertification] = useState<CertificationLevel>(initialData?.specs?.minCertification || 'bls');
   const [operationalStatus, setOperationalStatus] = useState(initialData?.specs?.operationalStatus || 'ACTIF 2026');
   const [escalationRule, setEscalationRule] = useState(initialData?.specs?.escalationRule || '');
   const [allowedGestures, setAllowedGestures] = useState(initialData?.specs?.allowedGestures || '');
@@ -253,11 +253,10 @@ export default function RecordForm({ initialData, onSubmit, isLoading = false }:
                     className="select form-input-control"
                     style={{ fontSize: '12px' }}
                   >
-                    <option value="all">Tous Secouristes (BLS)</option>
-                    <option value="emt">🚑 EMT-B (Basic)</option>
-                    <option value="aemt">⚡ AEMT (Advanced)</option>
-                    <option value="paramedic">🩺 Paramedic (ALS)</option>
-                    <option value="medical_director">⭐ Médecin Référent</option>
+                    <option value="all">Tous</option>
+                    <option value="bls">BLS</option>
+                    <option value="als">ALS</option>
+                    <option value="olmc">OLMC</option>
                   </select>
                 </div>
               </div>

@@ -9,18 +9,17 @@ interface RoleScopeBannerProps {
 }
 
 const ROLES: Array<{ id: CertificationLevel; label: string; short: string; color: string }> = [
-  { id: 'all', label: 'Tous les rôles', short: 'Tous', color: 'var(--color-text-secondary)' },
-  { id: 'emt', label: '🚑 EMT-B (Basic)', short: 'EMT-B', color: '#3b82f6' },
-  { id: 'aemt', label: '⚡ AEMT (Advanced)', short: 'AEMT', color: '#f59e0b' },
-  { id: 'paramedic', label: '🩺 Paramedic (ALS)', short: 'Paramedic', color: '#ef4444' },
+  { id: 'all', label: 'Tous', short: 'Tous', color: 'var(--color-text-secondary)' },
+  { id: 'bls', label: 'BLS', short: 'BLS', color: '#3b82f6' },
+  { id: 'als', label: 'ALS', short: 'ALS', color: '#ef4444' },
+  { id: 'olmc', label: 'OLMC', short: 'OLMC', color: '#f59e0b' },
 ];
 
 const LEVEL_WEIGHT: Record<CertificationLevel, number> = {
   all: 0,
-  emt: 1,
-  aemt: 2,
-  paramedic: 3,
-  medical_director: 4,
+  bls: 1,
+  als: 2,
+  olmc: 3,
 };
 
 export default function RoleScopeBanner({ recordCategory, specs }: RoleScopeBannerProps) {
@@ -41,7 +40,7 @@ export default function RoleScopeBanner({ recordCategory, specs }: RoleScopeBann
   };
 
   const minCert: CertificationLevel = specs?.minCertification || (
-    recordCategory === 'medication' ? 'paramedic' : 'emt'
+    recordCategory === 'medication' ? 'als' : 'bls'
   );
 
   const reqWeight = LEVEL_WEIGHT[minCert] || 1;
@@ -138,7 +137,7 @@ export default function RoleScopeBanner({ recordCategory, specs }: RoleScopeBann
             letterSpacing: '0.04em',
             marginBottom: '4px',
           }}>
-            <span>⚠️ HABILITATION REQUISE : {minCert.toUpperCase()} / ALS</span>
+            <span>⚠️ HABILITATION REQUISE : {minCert.toUpperCase()}</span>
           </div>
 
           <div style={{ color: 'var(--color-text-secondary)', marginBottom: specs?.escalationRule ? '6px' : '0' }}>
@@ -166,7 +165,7 @@ export default function RoleScopeBanner({ recordCategory, specs }: RoleScopeBann
               fontSize: '12px',
               color: '#fde68a',
             }}>
-              <strong>🛑 Conduite recommandée :</strong> Débutez les gestes de base (BLS), sécurisez les voies aériennes, administrez l'O2 et demandez immédiatement un renfort Paramedic (ALS).
+              <strong>🛑 Conduite recommandée :</strong> Débutez les gestes de base (BLS), sécurisez les voies aériennes, administrez l'O2 et demandez immédiatement un renfort ALS.
             </div>
           )}
 
