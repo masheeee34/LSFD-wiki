@@ -1,30 +1,5 @@
 [
   {
-    "id": "rec-002",
-    "slug": "polytrauma-management",
-    "title": "Polytraumatisme — Approche ABCDE",
-    "category": "protocol",
-    "severity": "routine",
-    "summary": "Évaluation primaire et stabilisation systématique du patient polytraumatisé selon le standard ATLS / PHTLS. Alignement rachidien strict et bilan lésionnel rapide.",
-    "content": "## Principes Généraux\n\nTout traumatisé grave doit être pris en charge selon la séquence standardisée **X-ABCDE** avec maintien de l'axe tête-cou-tronc en position neutre.\n\n---\n\n## Séquence d'Évaluation Primaire\n\n### X — Hémorragie Exsanguinante (eXsanguinating hemorrhage)\n- Pose immédiate de **garrot de membre** pour toute hémorragie active incontrôlable à la compression directe.\n- Pansement compressif ou hémostatique (packing) pour les plaies jonctionnelles.\n\n### A — Airway & Contrôle Rachidien\n- Maintien manuel de l'axe rachidien, pose du collier cervical rigide.\n- Désobstruction pharyngée, aspiration des sécrétions/débris.\n- [[link:bag-valve-mask|BVM]] avec oxygène 15 L/min.\n- Si [[def:Score de Glasgow Coma Scale évaluant la conscience|GCS]] ≤ 8 : [[link:rapid-sequence-intubation|RSI (Intubation en Séquence Rapide)]].\n\n### B — Breathing & Ventilation\n- Inspection symétrie thoracique, recherche d'emphysème sous-cutané.\n- Éliminer d'urgence un [[link:tension-pneumothorax|Pneumothorax sous Tension]] → [[link:needle-decompression|Décompression à l'Aiguille]].\n- Pansement 3 côtés pour pneumothorax ouvert.\n\n### C — Circulation & Gestion du Choc\n- Évaluation pouls périphériques, temps de recoloration cutanée, pression artérielle.\n- Prise en charge du [[link:hemorrhagic-shock|Choc Hémorragique]] : hypotension permissive (PAS 80–90 mmHg).\n- 2 VVP gros calibre (14–16G) ou accès intra-osseux.\n- Acide Tranexamique 1 g IV dans les 3 premières heures.\n\n### D — Disability (Bilan Neurologique)\n- Évaluation [[link:glasgow-coma-scale|Score de Glasgow (GCS)]], réactivité pupillaire (taille, symétrie, réflexe photomoteur).\n- Glycémie capillaire systématique.\n\n### E — Exposure & Hypothermie\n- Déshabillage complet pour inspection corporelle puis réchauffement immédiat (couverture isotherme).",
-    "tags": [
-      "polytraumatisme",
-      "ATLS",
-      "PHTLS",
-      "ABCDE",
-      "rachis",
-      "trauma",
-      "garrot"
-    ],
-    "media": [],
-    "updatedAt": "2026-08-17T15:26:27.980Z",
-    "specs": {
-      "organization": "RIHANNA",
-      "echelon": "ALS",
-      "operationalStatus": "ACTIF 2026"
-    }
-  },
-  {
     "id": "rec-003",
     "slug": "rapid-sequence-intubation",
     "title": "Intubation en Séquence Rapide (RSI)",
