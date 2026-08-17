@@ -297,11 +297,11 @@
     "content": "## [[color:green|A — ALERT]]\nLes yeux sont ouverts de façon spontanée.\nLe patient semble conscient de son environnement.\nBonne réponse aux instructions, capable de suivre un objet avec ses yeux.\n\n## [[color:gold|V — VERBAL]]\nLes yeux ne s’ouvrent pas de façon spontanée, mais s’ouvrent sur instruction.\nEn capacité de répondre de façon compréhensible et cohérente.\n\n## [[color:orange|P — PAIN]]\nNe répond pas verbalement, mais réagit/répond à la douleur.\n\n## [[color:red|U — UNRESPONSIVE]]\nLe patient ne répond à aucun stimuli, pleine inconscience.",
     "tags": [
       "conscience",
-      "emt"
+      "bls"
     ],
     "media": [],
     "id": "8d6dccca-cd66-498e-98d3-b9157adb119f",
-    "updatedAt": "2026-08-17T14:44:10.507Z"
+    "updatedAt": "2026-08-17T14:48:58.138Z"
   },
   {
     "title": "Échelle de Glasgow",
