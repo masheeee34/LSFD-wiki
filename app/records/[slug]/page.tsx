@@ -5,7 +5,6 @@ import { getAll, getBySlug } from '@/lib/store';
 import { verifySession, SESSION_COOKIE } from '@/lib/auth';
 import ContentParser from '@/components/content/ContentParser';
 import MediaGallery from '@/components/content/MediaGallery';
-import RoleScopeBanner from '@/components/records/RoleScopeBanner';
 
 export const dynamic = 'force-dynamic';
 
@@ -87,10 +86,13 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
 
   const sevInfo = record.severity ? SEVERITY_INFO[record.severity] : null;
 
-  // Custom Medical Specs with fallbacks
+  // Custom Medical Specs configured by Admin
   const organization = record.specs?.organization || 'LSFD EMS';
   const echelon = record.specs?.echelon || (record.category === 'medication' ? 'ALS / Paramedic' : 'BLS & ALS');
   const operationalStatus = record.specs?.operationalStatus || 'ACTIF 2026';
+  const escalationRule = record.specs?.escalationRule;
+  const allowedGestures = record.specs?.allowedGestures;
+  const forbiddenGestures = record.specs?.forbiddenGestures;
 
   return (
     <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', padding: '16px 20px 48px' }}>
@@ -179,9 +181,6 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
         {/* Main Column (8 cols on desktop) */}
         <div style={{ gridColumn: 'span 8', display: 'flex', flexDirection: 'column', gap: '16px' }} className="record-content-col">
           
-          {/* Interactive Role & Scope of Practice Filter */}
-          <RoleScopeBanner recordCategory={record.category} specs={record.specs} />
-
           {/* Header Protocol Card */}
           <div className="linear-card" style={{
             padding: '24px 28px',
@@ -274,6 +273,59 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
             )}
           </div>
 
+          {/* Optional Escalation / Scope Directive Configured by Admin */}
+          {(escalationRule || allowedGestures || forbiddenGestures) && (
+            <div style={{
+              backgroundColor: 'var(--color-bg-surface)',
+              border: '1px solid rgba(245, 158, 11, 0.3)',
+              borderLeft: '4px solid #f59e0b',
+              borderRadius: '10px',
+              padding: '14px 18px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+            }}>
+              <div style={{
+                fontSize: '11px',
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 700,
+                color: '#fbbf24',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+              }}>
+                🛑 DIRECTIVE D'ENGAGEMENT & RÈGLE D'ESCALADE
+              </div>
+
+              {escalationRule && (
+                <div style={{ fontSize: '13px', color: 'var(--color-text-primary)', lineHeight: 1.5 }}>
+                  {escalationRule}
+                </div>
+              )}
+
+              {(allowedGestures || forbiddenGestures) && (
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '10px',
+                  paddingTop: '8px',
+                  borderTop: '1px solid var(--color-border-subtle)',
+                  fontSize: '12px',
+                }} className="scope-gestures-grid">
+                  {allowedGestures && (
+                    <div style={{ color: '#4ade80' }}>
+                      <strong>✅ Gestes autorisés BLS :</strong> {allowedGestures}
+                    </div>
+                  )}
+                  {forbiddenGestures && (
+                    <div style={{ color: '#f87171' }}>
+                      <strong>⛔ Gestes réservés ALS :</strong> {forbiddenGestures}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Clinical Markdown Execution Body */}
           <div className="linear-card" style={{
             padding: '28px',
@@ -306,6 +358,64 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
         {/* Sidebar Column (4 cols on desktop) */}
         <aside style={{ gridColumn: 'span 4', display: 'flex', flexDirection: 'column', gap: '16px' }} className="record-sidebar-col">
           
+          {/* Spécifications médicales Personnalisables (100% Admin Editable) */}
+          <div className="linear-card" style={{
+            padding: '18px 20px',
+            backgroundColor: 'var(--color-bg-surface)',
+            border: '1px solid var(--color-border)',
+            borderRadius: '12px',
+          }}>
+            <div style={{
+              fontSize: '11px',
+              fontFamily: 'var(--font-mono)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              color: 'var(--color-text-muted)',
+              fontWeight: 700,
+              marginBottom: '14px',
+              paddingBottom: '8px',
+              borderBottom: '1px solid var(--color-border-subtle)',
+            }}>
+              Spécifications Médicales
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '12.5px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: 'var(--color-text-muted)' }}>Organisation</span>
+                <span style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>{organization}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: 'var(--color-text-muted)' }}>Échelon d'engagement</span>
+                <span style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>{echelon}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: 'var(--color-text-muted)' }}>Identifiant fiche</span>
+                <span style={{ color: 'var(--color-text-secondary)', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>{record.id}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '8px', borderTop: '1px solid var(--color-border-subtle)' }}>
+                <span style={{ color: 'var(--color-text-muted)' }}>Statut opérationnel</span>
+                <span style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  color: 'var(--color-cat-equip-text)',
+                  fontWeight: 600,
+                  fontSize: '11.5px',
+                  fontFamily: 'var(--font-mono)',
+                }}>
+                  <span style={{
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    backgroundColor: '#22c55e',
+                    boxShadow: '0 0 6px rgba(34, 197, 94, 0.6)',
+                  }} />
+                  {operationalStatus}
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* 1. Backlinks: Fiches qui citent ce protocole */}
           {citingRecords.length > 0 && (
             <div className="linear-card" style={{
@@ -526,64 +636,6 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
               )}
             </div>
           </div>
-
-          {/* Spécifications médicales Personnalisables */}
-          <div className="linear-card" style={{
-            padding: '16px 18px',
-            backgroundColor: 'var(--color-bg-surface)',
-            border: '1px solid var(--color-border)',
-            borderRadius: '12px',
-          }}>
-            <div style={{
-              fontSize: '11px',
-              fontFamily: 'var(--font-mono)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
-              color: 'var(--color-text-muted)',
-              fontWeight: 700,
-              marginBottom: '12px',
-              paddingBottom: '8px',
-              borderBottom: '1px solid var(--color-border-subtle)',
-            }}>
-              Spécifications Médicales
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: 'var(--color-text-muted)' }}>Organisation</span>
-                <span style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>{organization}</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: 'var(--color-text-muted)' }}>Échelon d'engagement</span>
-                <span style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>{echelon}</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: 'var(--color-text-muted)' }}>Identifiant fiche</span>
-                <span style={{ color: 'var(--color-text-secondary)', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>{record.id}</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '6px', borderTop: '1px solid var(--color-border-subtle)' }}>
-                <span style={{ color: 'var(--color-text-muted)' }}>Statut opérationnel</span>
-                <span style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  color: 'var(--color-cat-equip-text)',
-                  fontWeight: 600,
-                  fontSize: '11.5px',
-                  fontFamily: 'var(--font-mono)',
-                }}>
-                  <span style={{
-                    width: '6px',
-                    height: '6px',
-                    borderRadius: '50%',
-                    backgroundColor: '#22c55e',
-                    boxShadow: '0 0 6px rgba(34, 197, 94, 0.6)',
-                  }} />
-                  {operationalStatus}
-                </span>
-              </div>
-            </div>
-          </div>
         </aside>
       </div>
 
@@ -622,6 +674,11 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
           }
           .record-sidebar-col {
             grid-column: span 12 !important;
+          }
+        }
+        @media (max-width: 640px) {
+          .scope-gestures-grid {
+            grid-template-columns: 1fr !important;
           }
         }
       `}</style>
