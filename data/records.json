@@ -1,25 +1,5 @@
 [
   {
-    "id": "rec-004",
-    "slug": "severe-burns-management",
-    "title": "Brûlures Graves — Évaluation & Formule de Parkland",
-    "category": "protocol",
-    "severity": "critical",
-    "summary": "Protocole préhospitalier de prise en charge des brûlures thermiques et chimiques étendues. Calcul de la surface corporelle brûlée (SCB) et réanimation hydro-électrolytique.",
-    "content": "## Évaluation Initiale de la Gravité\n\n1. **Arrêt du processus de brûlure** : Refroidissement à l'eau tempérée (15–20°C) pendant 10–15 min max sur surface < 20% pour éviter l'hypothermie.\n2. **Recherche de lésions d'inhalation** : Brûlures faciales, vibrisses brûlées, suie oropharyngée, voix rauque, stridor → [[link:rapid-sequence-intubation|RSI]] précoce avant œdème obstructif.\n\n---\n\n## Règle des 9 de Wallace (Adulte)\n\n| Région anatomique | Surface Corporelle (% SCB) |\n|---|---|\n| Tête et cou | 9% |\n| Membre supérieur droit | 9% |\n| Membre supérieur gauche | 9% |\n| Face antérieure du tronc | 18% |\n| Face postérieure du tronc | 18% |\n| Membre inférieur droit | 18% |\n| Membre inférieur gauche | 18% |\n| Organes génitaux externes | 1% |\n\n---\n\n## Remplissage Vasculaire — Formule de Parkland Modifiée\n\nPour toute brûlure du 2ᵉ et 3ᵉ degré > 15–20% de SCB :\n\n$$\\text{Volume total (24h)} = 4\\,\\text{mL} \\times \\text{Poids (kg)} \\times \\%\\,\\text{SCB}$$\n\n- **Soluté de choix** : Ringer Lactate uniquement.\n- **Répartition** :\n  - $50\\%$ du volume calculé perfusé sur les **8 premières heures** (à compter de l'heure du sinistre).\n  - $50\\%$ restant perfusé sur les **16 heures suivantes**.\n\n---\n\n## Soins Locaux & Analgésie\n\n- Emballage stérile sec non adhérent (champs stériles ou métallines).\n- Ne jamais appliquer de corps gras ou topiques colorés.\n- Analgésie multimodale intraveineuse précoce (Morphine titrée ou Kétamine antalgique).\n- Prévention systématique de l'hypothermie.",
-    "tags": [
-      "brûlures",
-      "Parkland",
-      "Wallace",
-      "inhalation",
-      "Ringer Lactate",
-      "traumatologie",
-      "réanimation"
-    ],
-    "media": [],
-    "updatedAt": "2026-08-16T09:00:00.000Z"
-  },
-  {
     "id": "rec-005",
     "slug": "tension-pneumothorax",
     "title": "Pneumothorax sous Tension",
