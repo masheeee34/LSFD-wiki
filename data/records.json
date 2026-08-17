@@ -113,5 +113,21 @@
     },
     "id": "c3d3e59c-5cd4-44ef-9ff4-d7d66225db82",
     "updatedAt": "2026-08-17T21:17:22.258Z"
+  },
+  {
+    "title": "Détermination de la mort",
+    "slug": "determination-de-la-mort",
+    "category": "protocol",
+    "summary": "Concerne la constatation d'un décès sur une scène d'intervention.",
+    "content": "## CONDITIONS\nUn patient est considéré comme décédé lorsque l’absence de respiration, d’activité cardiaque et de réflexes neurologiques s’additionnent à au moins l’un des cas présentés ci-dessous.\n\n- Décapitation,\n- Écrasement massif,\n- Incinération,\n- Décomposition,\n- Désincarcération supérieure à 15 minutes sans tentative de réanimation effectuée,\n- Traumatisme pénétrant/contondant avec éviscération du cœur, du cerveau ou des poumons,\n- Arrêt cardio-respiratoire lors d’un incident impliquant plusieurs victimes sans ressources appropriées,\n- Patient noyé immergé sous l’eau pendant au moins une (1) heure de temps,\n- Rigidité cadavérique,\n- Après trois (3) tentatives de [[def:Réanimation cardiopulmonaire.|RCP]].\n\n## PROCÉDURES SUIVANT LA DÉTERMINATION DE LA MORT\nTous les traitements initiés pendant la tentative de réanimation doivent rester en place, cela implique notamment : les cathéters, tubulures, électrodes, pansements, …\n\nLe défunt ne doit pas être déplacé sans l’autorisation explicite d’un membre du Département de Médecine Légale (coroners).\n\n> Il peut être nécessaire de déplacer, malgré tout, le défunt pour des raisons de sécurité. Dans ce cas-là, les EMTs présents sur place doivent s’assurer de le déplacer vers la zone la plus accessible qu’il soit, ou à défaut, de le transporter vers un centre adapté.\n\n",
+    "tags": [],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "BLS",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "bfc169f4-42a5-4bcb-b824-2259f834010f",
+    "updatedAt": "2026-08-17T21:23:45.502Z"
   }
 ]
