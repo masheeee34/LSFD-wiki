@@ -286,16 +286,5 @@
     ],
     "media": [],
     "updatedAt": "2026-08-04T14:00:00.000Z"
-  },
-  {
-    "title": "test",
-    "slug": "test",
-    "category": "protocol",
-    "summary": "test",
-    "content": "test",
-    "tags": [],
-    "media": [],
-    "id": "553f7d03-c014-43c0-a2f5-e26a32d89c3e",
-    "updatedAt": "2026-08-17T11:21:21.343Z"
   }
 ]
