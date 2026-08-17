@@ -302,5 +302,19 @@
     "media": [],
     "id": "8d6dccca-cd66-498e-98d3-b9157adb119f",
     "updatedAt": "2026-08-17T14:44:10.507Z"
+  },
+  {
+    "title": "Échelle de Glasgow",
+    "slug": "echelle-de-glasgow",
+    "category": "protocol",
+    "summary": "Échelle utilisée pour noter l'état de conscience d'un patient.",
+    "content": "\n> Additionner le score de chaque catégorie pour obtenir le score total.\n![Illustration](https://i.imgur.com/Epfdawg.png)\n",
+    "tags": [
+      "conscience",
+      "als"
+    ],
+    "media": [],
+    "id": "583b87ec-2715-45f3-8ef9-a87c76a5fcca",
+    "updatedAt": "2026-08-17T14:48:49.627Z"
   }
 ]
