@@ -1,19 +1,5 @@
 [
   {
-    "id": "pack-003",
-    "slug": "detresse-respiratoire-aigu",
-    "code": "PACK-03",
-    "title": "Détresse Respiratoire & Voies Aériennes",
-    "description": "Sécurisation des voies aériennes, ventilation manuelle au BVM et séquence rapide d'intubation (RSI).",
-    "badgeLabel": "ALS AIRWAY",
-    "recordSlugs": [
-      "rapid-sequence-intubation",
-      "bag-valve-mask",
-      "tension-pneumothorax"
-    ],
-    "updatedAt": "2026-08-17T15:00:00.000Z"
-  },
-  {
     "id": "pack-004",
     "slug": "bilan-initial-scene",
     "code": "PACK-04",
