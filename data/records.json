@@ -17,7 +17,16 @@
       "garrot"
     ],
     "media": [],
-    "updatedAt": "2026-08-16T11:00:00.000Z"
+    "updatedAt": "2026-08-17T14:58:46.992Z",
+    "specs": {
+      "organization": "RIHANNA",
+      "echelon": "als",
+      "minCertification": "paramedic",
+      "operationalStatus": "ACTIF 2026",
+      "escalationRule": "jsp",
+      "allowedGestures": "test",
+      "forbiddenGestures": "abcde"
+    }
   },
   {
     "id": "rec-003",
