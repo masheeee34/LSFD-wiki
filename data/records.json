@@ -78,5 +78,24 @@
     },
     "id": "61401600-2eca-4086-90c1-58d7b22a468d",
     "updatedAt": "2026-08-17T20:51:22.779Z"
+  },
+  {
+    "title": "Refus de prise en charge",
+    "slug": "refus-de-prise-en-charge",
+    "category": "protocol",
+    "severity": "routine",
+    "summary": "Procédures lorsqu'un patient refuse la prise en charge et/ou le transport contre l'indication des pompiers.",
+    "content": "> [!CRITICAL] Tel que possible, la fiche de refus doit être signée par un EMT-P. Demander un renfort ALS dès que possible.\n## CONTRE INDICATION\nUne personne souffrant d’un handicap, étant dans une situation claire de détresse, ou disposant d’un état mental et/ou de conscience ne pouvant pas prétendre à des décisions éclairées n’est pas considérée comme étant en capacité de décider en son propre nom sa prise en charge.\n\nDe la même manière, une personne venant de tenter de se suicider, évoquant des pensées suicidaires, ou étant décrite par ses proches comme une personne suicidaire n’est pas considéré comme étant capable de décider de sa propre prise en charge.\n\nDans ces cas-là, l’EMT décide, ou non, du transport/de la prise en charge du patient.\n\n\n**Éléments nécessaires à la fiche de refus :**\n\n- Constantes vitales du patient.\n- Consommation de drogues/alcool.\n- Glycémie.\n- Âge du patient.\n- Les plans du patient post-refus.\n- Les personnes aux côtés du patient.\n- Raison du refus.\n- Liste des traitements effectués.\n\n> Les EMTs en charge du patient refusant une prise en charge doivent l’avertir des risques que cela pourrait représenter pour sa santé, et confirmer que ces risques-là ont été compris par la personne. Le patient doit signer la fiche de refus.\n\n\n\n\n\n",
+    "tags": [
+      "formulaire"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "58ffb01a-2775-4565-9494-5ba8afc92775",
+    "updatedAt": "2026-08-17T20:55:20.298Z"
   }
 ]
