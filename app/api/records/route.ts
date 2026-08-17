@@ -4,13 +4,26 @@ import * as store from '@/lib/store';
 import { verifySession, SESSION_COOKIE } from '@/lib/auth';
 import type { WikiRecord } from '@/types';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET(req: NextRequest) {
   try {
-    const q = new URL(req.url).searchParams.get('q');
+    const q = req.nextUrl.searchParams.get('q');
     if (q) {
-      return NextResponse.json(await store.search(q));
+      const searchResults = await store.search(q);
+      return NextResponse.json(searchResults, {
+        headers: {
+          'Cache-Control': 'no-store, max-age=0',
+        },
+      });
     }
-    return NextResponse.json(await store.getAll());
+    const allRecords = await store.getAll();
+    return NextResponse.json(allRecords, {
+      headers: {
+        'Cache-Control': 'no-store, max-age=0',
+      },
+    });
   } catch (error) {
     console.error('GET records error:', error);
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });

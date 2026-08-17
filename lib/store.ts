@@ -24,12 +24,13 @@ async function fetchRemoteRedis(): Promise<WikiRecord[] | null> {
   try {
     const res = await fetch(`${UPSTASH_URL}/get/lsfd_records`, {
       headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+      cache: 'no-store',
     });
     if (!res.ok) return null;
     const data = await res.json() as { result?: string };
     if (data.result) {
       const parsed = typeof data.result === 'string' ? JSON.parse(data.result) : data.result;
-      if (Array.isArray(parsed)) return parsed as WikiRecord[];
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed as WikiRecord[];
     }
   } catch {}
   return null;
@@ -46,6 +47,7 @@ async function saveRemoteRedis(records: WikiRecord[]): Promise<boolean> {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(JSON.stringify(records)),
+      cache: 'no-store',
     });
     return res.ok;
   } catch {
@@ -53,16 +55,17 @@ async function saveRemoteRedis(records: WikiRecord[]): Promise<boolean> {
   }
 }
 
-// Remote GitHub Fetch helper (reads live data directly from repo)
+// Remote GitHub Fetch helper (reads live data directly from repo with cache-busting)
 async function fetchFromGitHub(): Promise<WikiRecord[] | null> {
   if (!GITHUB_TOKEN) return null;
   try {
-    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data/records.json`, {
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data/records.json?t=${Date.now()}`, {
       headers: {
         Authorization: `Bearer ${GITHUB_TOKEN}`,
         Accept: 'application/vnd.github+json',
         'User-Agent': 'LSFD-Wiki-App',
       },
+      cache: 'no-store',
     });
 
     if (!res.ok) return null;
@@ -83,12 +86,13 @@ async function commitToGitHub(records: WikiRecord[]): Promise<boolean> {
   if (!GITHUB_TOKEN) return false;
   try {
     // 1. Get current file SHA
-    const fileRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data/records.json`, {
+    const fileRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data/records.json?t=${Date.now()}`, {
       headers: {
         Authorization: `Bearer ${GITHUB_TOKEN}`,
         Accept: 'application/vnd.github+json',
         'User-Agent': 'LSFD-Wiki-App',
       },
+      cache: 'no-store',
     });
 
     let sha: string | undefined;
@@ -112,6 +116,7 @@ async function commitToGitHub(records: WikiRecord[]): Promise<boolean> {
         content: contentBase64,
         sha,
       }),
+      cache: 'no-store',
     });
 
     return updateRes.ok;
@@ -121,23 +126,7 @@ async function commitToGitHub(records: WikiRecord[]): Promise<boolean> {
 }
 
 function loadLocalStore(): WikiRecord[] {
-  if (globalThis.__lsfd_records_store && Array.isArray(globalThis.__lsfd_records_store)) {
-    return globalThis.__lsfd_records_store;
-  }
-
-  // 1. Try reading from /tmp/lsfd-records.json
-  try {
-    if (fs.existsSync(TMP_DATA_FILE)) {
-      const raw = fs.readFileSync(TMP_DATA_FILE, 'utf-8');
-      const parsed = JSON.parse(raw) as WikiRecord[];
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        globalThis.__lsfd_records_store = parsed;
-        return parsed;
-      }
-    }
-  } catch {}
-
-  // 2. Try reading from local data file
+  // 1. Try reading from local data file (fresh read)
   try {
     if (fs.existsSync(LOCAL_DATA_FILE)) {
       const raw = fs.readFileSync(LOCAL_DATA_FILE, 'utf-8');
@@ -149,7 +138,24 @@ function loadLocalStore(): WikiRecord[] {
     }
   } catch {}
 
-  // 3. Fallback to bundled JSON
+  // 2. Try reading from /tmp/lsfd-records.json
+  try {
+    if (fs.existsSync(TMP_DATA_FILE)) {
+      const raw = fs.readFileSync(TMP_DATA_FILE, 'utf-8');
+      const parsed = JSON.parse(raw) as WikiRecord[];
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        globalThis.__lsfd_records_store = parsed;
+        return parsed;
+      }
+    }
+  } catch {}
+
+  // 3. In-memory global
+  if (globalThis.__lsfd_records_store && Array.isArray(globalThis.__lsfd_records_store)) {
+    return globalThis.__lsfd_records_store;
+  }
+
+  // 4. Fallback to bundled JSON
   const initial = Array.isArray(defaultRecords) ? [...(defaultRecords as WikiRecord[])] : [];
   globalThis.__lsfd_records_store = initial;
   return initial;
@@ -158,29 +164,29 @@ function loadLocalStore(): WikiRecord[] {
 function persistLocalStore(records: WikiRecord[]): void {
   globalThis.__lsfd_records_store = records;
 
-  // Persist to /tmp (always writable in serverless)
-  try {
-    fs.writeFileSync(TMP_DATA_FILE, JSON.stringify(records, null, 2), 'utf-8');
-  } catch {}
-
-  // Persist to local disk if writable
+  // Persist to local disk
   try {
     const dir = path.dirname(LOCAL_DATA_FILE);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(LOCAL_DATA_FILE, JSON.stringify(records, null, 2), 'utf-8');
   } catch {}
+
+  // Persist to /tmp
+  try {
+    fs.writeFileSync(TMP_DATA_FILE, JSON.stringify(records, null, 2), 'utf-8');
+  } catch {}
 }
 
 export async function getAll(): Promise<WikiRecord[]> {
   const remoteRedis = await fetchRemoteRedis();
-  if (remoteRedis) {
-    globalThis.__lsfd_records_store = remoteRedis;
+  if (remoteRedis && remoteRedis.length > 0) {
+    persistLocalStore(remoteRedis);
     return remoteRedis;
   }
 
   const remoteGH = await fetchFromGitHub();
-  if (remoteGH) {
-    globalThis.__lsfd_records_store = remoteGH;
+  if (remoteGH && remoteGH.length > 0) {
+    persistLocalStore(remoteGH);
     return remoteGH;
   }
 
@@ -252,14 +258,15 @@ export async function search(query: string): Promise<SearchResult[]> {
   for (const record of records) {
     const fields: Array<{ key: string; value: string }> = [
       { key: 'title', value: record.title },
+      { key: 'slug', value: record.slug },
       { key: 'summary', value: record.summary },
       { key: 'content', value: record.content },
-      { key: 'tags', value: record.tags.join(' ') },
+      { key: 'tags', value: (record.tags || []).join(' ') },
       { key: 'category', value: record.category },
     ];
 
     for (const { key, value } of fields) {
-      if (value.toLowerCase().includes(q)) {
+      if (value && value.toLowerCase().includes(q)) {
         results.push({
           record,
           snippet: extractSnippet(value, query),
