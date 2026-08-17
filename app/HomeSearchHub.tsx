@@ -12,10 +12,16 @@ interface Props {
 }
 
 const CATEGORY_MAP: Record<string, string> = {
-  protocol: 'Protocoles',
+  protocol: 'Protocole',
   medication: 'Pharmacologie',
-  maneuver: 'Manœuvres',
+  maneuver: 'Manœuvre',
   equipment: 'Matériel',
+};
+
+const SEVERITY_MAP: Record<string, string> = {
+  critical: 'Urgence vitale',
+  urgent: 'Urgent',
+  routine: 'Routine',
 };
 
 function normalizeText(text: string): string {
@@ -146,6 +152,16 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
     }
   };
 
+  const reflexShortcuts = useMemo(() => {
+    const criticals = allRecords.filter(r => r.severity === 'critical');
+    const urgents = allRecords.filter(r => r.severity === 'urgent');
+    const combined = [...criticals, ...urgents, ...allRecords];
+    const unique = Array.from(new Set(combined.map(r => r.id)))
+      .map(id => combined.find(r => r.id === id)!)
+      .slice(0, 4);
+    return unique;
+  }, [allRecords]);
+
   const protocols = useMemo(() => allRecords.filter(r => r.category === 'protocol'), [allRecords]);
   const medications = useMemo(() => allRecords.filter(r => r.category === 'medication'), [allRecords]);
   const maneuvers = useMemo(() => allRecords.filter(r => r.category === 'maneuver'), [allRecords]);
@@ -153,67 +169,98 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
 
   return (
     <div style={{
-      width: '100%',
-      maxWidth: '1120px',
-      margin: '0 auto',
-      padding: '24px 16px 80px',
+      minHeight: 'calc(100vh - 120px)',
       display: 'flex',
       flexDirection: 'column',
-      gap: '32px',
+      alignItems: 'center',
+      padding: '30px 16px 60px',
+      width: '100%',
     }}>
-      
-      {/* 1. MINIMALIST TOP HEADER & SEARCH */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingBottom: '20px',
-        borderBottom: '1px solid var(--color-border-subtle)',
-        flexWrap: 'wrap',
-        gap: '16px',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{ width: '36px', height: '36px', position: 'relative' }}>
+      <div style={{ width: '100%', maxWidth: '1240px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        
+        {/* Center Brand Header */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px', textAlign: 'center' }}>
+          <div style={{
+            width: '68px',
+            height: '68px',
+            position: 'relative',
+            marginBottom: '8px',
+          }}>
             <Image
               src="/lsfd-logo.png"
-              alt="LSFD"
-              width={36}
-              height={36}
+              alt="LSFD EMS Emblem"
+              width={68}
+              height={68}
               style={{ objectFit: 'contain' }}
               priority
             />
           </div>
-          <div>
-            <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--color-text-primary)', letterSpacing: '-0.01em' }}>
-              LSFD Medilog
-            </div>
-            <div style={{ fontSize: '11.5px', color: 'var(--color-text-muted)' }}>
-              Protocoles Médicaux & Pharmacologie
-            </div>
-          </div>
+          
+          <h1 style={{
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: '8px',
+            margin: 0,
+            lineHeight: 1.1,
+          }}>
+            <span style={{
+              fontSize: '28px',
+              fontWeight: 800,
+              letterSpacing: '-0.025em',
+              color: 'var(--color-text-primary)',
+            }}>
+              LSFD
+            </span>
+            <span style={{
+              fontSize: '28px',
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
+              color: 'var(--color-brand-red)',
+            }}>
+              Medilog
+            </span>
+          </h1>
+          
+          <p style={{
+            fontSize: '13px',
+            color: 'var(--color-text-secondary)',
+            marginTop: '6px',
+            fontFamily: 'var(--font-sans)',
+            fontWeight: 400,
+          }}>
+            Portail clinique et protocoles d'intervention opérationnels du Los Santos Fire Department
+          </p>
         </div>
 
-        {/* Minimalist Search Bar */}
-        <div ref={containerRef} style={{ flex: '1 1 320px', maxWidth: '440px', position: 'relative' }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: 'var(--color-bg-surface)',
-            border: isFocused ? '1px solid var(--color-text-secondary)' : '1px solid var(--color-border)',
-            borderRadius: '6px',
-            padding: '6px 12px',
-            transition: 'border-color 120ms ease',
-          }}>
+        {/* Central Search Bar */}
+        <div ref={containerRef} style={{ width: '100%', maxWidth: '640px', position: 'relative', marginBottom: '14px' }}>
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              backgroundColor: 'var(--color-bg-surface)',
+              border: (isFocused || (isOpen && results.length > 0))
+                ? '1px solid var(--color-brand-red)' 
+                : '1px solid var(--color-border)',
+              borderRadius: isOpen && results.length > 0 ? '20px 20px 0 0' : '20px',
+              padding: '10px 18px',
+              boxShadow: 'var(--card-shadow)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              transition: 'all 120ms ease',
+            }}
+          >
             <svg
-              width="14"
-              height="14"
+              width="16"
+              height="16"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="var(--color-text-muted)"
-              strokeWidth="2"
+              stroke={(isFocused || (isOpen && results.length > 0)) ? 'var(--color-brand-red)' : 'var(--color-text-muted)'}
+              strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              style={{ marginRight: '8px', flexShrink: 0 }}
+              style={{ marginRight: '10px', flexShrink: 0 }}
             >
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -227,13 +274,14 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
               onFocus={() => { setIsFocused(true); if (results.length > 0) setIsOpen(true); }}
               onBlur={() => { if (!isOpen) setIsFocused(false); }}
               onKeyDown={handleKeyDown}
-              placeholder="Rechercher... (Ctrl+K)"
+              placeholder="Rechercher un protocole, une molécule, un geste..."
+              autoFocus
               style={{
                 flex: 1,
                 border: 'none',
                 outline: 'none',
                 background: 'transparent',
-                fontSize: '13px',
+                fontSize: '14px',
                 color: 'var(--color-text-primary)',
                 fontFamily: 'var(--font-sans)',
               }}
@@ -246,44 +294,56 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: 'var(--color-text-muted)',
+                  color: 'var(--color-text-faint)',
                   cursor: 'pointer',
-                  fontSize: '12px',
-                  padding: '0 4px',
+                  fontSize: '14px',
+                  padding: '0 6px',
                 }}
               >
                 ✕
               </button>
             )}
 
-            <kbd style={{
-              fontSize: '10px',
-              fontFamily: 'var(--font-mono)',
-              color: 'var(--color-text-muted)',
-              border: '1px solid var(--color-border)',
-              borderRadius: '3px',
-              padding: '1px 4px',
-              background: 'var(--color-bg-subtle)',
-            }}>
+            <kbd
+              onClick={() => { inputRef.current?.focus(); setIsFocused(true); }}
+              style={{
+                backgroundColor: 'var(--color-bg-subtle)',
+                border: '1px solid var(--color-border)',
+                borderRadius: '4px',
+                padding: '2px 7px',
+                fontSize: '11px',
+                fontFamily: 'var(--font-mono)',
+                color: 'var(--color-text-muted)',
+                flexShrink: 0,
+                cursor: 'pointer',
+                userSelect: 'none',
+              }}
+            >
               ⌘K
             </kbd>
           </div>
 
-          {/* Minimalist Search Results Dropdown */}
+          {/* Real-Time Dropdown Results */}
           {isOpen && results.length > 0 && (
-            <div style={{
-              position: 'absolute',
-              top: 'calc(100% + 4px)',
-              left: 0,
-              right: 0,
-              backgroundColor: 'var(--color-bg-surface)',
-              border: '1px solid var(--color-border)',
-              borderRadius: '6px',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
-              zIndex: 50,
-              maxHeight: '300px',
-              overflowY: 'auto',
-            }}>
+            <div
+              style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                right: 0,
+                backgroundColor: 'var(--color-bg-surface)',
+                border: '1px solid var(--color-brand-red)',
+                borderTop: 'none',
+                borderRadius: '0 0 20px 20px',
+                boxShadow: '0 16px 36px rgba(0, 0, 0, 0.4)',
+                zIndex: 50,
+                maxHeight: '340px',
+                overflowY: 'auto',
+                padding: '6px 0',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+              }}
+            >
               {results.map((result, idx) => {
                 const isSelected = idx === selectedIndex;
                 return (
@@ -292,303 +352,527 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
                     onClick={() => router.push(`/records/${result.record.slug}`)}
                     onMouseEnter={() => setSelectedIndex(idx)}
                     style={{
-                      padding: '8px 12px',
+                      padding: '10px 18px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       cursor: 'pointer',
                       backgroundColor: isSelected ? 'var(--color-bg-hover)' : 'transparent',
-                      borderBottom: '1px solid var(--color-border-subtle)',
-                      fontSize: '12.5px',
+                      borderLeft: isSelected ? '3px solid var(--color-brand-red)' : '3px solid transparent',
                     }}
                   >
-                    <span style={{ fontWeight: 600, color: 'var(--color-text-primary)' }}>
-                      {result.record.title}
-                    </span>
-                    <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono)' }}>
-                      {CATEGORY_MAP[result.record.category] || result.record.category}
-                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+                      <span className="badge badge-category" style={{ fontSize: '10px' }}>
+                        {CATEGORY_MAP[result.record.category] || result.record.category}
+                      </span>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{
+                          fontSize: '13.5px',
+                          fontWeight: 600,
+                          color: 'var(--color-text-primary)',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}>
+                          {result.record.title}
+                        </div>
+                        <div style={{
+                          fontSize: '11.5px',
+                          color: 'var(--color-text-muted)',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}>
+                          {result.snippet}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0, marginLeft: '12px' }}>
+                      {result.record.severity && (
+                        <span className={`badge badge-${result.record.severity}`} style={{ fontSize: '10px' }}>
+                          {SEVERITY_MAP[result.record.severity] || result.record.severity}
+                        </span>
+                      )}
+                      <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)' }}>
+                        /{result.record.slug}
+                      </span>
+                    </div>
                   </div>
                 );
               })}
+
+              <div style={{
+                padding: '8px 18px',
+                borderTop: '1px solid var(--color-border-subtle)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontSize: '11.5px',
+                color: 'var(--color-text-muted)',
+                background: 'var(--color-bg-subtle)',
+                borderRadius: '0 0 20px 20px',
+              }}>
+                <span>Appuyez sur Entrée pour naviguer</span>
+                <span>{results.length} résultat{results.length > 1 ? 's' : ''}</span>
+              </div>
             </div>
           )}
         </div>
-      </div>
 
-      {/* 2. PACKS D'INTERVENTION (CLASSEURS MULTI-FICHES) — MINIMALIST LIST */}
-      {allPacks.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {/* Reflex Shortcuts */}
+        {reflexShortcuts.length > 0 && (
           <div style={{
-            fontSize: '11.5px',
-            fontFamily: 'var(--font-mono)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.06em',
-            color: 'var(--color-text-muted)',
-            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            flexWrap: 'wrap',
+            marginBottom: '28px',
           }}>
-            Packs d'Intervention & Séquences d'Urgence
+            <span style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontWeight: 500 }}>
+              Raccourcis réflexes :
+            </span>
+            {reflexShortcuts.map(item => (
+              <Link
+                key={item.id}
+                href={`/records/${item.slug}`}
+                style={{
+                  fontSize: '12px',
+                  fontWeight: 500,
+                  color: 'var(--color-text-secondary)',
+                  backgroundColor: 'var(--color-bg-surface)',
+                  border: '1px solid var(--color-border)',
+                  padding: '4px 12px',
+                  borderRadius: '9999px',
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                }}
+                className="suggestion-pill"
+              >
+                <span style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  backgroundColor: item.severity === 'critical' ? '#ef4444' : item.severity === 'urgent' ? '#f59e0b' : '#3b82f6',
+                  display: 'inline-block',
+                }} />
+                <span>{item.title}</span>
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {/* CLASSEURS D'INTERVENTION (PACKS) */}
+        {allPacks.length > 0 && (
+          <div style={{ width: '100%', marginBottom: '28px' }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '12px',
+              padding: '0 4px',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '13px' }}>📑</span>
+                <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-brand-red)', textTransform: 'uppercase', letterSpacing: '0.04em', fontFamily: 'var(--font-mono)' }}>
+                  CLASSEURS D'INTERVENTION & PACKS PROTOCOLES ({allPacks.length})
+                </span>
+              </div>
+              <span style={{ fontSize: '11.5px', color: 'var(--color-text-muted)' }}>
+                Séquences multi-fiches avec navigation par onglets H24
+              </span>
+            </div>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '12px',
+            }} className="packs-grid">
+              {allPacks.map(pack => (
+                <Link
+                  key={pack.id}
+                  href={`/packs/${pack.slug}`}
+                  style={{
+                    textDecoration: 'none',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: '16px 18px',
+                    borderRadius: '8px',
+                    backgroundColor: 'var(--color-bg-surface)',
+                    border: '1px solid var(--color-border)',
+                    borderLeft: '4px solid var(--color-brand-red)',
+                    transition: 'all 120ms ease',
+                  }}
+                  className="pack-card-link"
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{
+                        fontSize: '11px',
+                        fontFamily: 'var(--font-mono)',
+                        fontWeight: 700,
+                        color: 'var(--color-brand-red)',
+                      }}>
+                        {pack.code || 'PACK'}
+                      </span>
+                      {pack.badgeLabel && (
+                        <span className="badge badge-critical" style={{ fontSize: '9px', padding: '1px 6px' }}>
+                          {pack.badgeLabel}
+                        </span>
+                      )}
+                    </div>
+
+                    <span style={{
+                      fontSize: '11px',
+                      fontFamily: 'var(--font-mono)',
+                      color: 'var(--color-text-muted)',
+                      backgroundColor: 'var(--color-bg-subtle)',
+                      padding: '2px 6px',
+                      borderRadius: '4px',
+                      border: '1px solid var(--color-border)',
+                    }}>
+                      {pack.recordSlugs.length} protocoles
+                    </span>
+                  </div>
+
+                  <div style={{
+                    fontSize: '14px',
+                    fontWeight: 700,
+                    color: 'var(--color-text-primary)',
+                    marginBottom: '4px',
+                  }}>
+                    {pack.title}
+                  </div>
+
+                  {pack.description && (
+                    <div style={{
+                      fontSize: '12px',
+                      color: 'var(--color-text-secondary)',
+                      lineHeight: 1.4,
+                      marginBottom: '10px',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}>
+                      {pack.description}
+                    </div>
+                  )}
+
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginTop: 'auto',
+                    paddingTop: '8px',
+                    borderTop: '1px solid var(--color-border-subtle)',
+                    fontSize: '11.5px',
+                    color: 'var(--color-brand-red)',
+                    fontWeight: 600,
+                  }}>
+                    <span>Ouvrir la séquence d'intervention</span>
+                    <span className="pack-arrow">→</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 4 COLUMNS INDEX */}
+        <div style={{ width: '100%' }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '12px',
+            padding: '0 4px',
+          }}>
+            <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Index Technique & Protocoles Opérationnels ({allRecords.length})
+            </span>
+            <Link href="/search" style={{ fontSize: '12px', color: 'var(--color-text-muted)', textDecoration: 'none', fontWeight: 500 }} className="view-all-link">
+              Base complète →
+            </Link>
           </div>
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '10px',
-          }} className="packs-grid-minimal">
-            {allPacks.map(pack => (
-              <Link
-                key={pack.id}
-                href={`/packs/${pack.slug}`}
-                style={{
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '12px 14px',
-                  borderRadius: '6px',
-                  backgroundColor: 'var(--color-bg-surface)',
-                  border: '1px solid var(--color-border)',
-                  transition: 'all 120ms ease',
-                }}
-                className="minimal-pack-card"
-              >
-                <div style={{ minWidth: 0, flex: 1, paddingRight: '12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
-                    <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--color-brand-red)' }}>
-                      {pack.code || 'PACK'}
-                    </span>
-                    <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {pack.title}
-                    </span>
-                  </div>
-                  {pack.description && (
-                    <div style={{ fontSize: '11.5px', color: 'var(--color-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {pack.description}
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '14px',
+            width: '100%',
+          }} className="index-grid">
+            
+            {/* Col 1: Protocoles */}
+            <div className="linear-card" style={{ padding: '16px 18px', borderRadius: '8px', backgroundColor: 'var(--color-bg-surface)', border: '1px solid var(--color-border)' }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderBottom: '1px solid var(--color-border-subtle)',
+                paddingBottom: '8px',
+                marginBottom: '10px',
+              }}>
+                <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--color-text-primary)' }}>
+                  Protocoles ({protocols.length})
+                </span>
+                <span className="badge badge-critical" style={{ fontSize: '9.5px', padding: '2px 6px' }}>URGENT</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                {protocols.map((r, idx) => (
+                  <Link
+                    key={r.id}
+                    href={`/records/${r.slug}`}
+                    style={{
+                      fontSize: '12.5px',
+                      color: 'var(--color-text-secondary)',
+                      textDecoration: 'none',
+                      padding: '7px 10px',
+                      borderRadius: '5px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '8px',
+                      width: '100%',
+                    }}
+                    className="dense-link"
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '7px', minWidth: 0 }}>
+                      <span className="row-code" style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '-0.02em', flexShrink: 0 }}>
+                        [PR-{String(idx + 1).padStart(2, '0')}]
+                      </span>
+                      <span style={{ fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {r.title}
+                      </span>
                     </div>
-                  )}
-                </div>
+                    <span className="row-arrow" style={{ flexShrink: 0, color: 'var(--color-text-faint)', fontSize: '11px' }}>
+                      →
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-                  <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)' }}>
-                    {pack.recordSlugs.length} fiches
-                  </span>
-                  <span style={{ color: 'var(--color-text-muted)', fontSize: '12px' }}>→</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
+            {/* Col 2: Pharmacologie */}
+            <div className="linear-card" style={{ padding: '16px 18px', borderRadius: '8px', backgroundColor: 'var(--color-bg-surface)', border: '1px solid var(--color-border)' }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderBottom: '1px solid var(--color-border-subtle)',
+                paddingBottom: '8px',
+                marginBottom: '10px',
+              }}>
+                <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--color-text-primary)' }}>
+                  Pharmacologie ({medications.length})
+                </span>
+                <span className="badge badge-routine" style={{ fontSize: '9.5px', padding: '2px 6px' }}>ALS</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                {medications.map((r, idx) => (
+                  <Link
+                    key={r.id}
+                    href={`/records/${r.slug}`}
+                    style={{
+                      fontSize: '12.5px',
+                      color: 'var(--color-text-secondary)',
+                      textDecoration: 'none',
+                      padding: '7px 10px',
+                      borderRadius: '5px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '8px',
+                      width: '100%',
+                    }}
+                    className="dense-link"
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '7px', minWidth: 0 }}>
+                      <span className="row-code" style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '-0.02em', flexShrink: 0 }}>
+                        [PH-{String(idx + 1).padStart(2, '0')}]
+                      </span>
+                      <span style={{ fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {r.title}
+                      </span>
+                    </div>
+                    <span className="row-arrow" style={{ flexShrink: 0, color: 'var(--color-text-faint)', fontSize: '11px' }}>
+                      →
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
 
-      {/* 3. RÉFÉRENTIEL MÉDICAL — MINIMALIST 4 COLUMNS */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          fontSize: '11.5px',
-          fontFamily: 'var(--font-mono)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.06em',
-          color: 'var(--color-text-muted)',
-          fontWeight: 600,
-        }}>
-          <span>Référentiel Clinique ({allRecords.length} fiches)</span>
-          <Link href="/search" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none' }} className="minimal-link">
-            Tout voir →
-          </Link>
-        </div>
+            {/* Col 3: Manœuvres */}
+            <div className="linear-card" style={{ padding: '16px 18px', borderRadius: '8px', backgroundColor: 'var(--color-bg-surface)', border: '1px solid var(--color-border)' }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderBottom: '1px solid var(--color-border-subtle)',
+                paddingBottom: '8px',
+                marginBottom: '10px',
+              }}>
+                <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--color-text-primary)' }}>
+                  Manœuvres ({maneuvers.length})
+                </span>
+                <span className="badge badge-urgent" style={{ fontSize: '9.5px', padding: '2px 6px' }}>GESTES</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                {maneuvers.map((r, idx) => (
+                  <Link
+                    key={r.id}
+                    href={`/records/${r.slug}`}
+                    style={{
+                      fontSize: '12.5px',
+                      color: 'var(--color-text-secondary)',
+                      textDecoration: 'none',
+                      padding: '7px 10px',
+                      borderRadius: '5px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '8px',
+                      width: '100%',
+                    }}
+                    className="dense-link"
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '7px', minWidth: 0 }}>
+                      <span className="row-code" style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '-0.02em', flexShrink: 0 }}>
+                        [MN-{String(idx + 1).padStart(2, '0')}]
+                      </span>
+                      <span style={{ fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {r.title}
+                      </span>
+                    </div>
+                    <span className="row-arrow" style={{ flexShrink: 0, color: 'var(--color-text-faint)', fontSize: '11px' }}>
+                      →
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '16px',
-        }} className="directory-grid-minimal">
-          
-          {/* Protocoles */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <div style={{
-              fontSize: '12px',
-              fontWeight: 700,
-              color: 'var(--color-text-primary)',
-              paddingBottom: '6px',
-              borderBottom: '1px solid var(--color-border-subtle)',
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}>
-              <span>Protocoles</span>
-              <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)', fontWeight: 400 }}>
-                {protocols.length}
-              </span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              {protocols.map(r => (
-                <Link
-                  key={r.id}
-                  href={`/records/${r.slug}`}
-                  style={{
-                    fontSize: '12.5px',
-                    color: 'var(--color-text-secondary)',
-                    textDecoration: 'none',
-                    padding: '4px 6px',
-                    borderRadius: '4px',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                    transition: 'all 100ms ease',
-                  }}
-                  className="minimal-item-link"
-                >
-                  {r.title}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Pharmacologie */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <div style={{
-              fontSize: '12px',
-              fontWeight: 700,
-              color: 'var(--color-text-primary)',
-              paddingBottom: '6px',
-              borderBottom: '1px solid var(--color-border-subtle)',
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}>
-              <span>Pharmacologie</span>
-              <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)', fontWeight: 400 }}>
-                {medications.length}
-              </span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              {medications.map(r => (
-                <Link
-                  key={r.id}
-                  href={`/records/${r.slug}`}
-                  style={{
-                    fontSize: '12.5px',
-                    color: 'var(--color-text-secondary)',
-                    textDecoration: 'none',
-                    padding: '4px 6px',
-                    borderRadius: '4px',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                    transition: 'all 100ms ease',
-                  }}
-                  className="minimal-item-link"
-                >
-                  {r.title}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Manœuvres */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <div style={{
-              fontSize: '12px',
-              fontWeight: 700,
-              color: 'var(--color-text-primary)',
-              paddingBottom: '6px',
-              borderBottom: '1px solid var(--color-border-subtle)',
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}>
-              <span>Manœuvres</span>
-              <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)', fontWeight: 400 }}>
-                {maneuvers.length}
-              </span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              {maneuvers.map(r => (
-                <Link
-                  key={r.id}
-                  href={`/records/${r.slug}`}
-                  style={{
-                    fontSize: '12.5px',
-                    color: 'var(--color-text-secondary)',
-                    textDecoration: 'none',
-                    padding: '4px 6px',
-                    borderRadius: '4px',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                    transition: 'all 100ms ease',
-                  }}
-                  className="minimal-item-link"
-                >
-                  {r.title}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Matériel */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <div style={{
-              fontSize: '12px',
-              fontWeight: 700,
-              color: 'var(--color-text-primary)',
-              paddingBottom: '6px',
-              borderBottom: '1px solid var(--color-border-subtle)',
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}>
-              <span>Matériel</span>
-              <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)', fontWeight: 400 }}>
-                {equipment.length}
-              </span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              {equipment.map(r => (
-                <Link
-                  key={r.id}
-                  href={`/records/${r.slug}`}
-                  style={{
-                    fontSize: '12.5px',
-                    color: 'var(--color-text-secondary)',
-                    textDecoration: 'none',
-                    padding: '4px 6px',
-                    borderRadius: '4px',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                    transition: 'all 100ms ease',
-                  }}
-                  className="minimal-item-link"
-                >
-                  {r.title}
-                </Link>
-              ))}
+            {/* Col 4: Matériel */}
+            <div className="linear-card" style={{ padding: '16px 18px', borderRadius: '8px', backgroundColor: 'var(--color-bg-surface)', border: '1px solid var(--color-border)' }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderBottom: '1px solid var(--color-border-subtle)',
+                paddingBottom: '8px',
+                marginBottom: '10px',
+              }}>
+                <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--color-text-primary)' }}>
+                  Matériel ({equipment.length})
+                </span>
+                <span style={{
+                  fontSize: '9.5px',
+                  padding: '2px 6px',
+                  borderRadius: '9999px',
+                  fontWeight: 600,
+                  fontFamily: 'var(--font-mono)',
+                  background: 'rgba(34, 197, 94, 0.12)',
+                  color: '#4ade80',
+                  border: '1px solid rgba(34, 197, 94, 0.25)',
+                }}>
+                  LOGISTIQUE
+                </span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                {equipment.map((r, idx) => (
+                  <Link
+                    key={r.id}
+                    href={`/records/${r.slug}`}
+                    style={{
+                      fontSize: '12.5px',
+                      color: 'var(--color-text-secondary)',
+                      textDecoration: 'none',
+                      padding: '7px 10px',
+                      borderRadius: '5px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '8px',
+                      width: '100%',
+                    }}
+                    className="dense-link"
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '7px', minWidth: 0 }}>
+                      <span className="row-code" style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '-0.02em', flexShrink: 0 }}>
+                        [EQ-{String(idx + 1).padStart(2, '0')}]
+                      </span>
+                      <span style={{ fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {r.title}
+                      </span>
+                    </div>
+                    <span className="row-arrow" style={{ flexShrink: 0, color: 'var(--color-text-faint)', fontSize: '11px' }}>
+                      →
+                    </span>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <style>{`
-        .minimal-pack-card:hover {
+        .suggestion-pill {
+          transition: all 120ms ease;
+        }
+        .suggestion-pill:hover {
+          border-color: var(--color-border-hover) !important;
+          color: var(--color-text-primary) !important;
+          background-color: var(--color-bg-hover) !important;
+        }
+        .pack-card-link:hover {
           border-color: var(--color-border-hover) !important;
           background-color: var(--color-bg-hover) !important;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.3);
         }
-        .minimal-item-link:hover {
+        .pack-card-link:hover .pack-arrow {
+          transform: translateX(4px);
+        }
+        .pack-arrow {
+          transition: transform 120ms ease;
+        }
+        .dense-link {
+          transition: all 120ms ease;
+        }
+        .dense-link .row-arrow {
+          transition: transform 120ms ease, color 120ms ease;
+        }
+        .dense-link .row-code {
+          transition: color 120ms ease;
+        }
+        .dense-link:hover {
           background-color: var(--color-bg-hover) !important;
           color: var(--color-text-primary) !important;
         }
-        .minimal-link:hover {
+        .dense-link:hover .row-arrow {
+          color: var(--color-text-primary) !important;
+          transform: translateX(3px);
+        }
+        .dense-link:hover .row-code {
           color: var(--color-text-primary) !important;
         }
-        @media (max-width: 840px) {
-          .directory-grid-minimal {
+        .view-all-link:hover {
+          color: var(--color-text-primary) !important;
+        }
+        @media (max-width: 960px) {
+          .index-grid {
             grid-template-columns: repeat(2, 1fr) !important;
           }
-          .packs-grid-minimal {
+          .packs-grid {
             grid-template-columns: 1fr !important;
           }
         }
-        @media (max-width: 520px) {
-          .directory-grid-minimal {
+        @media (max-width: 540px) {
+          .index-grid {
             grid-template-columns: 1fr !important;
           }
         }
