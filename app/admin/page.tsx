@@ -1,10 +1,10 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
-import { getAll, remove } from '@/lib/store';
+import { getAll } from '@/lib/store';
 import { SESSION_COOKIE } from '@/lib/auth';
 import type { RecordCategory } from '@/types';
+import DeleteRecordButton from '@/components/admin/DeleteRecordButton';
 
 export const metadata = { title: 'Administration — LSFD Medilog' };
 
@@ -71,16 +71,6 @@ export default async function AdminPage() {
     const jar = await cookies();
     jar.delete(SESSION_COOKIE);
     redirect('/admin/login');
-  }
-
-  async function deleteRecord(formData: FormData) {
-    'use server';
-    const id = formData.get('id') as string;
-    if (id) {
-      await remove(id);
-      revalidatePath('/');
-      revalidatePath('/admin');
-    }
   }
 
   return (
@@ -310,26 +300,7 @@ export default async function AdminPage() {
                         >
                           Éditer
                         </Link>
-                        <form action={deleteRecord} style={{ margin: 0 }}>
-                          <input type="hidden" name="id" value={record.id} />
-                          <button
-                            type="submit"
-                            style={{
-                              fontSize: '12px',
-                              fontWeight: 500,
-                              color: '#f87171',
-                              backgroundColor: 'transparent',
-                              border: '1px solid transparent',
-                              padding: '4px 10px',
-                              borderRadius: '4px',
-                              cursor: 'pointer',
-                              transition: 'all 120ms ease',
-                            }}
-                            className="btn-delete-action"
-                          >
-                            Supprimer
-                          </button>
-                        </form>
+                        <DeleteRecordButton id={record.id} title={record.title} />
                       </div>
                     </td>
                   </tr>

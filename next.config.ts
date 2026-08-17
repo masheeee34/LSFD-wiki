@@ -39,11 +39,6 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'vumbnail.com' },
     ],
   },
-  experimental: {
-    serverActions: {
-      allowedOrigins: ['localhost:3000', '*.railway.app', '*.onrender.com', '*.fly.dev'],
-    },
-  },
   async headers() {
     return [
       {
