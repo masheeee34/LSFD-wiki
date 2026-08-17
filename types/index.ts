@@ -1,5 +1,16 @@
 export type RecordCategory = 'protocol' | 'medication' | 'maneuver' | 'equipment';
 export type SeverityLevel = 'routine' | 'urgent' | 'critical';
+export type CertificationLevel = 'all' | 'emt' | 'aemt' | 'paramedic' | 'medical_director';
+
+export interface MedicalSpecs {
+  organization?: string;
+  echelon?: string;
+  minCertification?: CertificationLevel;
+  operationalStatus?: string;
+  escalationRule?: string;
+  allowedGestures?: string;
+  forbiddenGestures?: string;
+}
 
 export interface MediaItem {
   id: string;
@@ -18,6 +29,7 @@ export interface WikiRecord {
   content: string;
   tags: string[];
   media: MediaItem[];
+  specs?: MedicalSpecs;
   updatedAt: string;
 }
 

@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { cookies } from 'next/headers';
 import { getAll, getBySlug } from '@/lib/store';
+import { verifySession, SESSION_COOKIE } from '@/lib/auth';
 import ContentParser from '@/components/content/ContentParser';
 import MediaGallery from '@/components/content/MediaGallery';
+import RoleScopeBanner from '@/components/records/RoleScopeBanner';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,6 +47,11 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
     notFound();
   }
 
+  // Check Admin session for Direct Edit Button
+  const cookieStore = await cookies();
+  const sessionToken = cookieStore.get(SESSION_COOKIE)?.value;
+  const isAdmin = !!(sessionToken && verifySession(sessionToken));
+
   const allRecords = await getAll();
 
   // 1. Backlinks: Other records that cite/link to this record
@@ -79,9 +87,14 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
 
   const sevInfo = record.severity ? SEVERITY_INFO[record.severity] : null;
 
+  // Custom Medical Specs with fallbacks
+  const organization = record.specs?.organization || 'LSFD EMS';
+  const echelon = record.specs?.echelon || (record.category === 'medication' ? 'ALS / Paramedic' : 'BLS & ALS');
+  const operationalStatus = record.specs?.operationalStatus || 'ACTIF 2026';
+
   return (
     <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', padding: '16px 20px 48px' }}>
-      {/* Top Breadcrumbs & Back button */}
+      {/* Top Breadcrumbs & Direct Admin Edit Button */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -90,6 +103,8 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
         fontSize: '12px',
         fontFamily: 'var(--font-mono)',
         color: 'var(--color-text-muted)',
+        flexWrap: 'wrap',
+        gap: '8px',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Link href="/" style={{ color: 'var(--color-text-muted)', textDecoration: 'none' }} className="crumb-link">
@@ -105,24 +120,52 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
           </span>
         </div>
 
-        <Link
-          href="/"
-          style={{
-            color: 'var(--color-text-secondary)',
-            textDecoration: 'none',
-            padding: '4px 10px',
-            borderRadius: '6px',
-            background: 'var(--color-bg-surface)',
-            border: '1px solid var(--color-border)',
-            fontSize: '11.5px',
-            fontFamily: 'var(--font-sans)',
-            fontWeight: 500,
-            transition: 'all 120ms ease',
-          }}
-          className="back-btn"
-        >
-          ← Retour
-        </Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Direct Admin Edit Mode Button */}
+          {isAdmin && (
+            <Link
+              href={`/admin/edit/${record.id}`}
+              style={{
+                color: '#ffffff',
+                textDecoration: 'none',
+                padding: '5px 12px',
+                borderRadius: '6px',
+                background: 'var(--color-brand-red)',
+                fontSize: '11.5px',
+                fontFamily: 'var(--font-sans)',
+                fontWeight: 600,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)',
+                transition: 'all 120ms ease',
+              }}
+              className="admin-edit-btn"
+            >
+              <span>✏️</span>
+              <span>Modifier cette fiche (Admin)</span>
+            </Link>
+          )}
+
+          <Link
+            href="/"
+            style={{
+              color: 'var(--color-text-secondary)',
+              textDecoration: 'none',
+              padding: '4px 10px',
+              borderRadius: '6px',
+              background: 'var(--color-bg-surface)',
+              border: '1px solid var(--color-border)',
+              fontSize: '11.5px',
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 500,
+              transition: 'all 120ms ease',
+            }}
+            className="back-btn"
+          >
+            ← Retour
+          </Link>
+        </div>
       </div>
 
       {/* Main 8 / 4 Responsive Grid */}
@@ -134,7 +177,11 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
       }} className="record-main-grid">
         
         {/* Main Column (8 cols on desktop) */}
-        <div style={{ gridColumn: 'span 8', display: 'flex', flexDirection: 'column', gap: '20px' }} className="record-content-col">
+        <div style={{ gridColumn: 'span 8', display: 'flex', flexDirection: 'column', gap: '16px' }} className="record-content-col">
+          
+          {/* Interactive Role & Scope of Practice Filter */}
+          <RoleScopeBanner recordCategory={record.category} specs={record.specs} />
+
           {/* Header Protocol Card */}
           <div className="linear-card" style={{
             padding: '24px 28px',
@@ -163,6 +210,10 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
                   {sevInfo.label}
                 </span>
               )}
+
+              <span className="badge badge-routine" style={{ fontSize: '10px' }}>
+                {echelon}
+              </span>
 
               <span style={{
                 fontSize: '11px',
@@ -476,7 +527,7 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
             </div>
           </div>
 
-          {/* Spécifications médicales */}
+          {/* Spécifications médicales Personnalisables */}
           <div className="linear-card" style={{
             padding: '16px 18px',
             backgroundColor: 'var(--color-bg-surface)',
@@ -500,11 +551,11 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ color: 'var(--color-text-muted)' }}>Organisation</span>
-                <span style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>LSFD EMS</span>
+                <span style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>{organization}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ color: 'var(--color-text-muted)' }}>Échelon d'engagement</span>
-                <span style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>ALS / Paramedic</span>
+                <span style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>{echelon}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ color: 'var(--color-text-muted)' }}>Identifiant fiche</span>
@@ -528,7 +579,7 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
                     backgroundColor: '#22c55e',
                     boxShadow: '0 0 6px rgba(34, 197, 94, 0.6)',
                   }} />
-                  ACTIF 2026
+                  {operationalStatus}
                 </span>
               </div>
             </div>
@@ -544,6 +595,10 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
           color: var(--color-text-primary) !important;
           background: var(--color-bg-hover) !important;
           border-color: var(--color-border-hover) !important;
+        }
+        .admin-edit-btn:hover {
+          background-color: #b91c1c !important;
+          transform: translateY(-1px);
         }
         .tag-pill:hover {
           color: var(--color-text-primary) !important;
