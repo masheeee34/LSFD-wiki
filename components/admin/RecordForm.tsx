@@ -32,14 +32,11 @@ export default function RecordForm({ initialData, onSubmit, isLoading = false }:
   const [tagInput, setTagInput] = useState('');
   const [media, setMedia] = useState<MediaItem[]>(initialData?.media || []);
   
-  // Custom Medical Specs & Scope of Practice
+  // Custom Medical Specs
   const [organization, setOrganization] = useState(initialData?.specs?.organization || 'LSFD EMS');
   const [echelon, setEchelon] = useState(initialData?.specs?.echelon || (initialData?.category === 'medication' ? 'ALS / Paramedic' : 'BLS & ALS'));
   const [minCertification, setMinCertification] = useState<CertificationLevel>(initialData?.specs?.minCertification || 'bls');
   const [operationalStatus, setOperationalStatus] = useState(initialData?.specs?.operationalStatus || 'ACTIF 2026');
-  const [escalationRule, setEscalationRule] = useState(initialData?.specs?.escalationRule || '');
-  const [allowedGestures, setAllowedGestures] = useState(initialData?.specs?.allowedGestures || '');
-  const [forbiddenGestures, setForbiddenGestures] = useState(initialData?.specs?.forbiddenGestures || '');
 
   const [showSpecsSection, setShowSpecsSection] = useState(true);
 
@@ -98,9 +95,6 @@ export default function RecordForm({ initialData, onSubmit, isLoading = false }:
       echelon: echelon.trim() || 'ALS / Paramedic',
       minCertification,
       operationalStatus: operationalStatus.trim() || 'ACTIF 2026',
-      escalationRule: escalationRule.trim() || undefined,
-      allowedGestures: allowedGestures.trim() || undefined,
-      forbiddenGestures: forbiddenGestures.trim() || undefined,
     };
 
     await onSubmit({
@@ -183,7 +177,7 @@ export default function RecordForm({ initialData, onSubmit, isLoading = false }:
           </div>
         </div>
 
-        {/* Custom Medical Specs & Scope of Practice Accordion */}
+        {/* Custom Medical Specs */}
         <div style={{
           backgroundColor: 'var(--color-bg-surface)',
           border: '1px solid var(--color-border)',
@@ -206,7 +200,7 @@ export default function RecordForm({ initialData, onSubmit, isLoading = false }:
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '14px' }}>📋</span>
               <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--color-text-primary)', fontFamily: 'var(--font-mono)' }}>
-                SPÉCIFICATIONS MÉDICALES & HABILITATION (EMT / ALS)
+                SPÉCIFICATIONS MÉDICALES
               </span>
             </div>
             <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono)' }}>
@@ -215,108 +209,61 @@ export default function RecordForm({ initialData, onSubmit, isLoading = false }:
           </div>
 
           {showSpecsSection && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', paddingTop: '8px', borderTop: '1px solid var(--color-border-subtle)' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '11.5px', color: 'var(--color-text-secondary)', fontWeight: 600 }}>
-                    Organisation
-                  </label>
-                  <input
-                    type="text"
-                    value={organization}
-                    onChange={e => setOrganization(e.target.value)}
-                    placeholder="LSFD EMS"
-                    className="input form-input-control"
-                    style={{ fontSize: '12px' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '11.5px', color: 'var(--color-text-secondary)', fontWeight: 600 }}>
-                    Échelon d'engagement
-                  </label>
-                  <input
-                    type="text"
-                    value={echelon}
-                    onChange={e => setEchelon(e.target.value)}
-                    placeholder="ALS / Paramedic"
-                    className="input form-input-control"
-                    style={{ fontSize: '12px' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '11.5px', color: 'var(--color-text-secondary)', fontWeight: 600 }}>
-                    Habilitation Requise
-                  </label>
-                  <select
-                    value={minCertification}
-                    onChange={e => setMinCertification(e.target.value as CertificationLevel)}
-                    className="select form-input-control"
-                    style={{ fontSize: '12px' }}
-                  >
-                    <option value="all">Tous</option>
-                    <option value="bls">BLS</option>
-                    <option value="als">ALS</option>
-                    <option value="olmc">OLMC</option>
-                  </select>
-                </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', paddingTop: '8px', borderTop: '1px solid var(--color-border-subtle)' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '11.5px', color: 'var(--color-text-secondary)', fontWeight: 600 }}>
+                  Organisation
+                </label>
+                <input
+                  type="text"
+                  value={organization}
+                  onChange={e => setOrganization(e.target.value)}
+                  placeholder="LSFD EMS"
+                  className="input form-input-control"
+                  style={{ fontSize: '12px' }}
+                />
               </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px' }}>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '11.5px', color: 'var(--color-text-secondary)', fontWeight: 600 }}>
-                    Statut opérationnel
-                  </label>
-                  <input
-                    type="text"
-                    value={operationalStatus}
-                    onChange={e => setOperationalStatus(e.target.value)}
-                    placeholder="ACTIF 2026"
-                    className="input form-input-control"
-                    style={{ fontSize: '12px' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '11.5px', color: 'var(--color-text-secondary)', fontWeight: 600 }}>
-                    Règle d'escalade / Quand demander du renfort :
-                  </label>
-                  <input
-                    type="text"
-                    value={escalationRule}
-                    onChange={e => setEscalationRule(e.target.value)}
-                    placeholder="ex: Arrêt au stade BLS et demande de renfort ALS immédiat si détresse persistante..."
-                    className="input form-input-control"
-                    style={{ fontSize: '12px' }}
-                  />
-                </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '11.5px', color: 'var(--color-text-secondary)', fontWeight: 600 }}>
+                  Échelon d'engagement
+                </label>
+                <input
+                  type="text"
+                  value={echelon}
+                  onChange={e => setEchelon(e.target.value)}
+                  placeholder="ALS / Paramedic"
+                  className="input form-input-control"
+                  style={{ fontSize: '12px' }}
+                />
               </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '11.5px', color: '#4ade80', fontWeight: 600 }}>
-                    ✅ Gestes autorisés (BLS / EMT)
-                  </label>
-                  <input
-                    type="text"
-                    value={allowedGestures}
-                    onChange={e => setAllowedGestures(e.target.value)}
-                    placeholder="ex: O2 haut débit, BVM, Collier cervical, DAE"
-                    className="input form-input-control"
-                    style={{ fontSize: '12px' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '11.5px', color: '#f87171', fontWeight: 600 }}>
-                    ⛔ Gestes réservés ALS / Interdits BLS
-                  </label>
-                  <input
-                    type="text"
-                    value={forbiddenGestures}
-                    onChange={e => setForbiddenGestures(e.target.value)}
-                    placeholder="ex: Intubation RSI, Voie Veineuse, Drogues ACLS"
-                    className="input form-input-control"
-                    style={{ fontSize: '12px' }}
-                  />
-                </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '11.5px', color: 'var(--color-text-secondary)', fontWeight: 600 }}>
+                  Habilitation Requise
+                </label>
+                <select
+                  value={minCertification}
+                  onChange={e => setMinCertification(e.target.value as CertificationLevel)}
+                  className="select form-input-control"
+                  style={{ fontSize: '12px' }}
+                >
+                  <option value="all">Tous</option>
+                  <option value="bls">BLS</option>
+                  <option value="als">ALS</option>
+                  <option value="olmc">OLMC</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontSize: '11.5px', color: 'var(--color-text-secondary)', fontWeight: 600 }}>
+                  Statut opérationnel
+                </label>
+                <input
+                  type="text"
+                  value={operationalStatus}
+                  onChange={e => setOperationalStatus(e.target.value)}
+                  placeholder="ACTIF 2026"
+                  className="input form-input-control"
+                  style={{ fontSize: '12px' }}
+                />
               </div>
             </div>
           )}
@@ -480,21 +427,6 @@ export default function RecordForm({ initialData, onSubmit, isLoading = false }:
               {title || 'Titre du protocole'}
             </h2>
             {summary && <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '16px', lineHeight: 1.5 }}>{summary}</p>}
-
-            {/* Scope Escalation Preview */}
-            {escalationRule && (
-              <div style={{
-                backgroundColor: 'rgba(245, 158, 11, 0.08)',
-                border: '1px solid rgba(245, 158, 11, 0.25)',
-                borderRadius: '6px',
-                padding: '8px 12px',
-                fontSize: '11.5px',
-                color: '#fbbf24',
-                marginBottom: '14px',
-              }}>
-                <strong>🛑 Escalade EMT / BLS :</strong> {escalationRule}
-              </div>
-            )}
             
             <div style={{ borderTop: '1px solid var(--color-border-subtle)', paddingTop: '14px' }}>
               {content ? (

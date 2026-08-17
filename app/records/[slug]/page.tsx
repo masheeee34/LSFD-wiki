@@ -90,9 +90,6 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
   const organization = record.specs?.organization || 'LSFD EMS';
   const echelon = record.specs?.echelon || (record.category === 'medication' ? 'ALS / Paramedic' : 'BLS & ALS');
   const operationalStatus = record.specs?.operationalStatus || 'ACTIF 2026';
-  const escalationRule = record.specs?.escalationRule;
-  const allowedGestures = record.specs?.allowedGestures;
-  const forbiddenGestures = record.specs?.forbiddenGestures;
 
   return (
     <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', padding: '16px 20px 48px' }}>
@@ -272,59 +269,6 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
               </div>
             )}
           </div>
-
-          {/* Optional Escalation / Scope Directive Configured by Admin */}
-          {(escalationRule || allowedGestures || forbiddenGestures) && (
-            <div style={{
-              backgroundColor: 'var(--color-bg-surface)',
-              border: '1px solid rgba(245, 158, 11, 0.3)',
-              borderLeft: '4px solid #f59e0b',
-              borderRadius: '10px',
-              padding: '14px 18px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '8px',
-            }}>
-              <div style={{
-                fontSize: '11px',
-                fontFamily: 'var(--font-mono)',
-                fontWeight: 700,
-                color: '#fbbf24',
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
-              }}>
-                🛑 DIRECTIVE D'ENGAGEMENT & RÈGLE D'ESCALADE
-              </div>
-
-              {escalationRule && (
-                <div style={{ fontSize: '13px', color: 'var(--color-text-primary)', lineHeight: 1.5 }}>
-                  {escalationRule}
-                </div>
-              )}
-
-              {(allowedGestures || forbiddenGestures) && (
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  gap: '10px',
-                  paddingTop: '8px',
-                  borderTop: '1px solid var(--color-border-subtle)',
-                  fontSize: '12px',
-                }} className="scope-gestures-grid">
-                  {allowedGestures && (
-                    <div style={{ color: '#4ade80' }}>
-                      <strong>✅ Gestes autorisés BLS :</strong> {allowedGestures}
-                    </div>
-                  )}
-                  {forbiddenGestures && (
-                    <div style={{ color: '#f87171' }}>
-                      <strong>⛔ Gestes réservés ALS :</strong> {forbiddenGestures}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
 
           {/* Clinical Markdown Execution Body */}
           <div className="linear-card" style={{
@@ -674,11 +618,6 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
           }
           .record-sidebar-col {
             grid-column: span 12 !important;
-          }
-        }
-        @media (max-width: 640px) {
-          .scope-gestures-grid {
-            grid-template-columns: 1fr !important;
           }
         }
       `}</style>
