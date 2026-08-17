@@ -1,25 +1,5 @@
 [
   {
-    "id": "rec-008",
-    "slug": "naloxone",
-    "title": "Naloxone (Narcan)",
-    "category": "medication",
-    "severity": "urgent",
-    "summary": "Antagoniste pur des récepteurs opioïdes µ. Antidote des surdosages aux opiacés (fentanyl, morphine, héroïne). Titration prudente pour éviter le syndrome de sevrage brutal.",
-    "content": "## Présentation\n\n- Ampoule 0,4 mg/mL — 1 mL\n- Spray nasal 4 mg/0,1 mL (Narcan® nasal — usage préhospitalier)\n\n---\n\n## Mécanisme\n\nCompétition et déplacement des opioïdes sur les récepteurs µ, δ et κ. Demi-vie courte (30–90 min) : **risque de re-narcotisation** après dissipation.\n\n---\n\n## Indications\n\nSurdosage aux opioïdes caractérisé par la **triade :**\n- Myosis bilatéral serré\n- Dépression respiratoire (FR < 12/min ou apnée)\n- Altération de la conscience ([[def:Score de Glasgow Coma Scale évaluant la conscience|GCS]] < 12)\n\n---\n\n## Posologie\n\n### IV/IO\n**0,4 mg** toutes les **2–3 min** jusqu'à FR ≥ 12/min. Ne pas viser le réveil complet (risque d'agitation et d'OAP).\n\n### Voie nasale\n**4 mg** dans une narine. Répéter après 2–3 min dans l'autre narine si inefficace.\n\n### Perfusion continue\nSi re-narcotisation : 2/3 de la dose de réveil/heure en IVSE.\n\n---\n\n## Précautions\n\nPréparer le patient à un sevrage brutal possible (agitation, vomissements, tachycardie). Surveiller pendant **au moins 2h** après la dernière dose.",
-    "tags": [
-      "naloxone",
-      "narcan",
-      "opioïdes",
-      "surdosage",
-      "antidote",
-      "fentanyl",
-      "morphine"
-    ],
-    "media": [],
-    "updatedAt": "2026-08-13T08:20:00.000Z"
-  },
-  {
     "id": "rec-009",
     "slug": "needle-decompression",
     "title": "Décompression à l'Aiguille",
