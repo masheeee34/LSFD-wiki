@@ -1,20 +1,5 @@
 [
   {
-    "id": "pack-002",
-    "slug": "arret-cardio-respiratoire",
-    "code": "PACK-02",
-    "title": "Arrêt Cardio-Respiratoire (ACLS & Réanimation)",
-    "description": "Protocole de réanimation cardio-pulmonaire avancée, défibrillation et pharmacologie d'urgence (Épinéphrine, Amiodarone).",
-    "badgeLabel": "ACLS CRITIQUE",
-    "recordSlugs": [
-      "cardiac-arrest-acls",
-      "epinephrine",
-      "amiodarone",
-      "aed-lifepak15"
-    ],
-    "updatedAt": "2026-08-17T15:00:00.000Z"
-  },
-  {
     "id": "pack-003",
     "slug": "detresse-respiratoire-aigu",
     "code": "PACK-03",
