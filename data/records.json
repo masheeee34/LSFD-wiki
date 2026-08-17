@@ -287,5 +287,20 @@
     "media": [],
     "id": "ac74d37e-2383-40bf-ab5a-bdd35ae44dbb",
     "updatedAt": "2026-08-17T14:23:21.289Z"
+  },
+  {
+    "title": "Échelle AVPU",
+    "slug": "echelle-avpu",
+    "category": "protocol",
+    "severity": "routine",
+    "summary": "Échelle utilisée pour noter l'état de conscience d'un patient.",
+    "content": "## **A — ALERT**\nLes yeux sont ouverts de façon spontanée.\nLe patient semble conscient de son environnement.\nBonne réponse aux instructions, capable de suivre un objet avec ses yeux.\n\n## **V — VERBAL**\nLes yeux ne s’ouvrent pas de façon spontanée, mais s’ouvrent sur instruction.\nEn capacité de répondre de façon compréhensible et cohérente.\n\n## **P — PAIN**\nNe répond pas verbalement, mais réagit/répond à la douleur.\n\n## **U — UNRESPONSIVE**\nLe patient ne répond à aucun stimuli, pleine inconscience.",
+    "tags": [
+      "conscience",
+      "emt"
+    ],
+    "media": [],
+    "id": "8d6dccca-cd66-498e-98d3-b9157adb119f",
+    "updatedAt": "2026-08-17T14:26:49.188Z"
   }
 ]
