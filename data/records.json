@@ -1,24 +1,5 @@
 [
   {
-    "id": "rec-013",
-    "slug": "adenosine",
-    "title": "Adénosine",
-    "category": "medication",
-    "severity": "urgent",
-    "summary": "Antiarythmique de première ligne pour les tachycardies supra-ventriculaires (TSV) à QRS fin. Bloque transitoirement la conduction auriculo-ventriculaire. Demi-vie ultra-courte (< 10 s).",
-    "content": "## Présentation\n\n- Ampoule 6 mg/2 mL (3 mg/mL)\n- À conserver à température ambiante (sensible à la lumière)\n\n---\n\n## Mécanisme\n\nAgoniste des récepteurs A1 de l'adénosine → hyperpolarisation des cellules du nœud AV → bloc AV transitoire (3–5 secondes) interrompant les circuits de réentrée nodaux.\n\n---\n\n## Indications\n\n**TSV à QRS fin**, régulière, hémodynamiquement stable, résistante aux manœuvres vagales ([[def:Manœuvre de Valsalva modifiée ou massage sino-carotidien|Valsalva]]).\n\n---\n\n## Posologie\n\n**Injection IVD ultrarapide obligatoire** (< 2 secondes), en VVP proximale ou voie centrale. Flush immédiat avec 20 mL NaCl 0,9%.\n\n- 1ère dose : **6 mg IVD**\n- 2ème dose (si échec 1–2 min) : **12 mg IVD**\n- 3ème dose (si échec) : **12 mg IVD**\n\n---\n\n## Effets Indésirables Attendus\n\nFlush, dyspnée, douleur thoracique, sensation de mort imminente — transitoires (< 30 s). Informer le patient avant injection.\n\n---\n\n## Contre-indications\n\n- Asthme sévère (bronchospasme)\n- BAV 2ème–3ème degré sans pacemaker\n- Syndrome de Wolff-Parkinson-White ([[def:Pré-excitation ventriculaire par faisceau accessoire|WPW]])",
-    "tags": [
-      "adénosine",
-      "TSV",
-      "antiarythmique",
-      "bloc AV",
-      "tachycardie",
-      "cardiologie"
-    ],
-    "media": [],
-    "updatedAt": "2026-08-05T09:30:00.000Z"
-  },
-  {
     "id": "rec-014",
     "slug": "glasgow-coma-scale",
     "title": "Score de Glasgow (GCS)",
