@@ -1,24 +1,5 @@
 [
   {
-    "id": "rec-007",
-    "slug": "amiodarone",
-    "title": "Amiodarone",
-    "category": "medication",
-    "severity": "urgent",
-    "summary": "Antiarythmique de classe III. Utilisé en première intention pour la FV/TV réfractaire à la défibrillation. Ralentit la conduction dans les tissus excitables.",
-    "content": "## Présentation\n\n- Flacon 150 mg/3 mL (50 mg/mL)\n- Dilution pour IV lente : dans G5% uniquement (incompatible avec NaCl 0,9%)\n\n---\n\n## Mécanisme\n\nBloqueur des canaux potassiques → allongement de la repolarisation (↑ QT). Effets secondaires sur canaux Na⁺ et Ca²⁺. Propriétés β-bloquantes et α-bloquantes.\n\n---\n\n## Indications\n\n### FV/TV sans pouls réfractaire — [[link:cardiac-arrest-acls|Protocole ACLS]]\n\n- **1ère dose :** 300 mg IV direct (dilués dans 20 mL G5%)\n- **2ème dose :** 150 mg IV si FV/TV persiste après 2ème choc\n\n### TV avec pouls, mal tolérée\n\n**150 mg IV** sur **10 minutes**, puis IVSE 1 mg/min pendant 6h.\n\n---\n\n## Effets Indésirables Aigus\n\n- Hypotension (fréquente si injection trop rapide)\n- Bradycardie, BAV\n- [[def:Allongement de l'intervalle QT pouvant induire une torsade de pointes|Allongement QT]]\n\n---\n\n## À Surveiller\n\nMonitoring ECG continu obligatoire. Avoir [[link:epinephrine|épinéphrine]] et atropine disponibles.",
-    "tags": [
-      "amiodarone",
-      "antiarythmique",
-      "FV",
-      "TV",
-      "QT",
-      "défibrillation réfractaire"
-    ],
-    "media": [],
-    "updatedAt": "2026-08-12T11:45:00.000Z"
-  },
-  {
     "id": "rec-008",
     "slug": "naloxone",
     "title": "Naloxone (Narcan)",
