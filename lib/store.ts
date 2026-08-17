@@ -24,7 +24,6 @@ async function fetchRemoteRedis(): Promise<WikiRecord[] | null> {
   try {
     const res = await fetch(`${UPSTASH_URL}/get/lsfd_records`, {
       headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
-      cache: 'no-store',
     });
     if (!res.ok) return null;
     const data = await res.json() as { result?: string };
@@ -32,9 +31,7 @@ async function fetchRemoteRedis(): Promise<WikiRecord[] | null> {
       const parsed = typeof data.result === 'string' ? JSON.parse(data.result) : data.result;
       if (Array.isArray(parsed)) return parsed as WikiRecord[];
     }
-  } catch (e) {
-    console.warn('Redis fetch error:', e);
-  }
+  } catch {}
   return null;
 }
 
@@ -51,13 +48,37 @@ async function saveRemoteRedis(records: WikiRecord[]): Promise<boolean> {
       body: JSON.stringify(JSON.stringify(records)),
     });
     return res.ok;
-  } catch (e) {
-    console.warn('Redis save error:', e);
+  } catch {
     return false;
   }
 }
 
-// Remote GitHub Commit helper (Auto-commits to GitHub repo if token is provided)
+// Remote GitHub Fetch helper (reads live data directly from repo)
+async function fetchFromGitHub(): Promise<WikiRecord[] | null> {
+  if (!GITHUB_TOKEN) return null;
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/data/records.json`, {
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        Accept: 'application/vnd.github+json',
+        'User-Agent': 'LSFD-Wiki-App',
+      },
+    });
+
+    if (!res.ok) return null;
+    const data = await res.json() as { content?: string; encoding?: string };
+    if (data.content) {
+      const raw = Buffer.from(data.content, 'base64').toString('utf-8');
+      const parsed = JSON.parse(raw) as WikiRecord[];
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch {}
+  return null;
+}
+
+// Remote GitHub Commit helper (Auto-commits to GitHub repo)
 async function commitToGitHub(records: WikiRecord[]): Promise<boolean> {
   if (!GITHUB_TOKEN) return false;
   try {
@@ -66,8 +87,8 @@ async function commitToGitHub(records: WikiRecord[]): Promise<boolean> {
       headers: {
         Authorization: `Bearer ${GITHUB_TOKEN}`,
         Accept: 'application/vnd.github+json',
+        'User-Agent': 'LSFD-Wiki-App',
       },
-      cache: 'no-store',
     });
 
     let sha: string | undefined;
@@ -83,6 +104,7 @@ async function commitToGitHub(records: WikiRecord[]): Promise<boolean> {
       headers: {
         Authorization: `Bearer ${GITHUB_TOKEN}`,
         Accept: 'application/vnd.github+json',
+        'User-Agent': 'LSFD-Wiki-App',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -93,8 +115,7 @@ async function commitToGitHub(records: WikiRecord[]): Promise<boolean> {
     });
 
     return updateRes.ok;
-  } catch (e) {
-    console.warn('GitHub sync error:', e);
+  } catch {
     return false;
   }
 }
@@ -151,11 +172,18 @@ function persistLocalStore(records: WikiRecord[]): void {
 }
 
 export async function getAll(): Promise<WikiRecord[]> {
-  const remote = await fetchRemoteRedis();
-  if (remote) {
-    globalThis.__lsfd_records_store = remote;
-    return remote;
+  const remoteRedis = await fetchRemoteRedis();
+  if (remoteRedis) {
+    globalThis.__lsfd_records_store = remoteRedis;
+    return remoteRedis;
   }
+
+  const remoteGH = await fetchFromGitHub();
+  if (remoteGH) {
+    globalThis.__lsfd_records_store = remoteGH;
+    return remoteGH;
+  }
+
   return loadLocalStore();
 }
 
@@ -179,7 +207,7 @@ export async function create(data: Omit<WikiRecord, 'id' | 'updatedAt'>): Promis
   records.push(record);
   persistLocalStore(records);
   await saveRemoteRedis(records);
-  commitToGitHub(records).catch(() => {});
+  await commitToGitHub(records).catch(() => {});
   return record;
 }
 
@@ -190,7 +218,7 @@ export async function update(id: string, data: Partial<Omit<WikiRecord, 'id'>>):
   records[idx] = { ...records[idx], ...data, id: records[idx].id, updatedAt: new Date().toISOString() };
   persistLocalStore(records);
   await saveRemoteRedis(records);
-  commitToGitHub(records).catch(() => {});
+  await commitToGitHub(records).catch(() => {});
   return records[idx];
 }
 
@@ -201,7 +229,7 @@ export async function remove(idOrSlug: string): Promise<boolean> {
     records.splice(idx, 1);
     persistLocalStore(records);
     await saveRemoteRedis(records);
-    commitToGitHub(records).catch(() => {});
+    await commitToGitHub(records).catch(() => {});
   }
   return true;
 }
