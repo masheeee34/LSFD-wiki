@@ -1,33 +1,5 @@
 [
   {
-    "id": "rec-001",
-    "slug": "cardiac-arrest-acls",
-    "title": "Arrêt Cardiaque — Protocole ACLS",
-    "category": "protocol",
-    "severity": "critical",
-    "summary": "Protocole de réanimation cardio-pulmonaire avancée (ACLS) pour adultes en arrêt cardiaque. Chaîne de survie, défibrillation précoce, et gestion des voies aériennes.",
-    "content": "## Définition\n\nL'arrêt cardiaque est une cessation soudaine de l'activité mécanique du cœur confirmée par l'absence de pouls, de conscience et de ventilation spontanée.\n\n---\n\n## Évaluation Initiale\n\n**Vérifier la réactivité** — stimulation verbale et douloureuse. Si absence de réponse :\n\n1. Appeler les renforts — activer le protocole de renfort médicalisé\n2. Commencer les compressions — 100–120/min, profondeur 5–6 cm\n3. Ratio 30:2 si voie aérienne non sécurisée\n\n---\n\n## Voie Aérienne\n\nSécuriser avec [[link:bag-valve-mask|BVM]] en attendant l'intubation. Viser une [[def:SpO₂ mesurée par oxymètre de pouls|saturation]] > 94% post-ROCS.\n\nSi intubation oro-trachéale indisponible : [[link:rapid-sequence-intubation|RSI]] ou dispositif supra-glottique.\n\n---\n\n## Défibrillation\n\nAnalyser le rythme toutes les 2 minutes avec l'[[link:aed-lifepak15|AED/Lifepak 15]].\n\n- **FV / TV sans pouls** → Choc biphasique 200 J, reprendre RCP immédiatement\n- **Asystolie / AESP** → Pas de choc, adresser causes réversibles (**4H/4T**)\n\n---\n\n## Médicaments\n\n- [[link:epinephrine|Épinéphrine]] 1 mg IV/IO toutes les 3–5 min\n- [[link:amiodarone|Amiodarone]] 300 mg IV en cas de FV/TV réfractaire (2ᵉ dose : 150 mg)\n\n---\n\n## Causes Réversibles — 4H/4T\n\n| 4H | 4T |\n|---|---|\n| Hypovolémie | Tamponnade cardiaque |\n| Hypoxie | Tension Pneumothorax |\n| Hypo/Hyperkaliémie | Thrombose (EP/SCA) |\n| Hypothermie | Toxiques |\n\n---\n\n## Post-ROCS\n\nMaintenir PAM ≥ 65 mmHg. Cibler normocapnie (EtCO₂ 35–45 mmHg). Préparer transfert vers centre de cathétérisme.",
-    "tags": [
-      "ACLS",
-      "RCP",
-      "défibrillation",
-      "FV",
-      "TV",
-      "arrêt cardiaque",
-      "épinéphrine",
-      "ROCS"
-    ],
-    "media": [
-      {
-        "id": "med-001",
-        "type": "video",
-        "url": "https://www.youtube.com/watch?v=CoVBRCkFelc",
-        "caption": "Démonstration RCP adulte — American Heart Association"
-      }
-    ],
-    "updatedAt": "2026-08-16T14:30:00.000Z"
-  },
-  {
     "id": "rec-002",
     "slug": "polytrauma-management",
     "title": "Polytraumatisme — Approche ABCDE",
