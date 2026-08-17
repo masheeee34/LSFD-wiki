@@ -1,24 +1,5 @@
 [
   {
-    "id": "rec-010",
-    "slug": "bag-valve-mask",
-    "title": "Ballon Masque (BVM / Bag-Valve-Mask)",
-    "category": "equipment",
-    "severity": "urgent",
-    "summary": "Dispositif de ventilation manuelle à pression positive. Utilisé pour l'assistance ventilatoire et la pré-oxygénation avant intubation. Nécessite une bonne technique d'étanchéité.",
-    "content": "## Description\n\nLe BVM est composé de :\n- Un **ballon autoremplissable** (volume 1,5 L adulte, 0,5 L pédiatrique)\n- Une **valve unidirectionnelle** anti-retour\n- Un **masque facial** avec coussin gonflable\n- Un **réservoir d'oxygène** (augmente FiO₂ jusqu'à 90–100%)\n\n---\n\n## Indications\n\n- Pré-oxygénation avant [[link:rapid-sequence-intubation|RSI]]\n- Ventilation de sauvetage en [[link:cardiac-arrest-acls|arrêt cardiaque]] (ratio 30:2)\n- Insuffisance respiratoire aiguë en attente d'intubation\n\n---\n\n## Technique EC (1 Opérateur)\n\nPouce + index forment le **E**, les 3 autres doigts soulèvent la mandibule (**C**).\n\nÉtanchéité masque-visage indispensable. En cas de difficulté : 2 opérateurs (1 masque, 1 ballon).\n\n---\n\n## Paramètres de Ventilation\n\n| Paramètre | Valeur |\n|---|---|\n| Fréquence adulte | 10–12/min |\n| Fréquence pédiatrique | 12–20/min |\n| Volume courant | 500–600 mL (visible soulèvement thoracique) |\n| Durée insufflation | 1 seconde |\n| FiO₂ avec réservoir | 90–100% |\n\n---\n\n## Pièges Fréquents\n\n- **Hyperventilation** → alcalose respiratoire, ↑ pression intrathoracique, ↓ retour veineux\n- **Mauvaise étanchéité** → insufflation gastrique → vomissements → inhalation\n- **Tête insuffisamment en extension** → obstruction pharyngée",
-    "tags": [
-      "BVM",
-      "ballon masque",
-      "ventilation",
-      "oxygène",
-      "pré-oxygénation",
-      "voies aériennes"
-    ],
-    "media": [],
-    "updatedAt": "2026-08-07T15:30:00.000Z"
-  },
-  {
     "id": "rec-011",
     "slug": "aed-lifepak15",
     "title": "Défibrillateur — LifePak 15",
