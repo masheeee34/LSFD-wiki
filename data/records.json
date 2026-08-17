@@ -1,24 +1,5 @@
 [
   {
-    "id": "rec-012",
-    "slug": "hemorrhagic-shock",
-    "title": "Choc Hémorragique & Damage Control",
-    "category": "protocol",
-    "severity": "critical",
-    "summary": "Protocole de prise en charge préhospitalière de l'hémorragie massive et du choc hypovolémique d'origine traumatique. Hémostase précoce et réanimation à volume restreint.",
-    "content": "## Classification ATLS de l'Hémorragie\n\n| Classe | Perte sanguine | FC | PAS | Conscience |\n|---|---|---|---|---|\n| I | < 750 mL (< 15%) | < 100 | Normale | Normale |\n| II | 750–1500 mL (15–30%) | 100–120 | Normale | Anxieux |\n| III | 1500–2000 mL (30–40%) | 120–140 | ↓ | Confus |\n| IV | > 2000 mL (> 40%) | > 140 | Très ↓ | Léthargique |\n\n---\n\n## Principes de Réanimation Hémostatique\n\n**Hémostase avant réplétion.** Éviter la dilution et l'hypertension qui déstabilisent le caillot primitif.\n\n1. **Arrêt du saignement** : Garrot de membre serré jusqu'à disparition du pouls distal, pansement compressif.\n2. **Hypotension permissive** : Cibler une PAM ~ 65 mmHg (PAS 80–90 mmHg) chez le traumatisé sans traumatisme crânien associé.\n3. **Voies veineuses** : 2 VVP 14G ou abord intra-osseux proximal.\n4. **Acide Tranexamique** : 1 g IV sur 10 min dans les 3h suivant le traumatisme.\n5. **Prévention de la triade létale** : [[def:Hypothermie, acidose et coagulopathie se renforçant mutuellement|Hypothermie + Acidose + Coagulopathie]]. Réchauffer le patient systématiquement.",
-    "tags": [
-      "choc hémorragique",
-      "traumatologie",
-      "ATLS",
-      "garrot",
-      "acide tranexamique",
-      "damage control"
-    ],
-    "media": [],
-    "updatedAt": "2026-08-15T17:00:00.000Z"
-  },
-  {
     "id": "rec-013",
     "slug": "adenosine",
     "title": "Adénosine",
