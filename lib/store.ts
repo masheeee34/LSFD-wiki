@@ -14,7 +14,7 @@ const LOCAL_DATA_FILE = path.join(process.cwd(), 'data', 'records.json');
 const TMP_DATA_FILE = path.join(os.tmpdir(), 'lsfd-records.json');
 
 function initStore(): WikiRecord[] {
-  if (globalThis.__lsfd_records_store && globalThis.__lsfd_records_store.length > 0) {
+  if (globalThis.__lsfd_records_store && Array.isArray(globalThis.__lsfd_records_store)) {
     return globalThis.__lsfd_records_store;
   }
 
@@ -77,11 +77,11 @@ export async function getAll(): Promise<WikiRecord[]> {
 }
 
 export async function getBySlug(slug: string): Promise<WikiRecord | undefined> {
-  return initStore().find((r) => r.slug === slug);
+  return initStore().find((r) => r.slug === slug || r.id === slug);
 }
 
 export async function getById(id: string): Promise<WikiRecord | undefined> {
-  return initStore().find((r) => r.id === id);
+  return initStore().find((r) => r.id === id || r.slug === id);
 }
 
 export async function create(data: Omit<WikiRecord, 'id' | 'updatedAt'>): Promise<WikiRecord> {
@@ -98,19 +98,20 @@ export async function create(data: Omit<WikiRecord, 'id' | 'updatedAt'>): Promis
 
 export async function update(id: string, data: Partial<Omit<WikiRecord, 'id'>>): Promise<WikiRecord | null> {
   const records = [...initStore()];
-  const idx = records.findIndex((r) => r.id === id);
+  const idx = records.findIndex((r) => r.id === id || r.slug === id);
   if (idx === -1) return null;
-  records[idx] = { ...records[idx], ...data, id, updatedAt: new Date().toISOString() };
+  records[idx] = { ...records[idx], ...data, id: records[idx].id, updatedAt: new Date().toISOString() };
   writeRecords(records);
   return records[idx];
 }
 
-export async function remove(id: string): Promise<boolean> {
+export async function remove(idOrSlug: string): Promise<boolean> {
   const records = [...initStore()];
-  const idx = records.findIndex((r) => r.id === id);
-  if (idx === -1) return false;
-  records.splice(idx, 1);
-  writeRecords(records);
+  const idx = records.findIndex((r) => r.id === idOrSlug || r.slug === idOrSlug);
+  if (idx !== -1) {
+    records.splice(idx, 1);
+    writeRecords(records);
+  }
   return true;
 }
 

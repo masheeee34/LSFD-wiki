@@ -44,10 +44,8 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
     if (!token || !verifySession(token)) {
       return NextResponse.json({ error: 'Session non autorisée ou expirée. Veuillez vous reconnecter.' }, { status: 401 });
     }
-    const removed = await store.remove(id);
-    if (!removed) {
-      return NextResponse.json({ error: 'Fiche introuvable' }, { status: 404 });
-    }
+    // Idempotent delete: if record is already absent or removed, it succeeds seamlessly
+    await store.remove(id);
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error('DELETE record error:', error);

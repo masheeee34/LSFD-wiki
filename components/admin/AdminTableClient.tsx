@@ -66,17 +66,16 @@ export default function AdminTableClient({ initialRecords }: Props) {
 
     setDeletingId(id);
     const previousRecords = [...records];
-    // Optimistic removal: instantaneous UI update
-    setRecords(prev => prev.filter(r => r.id !== id));
+    // Immediate instantaneous removal
+    setRecords(prev => prev.filter(r => r.id !== id && r.slug !== id));
 
     try {
       const res = await fetch(`/api/records/${id}`, {
         method: 'DELETE',
       });
-      if (!res.ok) {
+      if (!res.ok && res.status !== 404) {
         const data = await res.json().catch(() => null);
         alert(data?.error || 'Erreur lors de la suppression de la fiche.');
-        // Revert on error
         setRecords(previousRecords);
       }
     } catch {
