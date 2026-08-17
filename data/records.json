@@ -1,25 +1,5 @@
 [
   {
-    "id": "rec-011",
-    "slug": "aed-lifepak15",
-    "title": "Défibrillateur — LifePak 15",
-    "category": "equipment",
-    "severity": "critical",
-    "summary": "Moniteur-défibrillateur multiparamétrique de dotation opérationnelle LSFD. Fonctions : défibrillation manuelle/DAE, cardioversion synchronisée, entraînement électrosystolique et capnographie.",
-    "content": "## Description Générale\n\nLe **LifePak 15** (Physio-Control / Stryker) est le moniteur-défibrillateur de référence en préhospitalier LSFD. Il combine :\n\n- Défibrillation **manuelle et DAE**\n- Cardioversion synchronisée\n- Stimulation cardiaque externe ([[def:Pacing transcutané utilisé en cas de bradycardie symptomatique|pacing transcutané]])\n- ECG 12 dérivations avec interprétation automatique\n- Capnographie ([[def:Mesure continue du CO₂ en fin d'expiration|EtCO₂]])\n- Oxymétrie de pouls (SpO₂) et SpCO\n\n---\n\n## Procédure de Défibrillation\n\n1. Allumer l'appareil\n2. Connecter les électrodes ou palettes (position apex-sternum)\n3. Sélectionner mode **ANALYZE** (DAE) ou mode **MANUEL**\n4. Sélectionner énergie : **200 J** biphasique pour FV/TV\n5. Charger → s'assurer de la sécurité périphérique → délivrer le choc\n6. Reprendre immédiatement la RCP — **ne pas vérifier le pouls avant 2 min**\n\n---\n\n## Énergie de Cardioversion Synchronisée\n\n| Arythmie | Énergie Initiale |\n|---|---|\n| FA/Flutter | 100–200 J |\n| TV avec pouls | 100 J |\n| TSV | 50–100 J |",
-    "tags": [
-      "défibrillateur",
-      "LifePak 15",
-      "DAE",
-      "ECG",
-      "cardioversion",
-      "pacing",
-      "EtCO₂"
-    ],
-    "media": [],
-    "updatedAt": "2026-08-06T12:00:00.000Z"
-  },
-  {
     "id": "rec-012",
     "slug": "hemorrhagic-shock",
     "title": "Choc Hémorragique & Damage Control",
