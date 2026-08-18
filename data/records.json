@@ -434,5 +434,22 @@
     "id": "946da06e-9179-43f5-bd1f-da84ad23c6a0",
     "updatedAt": "2026-08-18T21:50:23.320Z",
     "severity": "critical"
+  },
+  {
+    "title": "Vertiges",
+    "slug": "vertiges",
+    "category": "protocol",
+    "severity": "urgent",
+    "summary": "Protocole relatif aux vertiges.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Débuter l’ABCD et vérifier les signes vitaux.\n2. Débuter la gestion des voies aériennes.\n3. Débuter l’oxygénothérapie.\n4. Vérifier la glycémie.\n5. Demander une assistance ALS ou transporter.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Débuter la surveillance cardiaque.\n2. Établir l’accès intraveineux.\n3. En cas de nausées ou vomissements, administrer **Ondansetron 4mg IV/IM**, peut être répété 1x après 15 minutes.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n> [!NOTE] Le terme « vertige » est souvent utilisé pour décrire deux sensations différentes : le vertige et l'étourdissement. Le vertige est la sensation qu'une personne ou son environnement bouge alors qu'il n'y a aucun mouvement réel. Les personnes décrivent souvent cette sensation comme une impression de tourner, de tomber, de basculer ou de perdre l'équilibre. Elle est souvent associée à des nausées/vomissements. L'étourdissement peut entraîner une sensation de malaise ou une syncope, et le patient rapporte souvent une amélioration en position couchée.",
+    "tags": [],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "997ae14e-a908-429c-a3fb-d4a1764ab82e",
+    "updatedAt": "2026-08-18T21:57:32.693Z"
   }
 ]
