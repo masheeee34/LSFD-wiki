@@ -568,5 +568,24 @@
     },
     "id": "60955207-ca85-4427-9d6b-ff29443cbe96",
     "updatedAt": "2026-08-18T22:19:16.156Z"
+  },
+  {
+    "title": "Blessure par écrasement",
+    "slug": "blessure-par-ecrasement",
+    "category": "protocol",
+    "severity": "critical",
+    "summary": "Protocole relatif aux traumatismes par écrasement.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Débuter l’ABCD et vérifier les signes vitaux.\n2. Débuter l’oxygénothérapie.\n3. Si nécessaire, prioriser l’immobilisation.\n4. Recouvrir la victime avec une couverture de survie.\n5. Demander une assistance ALS ou transporter.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Effectuer une gestion des voies aériennes avancée si nécessaire.\n2. Débuter une surveillance cardiaque au moyen du LIFEPAK 15.\n3. Établir l’accès intraveineux.\n4. Administrer **Normal Saline 1L IV**, répéter une fois pour un total de 2L.\n5. Vérifier les signaux vitaux toutes les 2-3 minutes.\n6. Pour les patients dans les 30 minutes suivant une hémorragie incontrôlée au niveau des membres malgré l'application d'un moyen de compression et d'un garrot et administrer **Tranexamic Acid (TXA) 1g** dilué dans 50-100mL Normal Saline IV/IO.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]",
+    "tags": [
+      "traumatisme"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "d6d27c19-2764-4b9e-bedc-798f2ce5872a",
+    "updatedAt": "2026-08-18T22:20:51.435Z"
   }
 ]
