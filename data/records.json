@@ -797,5 +797,24 @@
     },
     "id": "27bee57d-c7a2-4d74-8ada-3b14a0d30bbc",
     "updatedAt": "2026-08-18T22:50:23.096Z"
+  },
+  {
+    "title": "Évaluation de la glycémie",
+    "slug": "evaluation-de-la-glycemie",
+    "category": "maneuver",
+    "severity": "routine",
+    "summary": "Protocole relatif à la mesure de la glycémie.",
+    "content": "1. Préparer le matériel (glucomètre, lancette, lingettes désinfectantes, Band-Aid®, bandage de gaze et conteneur pour objets tranchants) à l'avance.\n2. Effectuer une asepsie au moyen d’une lingette désinfectante, en laissant sécher pendant 30 secondes.\n3. Allumer l'appareil.\n4. Confirmer le code de la bandelette réactive avec la lecture de l'écran du glucomètre.\n5. Piquez le doigt avec une lancette pour obtenir un échantillon de sang.\n6. Appliquer l'échantillon sur la bandelette réactive.\n7. Couvrir le point de ponction avec un pansement si le saignement continue.\n8. Noter et enregistrer la lecture.",
+    "tags": [
+      "glycemie"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "de9a1ed2-00e6-4eb3-9d21-1ed51e25e1ef",
+    "updatedAt": "2026-08-18T22:51:13.432Z"
   }
 ]
