@@ -587,5 +587,25 @@
     },
     "id": "d6d27c19-2764-4b9e-bedc-798f2ce5872a",
     "updatedAt": "2026-08-18T22:20:51.435Z"
+  },
+  {
+    "title": "Arrêt cardiaque traumatique",
+    "slug": "arret-cardiaque-traumatique",
+    "category": "protocol",
+    "severity": "critical",
+    "summary": "Protocole relatif aux arrêts cardiaques découlant d'un traumatisme.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Contrôler immédiatement les hémorragies importantes.\n2. Débuter la gestion des voies aériennes.\n3. Débuter la ventilation avec oxygène à 15L/min.\n4. Débuter les compressions thoraciques.\n5. Se munir et allumer le Défibrillateur Automatisé Externe (DAE).\n6. Appliquer les patchs du DAE sur le torse nu du patient en maintenant des interruptions minimales des compressions thoraciques.\n7. Connecter les patchs au DAE en écoutant les consignes vocales.\n8. Continuer la RCP et ré-analyser toutes les deux (2) minutes et choquer comme indiqué.\n9. Demander une assistance ALS et répéter la procédure en attendant.\n10. Considérer le transport après trois (3) cycles de RCP et d’analyse du DAE.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Continuer la RCP et la défibrillation en maintenant des interruptions minimales des compressions thoraciques.\n2. Si un DAE est en activité, effectuer la transition du DAE vers un moniteur ALS (tel que le LIFEPAK 15). Utiliser le paramètre maximal en joule lors de la défibrillation.\n3. Effectuer une décompression pour tout pneumothorax suspecté, tel que nécessaire.\n4. Établir un accès IV sur la route.\n5. Administrer **Normal Saline 2L IV**. Administrer par deux accès si possible.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]",
+    "tags": [
+      "traumatisme",
+      "acr"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "273c45e7-4b8a-4e88-b72e-07015896daeb",
+    "updatedAt": "2026-08-18T22:22:16.860Z"
   }
 ]
