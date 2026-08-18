@@ -275,5 +275,24 @@
     },
     "id": "38d3690b-455b-4a4f-a4fa-c428bbfc6d62",
     "updatedAt": "2026-08-18T21:15:19.330Z"
+  },
+  {
+    "title": "Accouchement",
+    "slug": "accouchement",
+    "category": "protocol",
+    "severity": "urgent",
+    "summary": "Protocole relatif à l'accouchement.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Débuter l’ABCD et vérifier les signes vitaux.\n2. Débuter la gestion des voies aériennes et une oxygénothérapie si nécessaire.\n3. Vérifier le couronnement si la mère sent des contractions, l’urgence de pousser ou à la sensation d’un mouvement au niveau de son abdomen. Si le couronnement est présent, l’accouchement est imminent.\n4. Si l’accouchement a commencé, traiter de façon appropriée.\n5. Si l’accouchement n’a pas commencé, placez la patiente en position couchée sur son côté gauche.\n6. Demander une assistance ALS si l’accouchement est imminent.\n7. Transporter.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Débuter la surveillance cardiaque.\n2. Réaliser, enregistrer et évaluer un électrocardiogramme (ECG) à 12 dérivations.\n3. Établir l’accès intraveineux.\n4. En cas d’hémorragie post-partum, administrer **Normal Saline 1L IV**.\n5. Répéter une fois si le saignement persiste.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]",
+    "tags": [
+      "obstétricales"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "3620d496-5695-4700-ac9e-2c039ef00f98",
+    "updatedAt": "2026-08-18T21:23:44.275Z"
   }
 ]
