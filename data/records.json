@@ -778,5 +778,24 @@
     "id": "6d741ce0-7171-4367-9119-3d85576bdad2",
     "updatedAt": "2026-08-18T22:49:07.468Z",
     "severity": "routine"
+  },
+  {
+    "title": "Évaluation de la tension",
+    "slug": "evaluation-de-la-tension",
+    "category": "maneuver",
+    "severity": "routine",
+    "summary": "Protocole relatif à la mesure de la tension artérielle par palpation.",
+    "content": "1. Placez le patient avec le bras au niveau du cœur.\n2. Palpez le pouls brachial ou radial.\n3. Appliquez le brassard autour du membre.\n4. Gonfler le brassard de pression artérielle à 30 mmHg au-dessus du point où le pouls disparaît.\n5. Dégonfler lentement le brassard tout en notant la valeur à laquelle on sent que le pouls revient.\n6. Enregistrer la pression artérielle systolique comme #/P.",
+    "tags": [
+      "tension"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "27bee57d-c7a2-4d74-8ada-3b14a0d30bbc",
+    "updatedAt": "2026-08-18T22:50:23.096Z"
   }
 ]
