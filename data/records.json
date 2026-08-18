@@ -369,7 +369,8 @@
       "operationalStatus": "ACTIF 2026"
     },
     "id": "20c4d4b4-f3a1-47e5-96bf-6eca1ee2f2e8",
-    "updatedAt": "2026-08-18T21:38:53.569Z"
+    "updatedAt": "2026-08-18T21:50:17.983Z",
+    "severity": "critical"
   },
   {
     "title": "Hyperthermie",
