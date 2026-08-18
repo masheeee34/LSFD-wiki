@@ -823,14 +823,28 @@
     "category": "protocol",
     "summary": "Protocole relatif à la ventilation artificielle par insufflateur manuel.",
     "content": "1. Sélectionner le [[def:Ballon auto-remplisseur à valve unidirectionnelle|BAVU]] de taille adulte, pédiatrique ou infantile et assembler les composants.\n2. Fixer l'alimentation en oxygène au BAVU ; régler l'alimentation en oxygène au niveau recommandé.\n3. Sceller le masque sur le visage du patient tout en maintenant l'inclinaison de la tête et l'élévation du menton.\n4. Presser le ballon pour ventiler le patient.\n5. Observez le soulèvement et l'abaissement du thorax à chaque ventilation. Si le thorax ne se soulève pas, réévaluer l'équipement, la technique et le patient.\n6. Si deux secouristes sont disponibles, l'un d'eux utilise ses deux mains pour maintenir l'étanchéité du masque, tandis que le second comprime le ballon pour effectuer les ventilations.",
-    "tags": [],
-    "media": [],
+    "tags": [
+      "bavu",
+      "respiration",
+      "ventilation",
+      "insufflateur",
+      "insufflation"
+    ],
+    "media": [
+      {
+        "id": "1787093613361",
+        "type": "video",
+        "url": "https://youtu.be/zUGw90iL0Qw",
+        "caption": ""
+      }
+    ],
     "specs": {
       "organization": "LSFD EMS",
-      "echelon": "BLS",
+      "echelon": "Tous",
       "operationalStatus": "ACTIF 2026"
     },
     "id": "d1014158-376b-44d2-8f50-bf341b5f9551",
-    "updatedAt": "2026-08-18T22:52:31.090Z"
+    "updatedAt": "2026-08-18T22:53:44.993Z",
+    "severity": "routine"
   }
 ]
