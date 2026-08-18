@@ -451,5 +451,23 @@
     },
     "id": "997ae14e-a908-429c-a3fb-d4a1764ab82e",
     "updatedAt": "2026-08-18T21:57:32.693Z"
+  },
+  {
+    "title": "Convulsions",
+    "slug": "convulsions",
+    "category": "protocol",
+    "summary": "Protocole relatif aux convulsions.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Protéger le patient pour prévenir toute blessure.\n2. Débuter l’ABCD et vérifier les signes vitaux.\n3. Débuter la gestion des voies aériennes en suivant ces considérations spéciales: Positionner le patient de manière à maintenir la perméabilité des voies respiratoires. Ne pas utiliser de canule de Guedel durant les convulsions.\n4. Débuter l’oxygénothérapie.\n5. Éviter les restrictions inutiles ou excessives.\n6. Traiter les possibles blessures si nécessaire.\n7. Vérifier la glycémie.\n8. Demander une assistance ALS si le patient convulse au moment de l’évaluation primaire.\n9. Transporter.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Établir l’accès intraveineux.\n2. Si le patient est sujet à des convulsions généralisées qui sont en cours ou récurrentes ET si le patient est actuellement en train de convulser, administrer **Midazolam 10mg (2 mL) IM/IN**.\n3. Si accès intraveineux déjà établi, administter **Midazolam 5mg (1 mL) IV/IO**, répéter 1x après 2 minutes.\n4. Effectuer une gestion des voies aériennes avancée si nécessaire.\n5. Débuter la surveillance cardiaque.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n> [!NOTE] Les convulsions peuvent être causées par des problèmes médicaux sous-jacents ou l'ingestion de substances toxiques. Faites tout votre possible pour obtenir les antécédents médicaux du patient et déterminer tous les médicaments/stupéfiants qu'il a pu prendre.",
+    "tags": [
+      "neurologie"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "BLS",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "1dbb8583-31b4-48e5-9c0b-a72d8ae22f8b",
+    "updatedAt": "2026-08-18T22:01:30.639Z"
   }
 ]
