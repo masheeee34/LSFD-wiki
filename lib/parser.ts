@@ -83,60 +83,91 @@ function escapeRegex(str: string): string {
 function applyDictionaryToTextTokens(tokens: InlineToken[], dictionary?: Record<string, string>): InlineToken[] {
   if (!dictionary || Object.keys(dictionary).length === 0) return tokens;
 
-  // Build sorted keys (longer words first to avoid sub-matching)
-  const words = Object.keys(dictionary).sort((a, b) => b.length - a.length);
-  if (words.length === 0) return tokens;
+  const allWords = Object.keys(dictionary).filter(w => w.trim().length > 0);
+  if (allWords.length === 0) return tokens;
 
-  const pattern = new RegExp(`(?<![a-zA-Z0-9À-ÿ])(${words.map(escapeRegex).join('|')})(?![a-zA-Z0-9À-ÿ])`, 'gi');
+  // Short words (<= 3 chars) or uppercase words (e.g. PAS, GCS, BVM) MUST match case-sensitively
+  const caseSensitiveWords = allWords
+    .filter(w => w === w.toUpperCase() || w.length <= 3)
+    .sort((a, b) => b.length - a.length);
 
-  const result: InlineToken[] = [];
+  // Longer mixed/lowercase words can match case-insensitively
+  const caseInsensitiveWords = allWords
+    .filter(w => !(w === w.toUpperCase() || w.length <= 3))
+    .sort((a, b) => b.length - a.length);
 
-  for (const token of tokens) {
-    if (token.type === 'text') {
-      const text = token.value;
-      let lastIndex = 0;
-      let match: RegExpExecArray | null;
-
-      while ((match = pattern.exec(text)) !== null) {
-        const matchedText = match[0];
-        const matchIndex = match.index;
-
-        if (matchIndex > lastIndex) {
-          result.push({ type: 'text', value: text.substring(lastIndex, matchIndex) });
-        }
-
-        // Find matching definition (case-insensitive search in dictionary keys)
-        const dictKey = Object.keys(dictionary).find(k => k.toLowerCase() === matchedText.toLowerCase()) || matchedText;
-        const explanation = dictionary[dictKey];
-
-        if (explanation) {
-          result.push({
-            type: 'definition',
-            word: matchedText,
-            explanation,
-          });
-        } else {
-          result.push({ type: 'text', value: matchedText });
-        }
-
-        lastIndex = matchIndex + matchedText.length;
-      }
-
-      if (lastIndex < text.length) {
-        result.push({ type: 'text', value: text.substring(lastIndex) });
-      }
-    } else if (token.type === 'bold' && token.tokens) {
-      result.push({ type: 'bold', tokens: applyDictionaryToTextTokens(token.tokens, dictionary) });
-    } else if (token.type === 'italic' && token.tokens) {
-      result.push({ type: 'italic', tokens: applyDictionaryToTextTokens(token.tokens, dictionary) });
-    } else if (token.type === 'color' && token.tokens) {
-      result.push({ type: 'color', color: token.color, tokens: applyDictionaryToTextTokens(token.tokens, dictionary) });
-    } else {
-      result.push(token);
-    }
+  const patterns: Array<{ regex: RegExp; exact: boolean }> = [];
+  if (caseSensitiveWords.length > 0) {
+    patterns.push({
+      regex: new RegExp(`(?<![a-zA-Z0-9À-ÿ])(${caseSensitiveWords.map(escapeRegex).join('|')})(?![a-zA-Z0-9À-ÿ])`, 'g'),
+      exact: true,
+    });
+  }
+  if (caseInsensitiveWords.length > 0) {
+    patterns.push({
+      regex: new RegExp(`(?<![a-zA-Z0-9À-ÿ])(${caseInsensitiveWords.map(escapeRegex).join('|')})(?![a-zA-Z0-9À-ÿ])`, 'gi'),
+      exact: false,
+    });
   }
 
-  return result;
+  if (patterns.length === 0) return tokens;
+
+  let currentTokens = tokens;
+
+  for (const { regex, exact } of patterns) {
+    const nextTokens: InlineToken[] = [];
+
+    for (const token of currentTokens) {
+      if (token.type === 'text') {
+        const text = token.value;
+        let lastIndex = 0;
+        let match: RegExpExecArray | null;
+        regex.lastIndex = 0;
+
+        while ((match = regex.exec(text)) !== null) {
+          const matchedText = match[0];
+          const matchIndex = match.index;
+
+          if (matchIndex > lastIndex) {
+            nextTokens.push({ type: 'text', value: text.substring(lastIndex, matchIndex) });
+          }
+
+          const dictKey = exact
+            ? Object.keys(dictionary).find(k => k === matchedText) || matchedText
+            : Object.keys(dictionary).find(k => k.toLowerCase() === matchedText.toLowerCase()) || matchedText;
+          const explanation = dictionary[dictKey];
+
+          if (explanation) {
+            nextTokens.push({
+              type: 'definition',
+              word: matchedText,
+              explanation,
+            });
+          } else {
+            nextTokens.push({ type: 'text', value: matchedText });
+          }
+
+          lastIndex = matchIndex + matchedText.length;
+        }
+
+        if (lastIndex < text.length) {
+          nextTokens.push({ type: 'text', value: text.substring(lastIndex) });
+        }
+      } else if (token.type === 'bold' && token.tokens) {
+        nextTokens.push({ type: 'bold', tokens: applyDictionaryToTextTokens(token.tokens, dictionary) });
+      } else if (token.type === 'italic' && token.tokens) {
+        nextTokens.push({ type: 'italic', tokens: applyDictionaryToTextTokens(token.tokens, dictionary) });
+      } else if (token.type === 'color' && token.tokens) {
+        nextTokens.push({ type: 'color', color: token.color, tokens: applyDictionaryToTextTokens(token.tokens, dictionary) });
+      } else {
+        nextTokens.push(token);
+      }
+    }
+
+    currentTokens = nextTokens;
+  }
+
+  return currentTokens;
 }
 
 export function tokenizeInline(text: string, dictionary?: Record<string, string>): InlineToken[] {
