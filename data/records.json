@@ -333,5 +333,24 @@
     },
     "id": "b711d710-f9b1-4414-9962-38721b041e35",
     "updatedAt": "2026-08-18T21:28:12.367Z"
+  },
+  {
+    "title": "Brûlure",
+    "slug": "brulure",
+    "category": "protocol",
+    "severity": "critical",
+    "summary": "Protocole relatif aux brûlures.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Éloigner la victime de la source de combustion si possible.\n2. Débuter l’ABCD et vérifier les signes vitaux.\n3. Débuter la gestion des voies aériennes et l’oxygénothérapie (15L/min) si nécessaire.\n4. Retirer les vêtements qui n’adhèrent pas à la peau du patient.\n5. Si possible, retirer les bijoux et autres objets contraignants sur les membres brûlés.\n6. Si possible, appliquez de l’eau froide sur la brûlure et couvrir avec un pansement stérile non adhérent.\n7. Pour les brûlures avec un degré de lésion supérieur, appliquer des compresses médicales BURNAID.\n8. Irriguer immédiatement les brûlures oculaires avec une solution physiologique (Normal Saline) ou de l’eau.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Effectuer une gestion des voies aériennes avancée si nécessaire.\n2. Débuter la surveillance cardiaque.\n3. Établir l’accès intraveineux.\n4. Pour les brûlures partielles et complètes (2e degré ou plus) > 20% surface corporelle, administrer **Normal Saline 1L IV/IO**.\n5. Si accès intraveineux impossible sur un patient alerte : administrer **Lidocaine 2% 40mg (20mg/mL) IO**.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n> [!CRITICAL] Assurer la sécurité des lieux et la décontamination des patients en cas de brûlures chimiques ou d'exposition HAZMAT: Pour les brûlures chimiques liquides: rincer abondamment à l'eau ou avec une solution physiologique (Normal Saline), idéalement pendant au moins 20 minutes. Pour les brûlures par poudre sèche: brosser la poudre avant de rincer.\n\n> [!CRITICAL] Faire preuve de prudence pour éviter la propagation du contaminant aux zones non touchées (en particulier d'un œil à l'autre).\n\n> [!CRITICAL] Si l'on soupçonne la présence de matières dangereuses, avertir l'hôpital de destination pour permettre une décontamination appropriée.\n\n> [!NOTE] La saturation en oxygène peut être faussement élevée en cas de suspicion d'inhalation de fumée.",
+    "tags": [
+      "environnement"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "69e3a862-adb9-4e56-906b-44a1da27795e",
+    "updatedAt": "2026-08-18T21:35:05.576Z"
   }
 ]
