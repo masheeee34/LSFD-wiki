@@ -651,5 +651,27 @@
     },
     "id": "f43d60ad-3bf3-415f-8e32-5a85fb7c6c85",
     "updatedAt": "2026-08-18T22:28:49.773Z"
+  },
+  {
+    "title": "Hémorragie (tête/cou)",
+    "slug": "hemorragie-tete-cou",
+    "category": "protocol",
+    "severity": "critical",
+    "summary": "Protocole relatif aux hémorragies situées à la tête ou au cou.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Si possible, immobiliser le patient.\n2. Effectuer une pression directe sur la/les plaie(s).\n3. Si un corps étranger est présent, le couvrir avec une gaze humide.\n4. Si blessure aux yeux, les couvrir avec un pansement imbibé de sérum physiologique.\n5. Débuter l’ABCD.\n6. Débuter la gestion des voies aériennes et l’oxygénothérapie.\n7. Demander une ressource ALS ou transporter.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Débuter une gestion des voies aériennes avancée si nécessaire.\n2. Débuter la surveillance cardiaque.\n3. Établir l’accès intraveineux.\n4. Administrer **1L Normal Saline IV**.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n> [!CRITICAL] Le traitement des hémorragies importantes est toujours prioritaire sur l’évaluation primaire.\n\n> [!CRITICAL] Si le saignement traverse un pansement, le recouvrir avec un second.",
+    "tags": [
+      "hémorragie",
+      "saignement",
+      "traumatisme",
+      "gsw"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "59cc8813-b61c-427d-9e6e-baad415cfa67",
+    "updatedAt": "2026-08-18T22:30:22.701Z"
   }
 ]
