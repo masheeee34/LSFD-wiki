@@ -530,5 +530,24 @@
     },
     "id": "05a61040-c754-48e9-aa2d-8e14018fa30c",
     "updatedAt": "2026-08-18T22:12:38.030Z"
+  },
+  {
+    "title": "Blessure par inhalation",
+    "slug": "blessure-par-inhalation",
+    "category": "protocol",
+    "summary": "Protocole relatif aux blessures par inhalation (ex; fumée).",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Débuter l’ABCD et vérifier les signes vitaux.\n2. Débuter la gestion des voies aériennes.\n3. Débuter l’oxygénothérapie.\n4. Traiter toute potentielle brûlure.\n5. Évaluer le taux de monoxyde de carbone (SpCO) du patient, si possible.\n6. Demander une assistance ALS.\n7. Transporter.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Effectuer une gestion des voies aériennes avancée si nécessaire.\n2. Établir l’accès intraveineux.\n3. Administrer Normal Saline 2L IV.\n4. Débuter la surveillance cardiaque.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]",
+    "tags": [
+      "respiration",
+      "fumée"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "BLS",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "a94e337a-2db1-45de-9edb-43bbec0569e3",
+    "updatedAt": "2026-08-18T22:16:16.376Z"
   }
 ]
