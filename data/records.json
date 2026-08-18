@@ -128,7 +128,8 @@
       "operationalStatus": "ACTIF 2026"
     },
     "id": "bfc169f4-42a5-4bcb-b824-2259f834010f",
-    "updatedAt": "2026-08-17T21:23:45.502Z"
+    "updatedAt": "2026-08-18T13:47:41.227Z",
+    "severity": "routine"
   },
   {
     "title": "Scènes de crime et suicides suspectés",
