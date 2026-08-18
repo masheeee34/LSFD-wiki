@@ -673,5 +673,24 @@
     },
     "id": "59cc8813-b61c-427d-9e6e-baad415cfa67",
     "updatedAt": "2026-08-18T22:30:22.701Z"
+  },
+  {
+    "title": "Gestion de la douleur",
+    "slug": "gestion-de-la-douleur",
+    "category": "protocol",
+    "severity": "urgent",
+    "summary": "Protocole relatif à la gestion de la douleur.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Si 1 à 3 sur l’[[link:echelle-de-la-douleur|échelle de la douleur]] :  **Ibuprofen 600 mg [[def:Per Os, par voie orale.|PO]]**, 1x. Poches de glace. Distraction. Position confortable.\n2. Pour les douleurs au-dessus de 4, demander une ressource ALS.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Si 4 à 7 sur l’[[link:echelle-de-la-douleur|échelle de la douleur]], administrer **Ketorolac 15 mg (1 mL) IV/IO**, ou **Ketorolac 30 mg (2 mL) IM**.\n2. Si supérieur à 7 sur l’[[link:echelle-de-la-douleur|échelle de la douleur]], administrer **Fentanyl 50mcg (1mL) IV/IM/IN**, répéter toutes les 5 minutes pour dose maximum de 150mcg, ou **Morphine 4mg (1mL) IV/IO/IM**, répéter toutes les 5 minutes pour dose maximum de 12mg.\n\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n> [!CRITICAL] Contre-indications pour le Ketorolac: hémorragie, respiration sifflante, traumatisme crânien, grossesse.\n\n> [!CRITICAL] Contre-indications pour le Fentanyl : accouchement.\n\n> [!CRITICAL] Contre-indications pour la Morphine : hypotension, accouchement.",
+    "tags": [
+      "traumatisme"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "5cc8a0e8-2dbe-44b4-a744-29bf014f0513",
+    "updatedAt": "2026-08-18T22:34:45.934Z"
   }
 ]
