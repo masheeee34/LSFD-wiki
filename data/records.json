@@ -352,5 +352,23 @@
     },
     "id": "69e3a862-adb9-4e56-906b-44a1da27795e",
     "updatedAt": "2026-08-18T21:35:05.576Z"
+  },
+  {
+    "title": "Électrisation",
+    "slug": "electrisation",
+    "category": "protocol",
+    "summary": "Protocole relatif aux blessures par l'électricité.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. S’il est impossible de l’éteindre, éloigner la victime de la source électrique si possible.\n2. Débuter l’ABCD et vérifier les signes vitaux.\n3. Débuter la gestion des voies aériennes et l’oxygénothérapie (15L/min) si nécessaire.\n4. En cas d’arrêt cardiaque, voir le [[link:arret-cardiaque-non-traumatique|protocole approprié]].\n5. En cas de brûlure, voir le [[link:brulure|protocole approprié]].\n6. Retirer les vêtements et bijoux de la victime si possible.\n7. Contacter une unité ALS ou transporter dès que possible.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Effectuer une gestion des voies aériennes avancée si nécessaire.\n2. Débuter la surveillance cardiaque.\n3. Établir l’accès intraveineux.\n4. En cas de nausées ou vomissements, administrer **Ondansetron 4mg IV/IM**, peut être répété 1x après 15 minutes.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n> [!CRITICAL] Ne touchez pas le patient tant que vous n'avez pas coupé la source d'électricité. Le courant électrique peut être conduit par l'eau et la peau. Assurez-vous que la zone entourant le patient est sèche avant de vous approcher de lui.\n\n> [!CRITICAL] L'électrocution peut entraîner une tachycardie, une fibrillation ventriculaire, une asystolie ou d'autres arythmies. Cependant, si le rythme cardiaque du patient est régulier lors de l'évaluation, il est peu probable qu'il développe une arythmie.\n",
+    "tags": [
+      "environnement"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "BLS",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "20c4d4b4-f3a1-47e5-96bf-6eca1ee2f2e8",
+    "updatedAt": "2026-08-18T21:38:53.569Z"
   }
 ]
