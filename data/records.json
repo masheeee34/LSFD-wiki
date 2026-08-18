@@ -313,5 +313,25 @@
     },
     "id": "6bbfc72b-e672-4afa-a065-1153ddb9b257",
     "updatedAt": "2026-08-18T21:25:30.987Z"
+  },
+  {
+    "title": "Anaphylaxie",
+    "slug": "anaphylaxie",
+    "category": "protocol",
+    "severity": "critical",
+    "summary": "Protocole relatif aux réactions allergiques aiguës.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Débuter l’ABCD et vérifier les signes vitaux.\n2. Débuter la gestion des voies aériennes.\n3. Débuter l’oxygénothérapie. (15L/min)\n4. Vérifier les rythmes circulatoire et respiratoire, s’il est anormal considérer l’injection d'Épinéphrine IM par auto-injecteur (EpiPen).\n5. Demander une assistance ALS ou transporter.\n6. Si les symptômes continuent, considérer une nouvelle injection d'Épinéphrine IM (2 doses maximum).\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Débuter la surveillance cardiaque.\n2. Réaliser, enregistrer et évaluer un électrocardiogramme (ECG) à 12 dérivations.\n3. Établir l’accès intraveineux.\n4. En cas de démangeaisons, administrer **Diphenhydramine 50mg (1mL) IV/IM**.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n> [!CRITICAL] Ne pas retarder le transport, même en cas d’attente pour une deuxième dose d’Épinéphrine. Après l’administration d’Épinéphrine, surveillez attentivement le patient toutes les 3-5 minutes pour constater toute évolution des symptômes. L’anaphylaxie peut mettre en danger la vie du patient si elle est associée avec une exposition passée à : la drogue ou des médicaments, un agent allergène (piqûre d’abeille ou venin d’insecte), de la nourriture (cacahuètes, fruits de mer, …).",
+    "tags": [
+      "allergie",
+      "environnement"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "b711d710-f9b1-4414-9962-38721b041e35",
+    "updatedAt": "2026-08-18T21:28:12.367Z"
   }
 ]
