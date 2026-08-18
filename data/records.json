@@ -112,7 +112,8 @@
       "operationalStatus": "ACTIF 2026"
     },
     "id": "c3d3e59c-5cd4-44ef-9ff4-d7d66225db82",
-    "updatedAt": "2026-08-17T21:17:22.258Z"
+    "updatedAt": "2026-08-18T13:47:45.746Z",
+    "severity": "routine"
   },
   {
     "title": "Détermination de la mort",
