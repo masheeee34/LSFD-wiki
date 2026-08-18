@@ -629,5 +629,27 @@
     },
     "id": "40d16cd7-b96f-4709-8156-ca3054fdb5a9",
     "updatedAt": "2026-08-18T22:25:11.072Z"
+  },
+  {
+    "title": "Hémorragie (thorax/abdomen/pelvis)",
+    "slug": "hemorragie-thorax-abdomen-pelvis",
+    "category": "protocol",
+    "severity": "critical",
+    "summary": "Protocole relatif aux hémorragies situées au thorax, à l'abdomen ou au pelvis.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Stabiliser la colonne vertébrale et toute fracture suspectée.\n2. Effectuer une pression directe sur la/les plaie(s).\n3. Si nécessaire, appliquer un pansement occlusif.\n4. Couvrez tout organe exposé et éviscéré avec une gaze humide imprégnée de solution saline.\n6. Débuter l’ABCD.\n7. Débuter la gestion des voies aériennes et l’oxygénothérapie.\n8. Demander une ressource ALS ou transporter.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Débuter une gestion des voies aériennes avancée si nécessaire.\n2. Débuter la surveillance cardiaque.\n3. Établir l’accès intraveineux.\n4. Administrer **1L Normal Saline IV**.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n> [!CRITICAL] Le traitement des hémorragies importantes est toujours prioritaire sur l’évaluation primaire.\n\n> [!CRITICAL] Si le saignement traverse un pansement, le recouvrir avec un second.",
+    "tags": [
+      "hémorragie",
+      "saignement",
+      "traumatisme",
+      "gsw"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "f43d60ad-3bf3-415f-8e32-5a85fb7c6c85",
+    "updatedAt": "2026-08-18T22:28:49.773Z"
   }
 ]
