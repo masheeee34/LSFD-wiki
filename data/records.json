@@ -256,5 +256,22 @@
     "id": "1d72fcd3-4d68-46e5-bdcb-2317be233b27",
     "updatedAt": "2026-08-18T21:13:51.616Z",
     "severity": "urgent"
+  },
+  {
+    "title": "Œdème pulmonaire",
+    "slug": "deme-pulmonaire",
+    "category": "protocol",
+    "severity": "critical",
+    "summary": "Protocole relatif à l'œdème pulmonaire (accumulation anormale de liquide dans les alvéoles/tissus des poumons).",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Débuter l’ABCD et vérifier les signes vitaux.\n2. ébuter la gestion des voies aériennes et une oxygénothérapie (15L/min) si nécessaire.\n3. Administrer de l’Aspirine 325 mg à croquer PO, si disponible et qu’une douleur thoracique est ressentie.\n4. Demander une assistance ALS, ne pas retarder le transport.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Débuter la surveillance cardiaque.\n2. Réaliser, enregistrer et évaluer un électrocardiogramme (ECG) à 12 dérivations.\n3. Établir l’accès intraveineux.\n4. Vérifier les signes vitaux toutes les 2-3 minutes.\n5. Administrer de la Nitroglycérine 0.4 mg SL toutes les cinq (5) minutes, trois (3) doses maximum.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n",
+    "tags": [],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "38d3690b-455b-4a4f-a4fa-c428bbfc6d62",
+    "updatedAt": "2026-08-18T21:15:19.330Z"
   }
 ]
