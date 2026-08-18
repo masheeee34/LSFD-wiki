@@ -5,14 +5,14 @@
     "category": "protocol",
     "severity": "routine",
     "summary": "Analyse et compréhension de la scène, observations initiales relatives à la sécurité.",
-    "content": "## **Évaluer la sécurité de la scène**\n\n- Évaluer les risques pour le personnel intervenant, le patient et les passants,\n- Éloigner le patient des dangers avant de commencer les soins médicaux,\n- Déterminer le nombre de patients,\n- Déterminer la blessure ou la source potentielle de la maladie,\n- Demander des ressources supplémentaires si nécessaire,\n- Déterminer la blessure ou la source potentielle de la maladie,\n- Demander des ressources supplémentaires si nécessaire,\n- Évaluer le rapport soins sur place/transport immédiat et décider,\n- Envisager la déclaration d'un MCI (Mass Casualty Incident).\n\n> [!CRITICAL] La sécurité du personnel prime sur le reste. Un pompier/EMT blessé ou dans l'incapacité de porter secours provoque une charge de travail supplémentaire et l'absence d'un secouriste.\n\n---\n## **UTILISER LES ÉQUIPEMENTS DE PROTECTION INDIVIDUELLE APPROPRIÉS**\n\n- Tenir compte des dangers suspectés ou confirmés sur les lieux\n- Tenir compte des maladies contagieuses suspectées ou confirmées.\n- S’équiper en conséquence (casque, masque, gants, lunettes, …).\n- Porter un gilet haute visibilité ou une veste réfléchissante si nécessaire.\n\n---\n## **ENVISAGER UNE IMMOBILISATION IMMÉDIATE DU PATIENT SI NÉCESSAIRE**\nVoir protocole immobilisation.",
+    "content": "## **Évaluer la sécurité de la scène**\n\n- Évaluer les risques pour le personnel intervenant, le patient et les passants,\n- Éloigner le patient des dangers avant de commencer les soins médicaux,\n- Déterminer le nombre de patients,\n- Déterminer la blessure ou la source potentielle de la maladie,\n- Demander des ressources supplémentaires si nécessaire,\n- Déterminer la blessure ou la source potentielle de la maladie,\n- Demander des ressources supplémentaires si nécessaire,\n- Évaluer le rapport soins sur place/transport immédiat et décider,\n- Envisager la déclaration d'un MCI (Mass Casualty Incident).\n\n> [!CRITICAL] La sécurité du personnel prime sur le reste. Un pompier/EMT blessé ou dans l'incapacité de porter secours provoque une charge de travail supplémentaire et l'absence d'un secouriste.\n\n---\n## **UTILISER LES ÉQUIPEMENTS DE PROTECTION INDIVIDUELLE APPROPRIÉS**\n\n- Tenir compte des dangers suspectés ou confirmés sur les lieux\n- Tenir compte des maladies contagieuses suspectées ou confirmées.\n- S’équiper en conséquence (casque, masque, gants, lunettes, …).\n- Porter un gilet haute visibilité ou une veste réfléchissante si nécessaire.\n\n---\n## **ENVISAGER UNE [[link:immobilisation-du-rachis|IMMOBILISATION]] IMMÉDIATE DU PATIENT SI NÉCESSAIRE**",
     "tags": [
       "drrtc",
       "sécurité"
     ],
     "media": [],
     "id": "35f532d7-62d3-4fa6-af0a-cd940fd3fc6f",
-    "updatedAt": "2026-08-18T13:49:12.636Z",
+    "updatedAt": "2026-08-18T22:55:51.391Z",
     "specs": {
       "organization": "LSFD EMS",
       "echelon": "BLS",
