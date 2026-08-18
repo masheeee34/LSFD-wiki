@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import type { InterventionPack } from '@/types';
 
@@ -11,6 +12,7 @@ interface PacksTableClientProps {
 export default function PacksTableClient({ initialPacks }: PacksTableClientProps) {
   const [packs, setPacks] = useState<InterventionPack[]>(initialPacks);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleDelete = async (id: string, title: string) => {
     if (!confirm(`Confirmer la suppression définitive du pack « ${title} » ?`)) {
@@ -24,6 +26,7 @@ export default function PacksTableClient({ initialPacks }: PacksTableClientProps
     try {
       const res = await fetch(`/api/packs/${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Échec de la suppression');
+      router.refresh();
     } catch {
       alert('Erreur lors de la suppression sur le serveur');
       // Revert if failed

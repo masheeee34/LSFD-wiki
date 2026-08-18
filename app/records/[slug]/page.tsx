@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { getAll, getBySlug } from '@/lib/store';
+import { getAll, getBySlug, getGlobalDictionary } from '@/lib/store';
 import { verifySession, SESSION_COOKIE } from '@/lib/auth';
 import ContentParser from '@/components/content/ContentParser';
 import MediaGallery from '@/components/content/MediaGallery';
@@ -51,7 +51,7 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
   const sessionToken = cookieStore.get(SESSION_COOKIE)?.value;
   const isAdmin = !!(sessionToken && verifySession(sessionToken));
 
-  const allRecords = await getAll();
+  const [allRecords, dictionary] = await Promise.all([getAll(), getGlobalDictionary()]);
 
   // 1. Backlinks: Other records that cite/link to this record
   const currentSlugNorm = record.slug.toLowerCase().trim();
@@ -277,7 +277,7 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
             border: '1px solid var(--color-border)',
             borderRadius: '12px',
           }}>
-            <ContentParser content={record.content} />
+            <ContentParser content={record.content} dictionary={dictionary} />
 
             {/* Embedded Media if available */}
             {record.media && record.media.length > 0 && (

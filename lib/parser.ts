@@ -75,7 +75,71 @@ export function resolveColorAndStyles(param: string): { color: string; isBold: b
   return { color, isBold, isItalic };
 }
 
-export function tokenizeInline(text: string): InlineToken[] {
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Auto-expand plain text tokens using the Global Dictionary
+function applyDictionaryToTextTokens(tokens: InlineToken[], dictionary?: Record<string, string>): InlineToken[] {
+  if (!dictionary || Object.keys(dictionary).length === 0) return tokens;
+
+  // Build sorted keys (longer words first to avoid sub-matching)
+  const words = Object.keys(dictionary).sort((a, b) => b.length - a.length);
+  if (words.length === 0) return tokens;
+
+  const pattern = new RegExp(`(?<![a-zA-Z0-9À-ÿ])(${words.map(escapeRegex).join('|')})(?![a-zA-Z0-9À-ÿ])`, 'gi');
+
+  const result: InlineToken[] = [];
+
+  for (const token of tokens) {
+    if (token.type === 'text') {
+      const text = token.value;
+      let lastIndex = 0;
+      let match: RegExpExecArray | null;
+
+      while ((match = pattern.exec(text)) !== null) {
+        const matchedText = match[0];
+        const matchIndex = match.index;
+
+        if (matchIndex > lastIndex) {
+          result.push({ type: 'text', value: text.substring(lastIndex, matchIndex) });
+        }
+
+        // Find matching definition (case-insensitive search in dictionary keys)
+        const dictKey = Object.keys(dictionary).find(k => k.toLowerCase() === matchedText.toLowerCase()) || matchedText;
+        const explanation = dictionary[dictKey];
+
+        if (explanation) {
+          result.push({
+            type: 'definition',
+            word: matchedText,
+            explanation,
+          });
+        } else {
+          result.push({ type: 'text', value: matchedText });
+        }
+
+        lastIndex = matchIndex + matchedText.length;
+      }
+
+      if (lastIndex < text.length) {
+        result.push({ type: 'text', value: text.substring(lastIndex) });
+      }
+    } else if (token.type === 'bold' && token.tokens) {
+      result.push({ type: 'bold', tokens: applyDictionaryToTextTokens(token.tokens, dictionary) });
+    } else if (token.type === 'italic' && token.tokens) {
+      result.push({ type: 'italic', tokens: applyDictionaryToTextTokens(token.tokens, dictionary) });
+    } else if (token.type === 'color' && token.tokens) {
+      result.push({ type: 'color', color: token.color, tokens: applyDictionaryToTextTokens(token.tokens, dictionary) });
+    } else {
+      result.push(token);
+    }
+  }
+
+  return result;
+}
+
+export function tokenizeInline(text: string, dictionary?: Record<string, string>): InlineToken[] {
   const tokens: InlineToken[] = [];
   let remaining = text;
 
@@ -96,7 +160,7 @@ export function tokenizeInline(text: string): InlineToken[] {
       re: /\[\[color:([^|\]]+)\|([\s\S]+?)\]\]/,
       handler: (m) => {
         const { color, isBold, isItalic } = resolveColorAndStyles(m[1]);
-        let innerTokens = tokenizeInline(m[2]);
+        let innerTokens = tokenizeInline(m[2], dictionary);
         if (isItalic) {
           innerTokens = [{ type: 'italic', tokens: innerTokens }];
         }
@@ -110,7 +174,6 @@ export function tokenizeInline(text: string): InlineToken[] {
         };
       },
     },
-    // HTML span style="color:..."
     {
       re: /<span\s+style=["']color:\s*([^"';]+)["']>([\s\S]*?)<\/span>/i,
       handler: (m) => {
@@ -118,34 +181,22 @@ export function tokenizeInline(text: string): InlineToken[] {
         return {
           type: 'color',
           color,
-          tokens: tokenizeInline(m[2]),
-        };
-      },
-    },
-    // HTML font color="..."
-    {
-      re: /<font\s+color=["']([^"']+)["']>([\s\S]*?)<\/font>/i,
-      handler: (m) => {
-        const color = resolveColor(m[1]);
-        return {
-          type: 'color',
-          color,
-          tokens: tokenizeInline(m[2]),
+          tokens: tokenizeInline(m[2], dictionary),
         };
       },
     },
     {
-      re: /\*\*(.+?)\*\*/,
+      re: /\*\*([^*]+)\*\*/,
       handler: (m) => ({
         type: 'bold',
-        tokens: tokenizeInline(m[1]),
+        tokens: tokenizeInline(m[1], dictionary),
       }),
     },
     {
-      re: /(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/,
+      re: /\*([^*]+)\*/,
       handler: (m) => ({
         type: 'italic',
-        tokens: tokenizeInline(m[1]),
+        tokens: tokenizeInline(m[1], dictionary),
       }),
     },
     {
@@ -155,178 +206,197 @@ export function tokenizeInline(text: string): InlineToken[] {
   ];
 
   while (remaining.length > 0) {
-    let earliest: { index: number; length: number; token: InlineToken } | null = null;
+    let earliestMatch: {
+      index: number;
+      length: number;
+      token: InlineToken;
+    } | null = null;
 
     for (const { re, handler } of patterns) {
       const match = re.exec(remaining);
-      if (match && (earliest === null || match.index < earliest.index)) {
-        earliest = { index: match.index, length: match[0].length, token: handler(match) };
+      if (match && match.index !== -1) {
+        if (!earliestMatch || match.index < earliestMatch.index) {
+          earliestMatch = {
+            index: match.index,
+            length: match[0].length,
+            token: handler(match),
+          };
+        }
       }
     }
 
-    if (!earliest) {
+    if (earliestMatch) {
+      if (earliestMatch.index > 0) {
+        tokens.push({
+          type: 'text',
+          value: remaining.slice(0, earliestMatch.index),
+        });
+      }
+      tokens.push(earliestMatch.token);
+      remaining = remaining.slice(earliestMatch.index + earliestMatch.length);
+    } else {
       tokens.push({ type: 'text', value: remaining });
       break;
     }
-
-    if (earliest.index > 0) {
-      tokens.push({ type: 'text', value: remaining.slice(0, earliest.index) });
-    }
-    tokens.push(earliest.token);
-    remaining = remaining.slice(earliest.index + earliest.length);
   }
 
-  return tokens;
+  // Apply automatic global dictionary detection across text tokens
+  return applyDictionaryToTextTokens(tokens, dictionary);
 }
 
-export const tokenizeLine = tokenizeInline;
+export function parseMarkdownBlocks(content: string, dictionary?: Record<string, string>): BlockToken[] {
+  if (!content) return [];
 
-export function parseMarkdownBlocks(markdown: string): BlockToken[] {
-  if (!markdown) return [];
-  const lines = markdown.split(/\r?\n/);
+  const lines = content.split('\n');
   const blocks: BlockToken[] = [];
   let i = 0;
 
   while (i < lines.length) {
-    const rawLine = lines[i];
-    const trimmed = rawLine.trim();
+    const line = lines[i];
+    const trimmed = line.trim();
 
-    // Empty lines
     if (trimmed === '') {
       blocks.push({ type: 'linebreak' });
       i++;
       continue;
     }
 
-    // Horizontal Rule
-    if (trimmed === '---' || trimmed === '***' || trimmed === '___') {
+    if (/^---{1,}$/.test(trimmed)) {
       blocks.push({ type: 'hr' });
       i++;
       continue;
     }
 
-    // Headings: # H1, ## H2, ### H3, #### H4
-    const headingMatch = rawLine.match(/^(#{1,4})\s+(.+)$/);
-    if (headingMatch) {
-      const level = headingMatch[1].length as 1 | 2 | 3 | 4;
-      blocks.push({
-        type: 'heading',
-        level,
-        tokens: tokenizeInline(headingMatch[2].trim()),
-      });
-      i++;
-      continue;
-    }
-
-    // Standalone Image: ![alt](url)
-    const imageMatch = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
-    if (imageMatch) {
+    const imgMatch = /^!\[([^\]]*)\]\(([^)]+)\)$/.exec(trimmed);
+    if (imgMatch) {
       blocks.push({
         type: 'image',
-        alt: imageMatch[1].trim() || 'Image illustrative',
-        url: imageMatch[2].trim(),
+        alt: imgMatch[1],
+        url: imgMatch[2],
       });
       i++;
       continue;
     }
 
-    // Callout block: > [!CRITICAL] or > [!URGENT] or > [!INFO] or simple quote > text
-    if (trimmed.startsWith('>')) {
-      let calloutText = trimmed.replace(/^>\s*/, '');
-      let variant: 'critical' | 'urgent' | 'info' = 'info';
+    const calloutMatch = /^>\s*\[!(CRITICAL|URGENT|WARNING|NOTE|INFO)\](.*)$/i.exec(trimmed);
+    if (calloutMatch) {
+      const variantType = calloutMatch[1].toUpperCase();
+      const variant: 'critical' | 'urgent' | 'info' =
+        variantType === 'CRITICAL' ? 'critical' : variantType === 'URGENT' || variantType === 'WARNING' ? 'urgent' : 'info';
+      
+      const calloutLines: string[] = [];
+      if (calloutMatch[2].trim()) calloutLines.push(calloutMatch[2].trim());
+      i++;
 
-      if (/^\[!(CRITICAL|DANGER|ATTENTION)\]/i.test(calloutText)) {
-        variant = 'critical';
-        calloutText = calloutText.replace(/^\[!(CRITICAL|DANGER|ATTENTION)\]\s*/i, '');
-      } else if (/^\[!(WARNING|AVERTISSEMENT|URGENT)\]/i.test(calloutText)) {
-        variant = 'urgent';
-        calloutText = calloutText.replace(/^\[!(WARNING|AVERTISSEMENT|URGENT)\]\s*/i, '');
-      } else if (/^\[!(NOTE|INFO|IMPORTANT)\]/i.test(calloutText)) {
-        variant = 'info';
-        calloutText = calloutText.replace(/^\[!(NOTE|INFO|IMPORTANT)\]\s*/i, '');
+      while (i < lines.length && lines[i].trim().startsWith('>')) {
+        calloutLines.push(lines[i].trim().replace(/^>\s*/, ''));
+        i++;
       }
 
       blocks.push({
         type: 'callout',
         variant,
-        tokens: tokenizeInline(calloutText),
+        tokens: tokenizeInline(calloutLines.join('\n'), dictionary),
+      });
+      continue;
+    }
+
+    const headingMatch = /^(#{1,4})\s+(.+)$/.exec(trimmed);
+    if (headingMatch) {
+      const level = headingMatch[1].length as 1 | 2 | 3 | 4;
+      blocks.push({
+        type: 'heading',
+        level,
+        tokens: tokenizeInline(headingMatch[2], dictionary),
       });
       i++;
       continue;
     }
 
-    // Ordered List (1. item, 1 . item, 1) item)
-    const orderedMatch = rawLine.match(/^\s*(\d+)\s*[\.\)]\s*(.+)$/);
-    if (orderedMatch) {
-      const items: InlineToken[][] = [];
-      while (i < lines.length) {
-        const line = lines[i];
-        if (line.trim() === '') { i++; continue; }
-        const itemMatch = line.match(/^\s*(\d+)\s*[\.\)]\s*(.+)$/);
-        if (!itemMatch) break;
-        items.push(tokenizeInline(itemMatch[2].trim()));
-        i++;
-      }
-      blocks.push({ type: 'ordered_list', items });
-      continue;
-    }
-
-    // Unordered List (- item, * item, • item)
-    const unorderedMatch = rawLine.match(/^\s*[-*•]\s+(.+)$/);
-    if (unorderedMatch) {
-      const items: InlineToken[][] = [];
-      while (i < lines.length) {
-        const itemMatch = lines[i].match(/^\s*[-*•]\s+(.+)$/);
-        if (!itemMatch) break;
-        items.push(tokenizeInline(itemMatch[1].trim()));
-        i++;
-      }
-      blocks.push({ type: 'unordered_list', items });
-      continue;
-    }
-
-    // Markdown Table (| Col 1 | Col 2 |)
-    if (trimmed.startsWith('|') && trimmed.includes('|')) {
+    if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
       const tableLines: string[] = [];
-      while (i < lines.length && lines[i].trim().startsWith('|')) {
+      while (i < lines.length && lines[i].trim().startsWith('|') && lines[i].trim().endsWith('|')) {
         tableLines.push(lines[i].trim());
         i++;
       }
 
       if (tableLines.length >= 2) {
-        const rawHeaders = tableLines[0]
-          .replace(/^\|/, '').replace(/\|$/, '')
+        const headerCells = tableLines[0]
+          .slice(1, -1)
           .split('|')
-          .map((h) => h.trim());
-        const headers = rawHeaders.map((h) => tokenizeInline(h));
+          .map((c) => tokenizeInline(c.trim(), dictionary));
+        
+        const rowStartIndex = /^\|(?:\s*:?-+:?\s*\|)+$/.test(tableLines[1]) ? 2 : 1;
 
-        // Row 1 is divider
-        const rowLines = tableLines.slice(2);
-        const rows: InlineToken[][][] = rowLines.map((r) => {
-          const cells = r
-            .replace(/^\|/, '').replace(/\|$/, '')
+        const rows: InlineToken[][][] = [];
+        for (let r = rowStartIndex; r < tableLines.length; r++) {
+          const cells = tableLines[r]
+            .slice(1, -1)
             .split('|')
-            .map((c) => c.trim());
-          return cells.map((c) => tokenizeInline(c));
-        });
+            .map((c) => tokenizeInline(c.trim(), dictionary));
+          rows.push(cells);
+        }
 
-        blocks.push({ type: 'table', headers, rows });
+        blocks.push({
+          type: 'table',
+          headers: headerCells,
+          rows,
+        });
         continue;
       }
     }
 
-    // Standard Paragraph
-    blocks.push({
-      type: 'paragraph',
-      tokens: tokenizeInline(rawLine),
-    });
-    i++;
+    if (/^\d+\.\s+/.test(trimmed)) {
+      const items: InlineToken[][] = [];
+      while (i < lines.length && /^\d+\.\s+/.test(lines[i].trim())) {
+        const itemText = lines[i].trim().replace(/^\d+\.\s+/, '');
+        items.push(tokenizeInline(itemText, dictionary));
+        i++;
+      }
+      blocks.push({
+        type: 'ordered_list',
+        items,
+      });
+      continue;
+    }
+
+    if (/^[-*]\s+/.test(trimmed)) {
+      const items: InlineToken[][] = [];
+      while (i < lines.length && /^[-*]\s+/.test(lines[i].trim())) {
+        const itemText = lines[i].trim().replace(/^[-*]\s+/, '');
+        items.push(tokenizeInline(itemText, dictionary));
+        i++;
+      }
+      blocks.push({
+        type: 'unordered_list',
+        items,
+      });
+      continue;
+    }
+
+    const paragraphLines: string[] = [];
+    while (
+      i < lines.length &&
+      lines[i].trim() !== '' &&
+      !/^#{1,4}\s+/.test(lines[i].trim()) &&
+      !/^---{1,}$/.test(lines[i].trim()) &&
+      !/^!\[/.test(lines[i].trim()) &&
+      !lines[i].trim().startsWith('>') &&
+      !(lines[i].trim().startsWith('|') && lines[i].trim().endsWith('|')) &&
+      !/^\d+\.\s+/.test(lines[i].trim()) &&
+      !/^[-*]\s+/.test(lines[i].trim())
+    ) {
+      paragraphLines.push(lines[i]);
+      i++;
+    }
+
+    if (paragraphLines.length > 0) {
+      blocks.push({
+        type: 'paragraph',
+        tokens: tokenizeInline(paragraphLines.join(' '), dictionary),
+      });
+    }
   }
 
   return blocks;
-}
-
-export function parseMarkdown(markdown: string): ParsedToken[][] {
-  const blocks = parseMarkdownBlocks(markdown);
-  return blocks.map((b) => [b]);
 }

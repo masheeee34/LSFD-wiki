@@ -18,12 +18,10 @@ const LOCAL_PACKS_FILE = path.join(process.cwd(), 'data', 'packs.json');
 const TMP_DATA_FILE = path.join(os.tmpdir(), 'lsfd-records.json');
 const TMP_PACKS_FILE = path.join(os.tmpdir(), 'lsfd-packs.json');
 
-const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
-const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
 const GITHUB_REPO = process.env.GITHUB_REPO || 'masheeee34/LSFD-wiki';
 
-// Helper to remove accents for fuzzy French search (e.g. "evaluation" matches "Évaluation")
+// Helper to remove accents for fuzzy French search
 function normalizeText(text: string): string {
   if (!text) return '';
   return text
@@ -33,11 +31,37 @@ function normalizeText(text: string): string {
     .trim();
 }
 
+// Built-in standard EMS medical glossary
+const DEFAULT_GLOSSARY: Record<string, string> = {
+  GCS: 'Score de Glasgow (Glasgow Coma Scale) évaluant l\'état de conscience de 3 à 15 (Yeux, Verbal, Moteur).',
+  BVM: 'Bag-Valve-Mask (Ballon autoremplisseur à valve unidirectionnelle pour ventilation manuelle au masque).',
+  RSI: 'Rapid Sequence Intubation (Intubation en Séquence Rapide sous sédation et curarisation).',
+  ACLS: 'Advanced Cardiovascular Life Support (Protocoles avancés de réanimation cardio-vasculaire).',
+  ATLS: 'Advanced Trauma Life Support (Prise en charge standardisée du traumatisé grave).',
+  PHTLS: 'Prehospital Trauma Life Support (Prise en charge préhospitalière du polytraumatisé).',
+  BLS: 'Basic Life Support (Secourisme d\'urgence de base et réanimation non-invasive).',
+  ALS: 'Advanced Life Support (Soins et thérapeutiques médicales avancées).',
+  OLMC: 'On-Line Medical Control (Régulation médicale / Médecin référent).',
+  AVPU: 'Échelle d\'évaluation de la conscience : Alert, Verbal, Pain, Unresponsive.',
+  EtCO2: 'Pression partielle de CO₂ en fin d\'expiration mesurée par capnographie (normale : 35-45 mmHg).',
+  'EtCO₂': 'Pression partielle de CO₂ en fin d\'expiration mesurée par capnographie (normale : 35-45 mmHg).',
+  PAS: 'Pression Artérielle Systolique (seuil d\'hypotension < 90 mmHg).',
+  PAD: 'Pression Artérielle Diastolique.',
+  PAM: 'Pression Artérielle Moyenne : (PAS + 2×PAD) / 3 (cible > 65 mmHg).',
+  VVP: 'Voie Veineuse Périphérique (cathéter intraveineux 14G à 20G).',
+  IO: 'Voie Intra-Osseuse (accès vasculaire d\'urgence si échec de VVP).',
+  SpO2: 'Saturation pulsée en oxygène mesurée par oxymétrie de pouls (cible 94-98%).',
+  'SpO₂': 'Saturation pulsée en oxygène mesurée par oxymétrie de pouls (cible 94-98%).',
+  MILS: 'Manual In-Line Stabilization (Maintien manuel dans l\'axe tête-cou-tronc).',
+  PLI: 'Position Latérale de Sécurité ou d\'Attente.',
+  SCB: 'Surface Corporelle Brûlée (% de la surface corporelle totale selon Wallace).',
+};
+
 // ----------------------------------------------------
 // RECORDS STORE (0ms local NVMe SSD & Memory)
 // ----------------------------------------------------
 function loadLocalStore(): WikiRecord[] {
-  if (globalThis.__lsfd_records_store && Array.isArray(globalThis.__lsfd_records_store) && globalThis.__lsfd_records_store.length > 0) {
+  if (globalThis.__lsfd_records_store !== undefined) {
     return globalThis.__lsfd_records_store;
   }
 
@@ -45,7 +69,7 @@ function loadLocalStore(): WikiRecord[] {
     if (fs.existsSync(LOCAL_DATA_FILE)) {
       const raw = fs.readFileSync(LOCAL_DATA_FILE, 'utf-8');
       const parsed = JSON.parse(raw) as WikiRecord[];
-      if (Array.isArray(parsed) && parsed.length > 0) {
+      if (Array.isArray(parsed)) {
         globalThis.__lsfd_records_store = parsed;
         return parsed;
       }
@@ -56,7 +80,7 @@ function loadLocalStore(): WikiRecord[] {
     if (fs.existsSync(TMP_DATA_FILE)) {
       const raw = fs.readFileSync(TMP_DATA_FILE, 'utf-8');
       const parsed = JSON.parse(raw) as WikiRecord[];
-      if (Array.isArray(parsed) && parsed.length > 0) {
+      if (Array.isArray(parsed)) {
         globalThis.__lsfd_records_store = parsed;
         return parsed;
       }
@@ -84,7 +108,7 @@ function persistLocalStore(records: WikiRecord[]): void {
 // PACKS STORE (0ms local NVMe SSD & Memory)
 // ----------------------------------------------------
 function loadLocalPacks(): InterventionPack[] {
-  if (globalThis.__lsfd_packs_store && Array.isArray(globalThis.__lsfd_packs_store) && globalThis.__lsfd_packs_store.length > 0) {
+  if (globalThis.__lsfd_packs_store !== undefined) {
     return globalThis.__lsfd_packs_store;
   }
 
@@ -92,7 +116,7 @@ function loadLocalPacks(): InterventionPack[] {
     if (fs.existsSync(LOCAL_PACKS_FILE)) {
       const raw = fs.readFileSync(LOCAL_PACKS_FILE, 'utf-8');
       const parsed = JSON.parse(raw) as InterventionPack[];
-      if (Array.isArray(parsed) && parsed.length > 0) {
+      if (Array.isArray(parsed)) {
         globalThis.__lsfd_packs_store = parsed;
         return parsed;
       }
@@ -103,7 +127,7 @@ function loadLocalPacks(): InterventionPack[] {
     if (fs.existsSync(TMP_PACKS_FILE)) {
       const raw = fs.readFileSync(TMP_PACKS_FILE, 'utf-8');
       const parsed = JSON.parse(raw) as InterventionPack[];
-      if (Array.isArray(parsed) && parsed.length > 0) {
+      if (Array.isArray(parsed)) {
         globalThis.__lsfd_packs_store = parsed;
         return parsed;
       }
@@ -225,7 +249,7 @@ export async function remove(idOrSlug: string): Promise<boolean> {
 }
 
 // ----------------------------------------------------
-// PACKS API
+// PACKS API (Robust Delete & CRUD)
 // ----------------------------------------------------
 export async function getPacks(): Promise<InterventionPack[]> {
   return loadLocalPacks();
@@ -269,14 +293,40 @@ export async function updatePack(id: string, data: Partial<Omit<InterventionPack
 
 export async function removePack(idOrSlug: string): Promise<boolean> {
   const packs = [...(await getPacks())];
-  const idx = packs.findIndex((p) => p.id === idOrSlug || p.slug === idOrSlug);
+  const norm = normalizeText(idOrSlug);
+  const idx = packs.findIndex((p) => p.id === idOrSlug || p.slug === idOrSlug || normalizeText(p.slug) === norm);
+  
   if (idx !== -1) {
     packs.splice(idx, 1);
     persistLocalPacks(packs);
-
     commitToGitHubAsync('data/packs.json', packs, 'chore(packs): auto-sync delete pack').catch(() => {});
+    return true;
   }
-  return true;
+  return false;
+}
+
+// ----------------------------------------------------
+// GLOBAL DEFINITIONS DICTIONARY
+// ----------------------------------------------------
+export async function getGlobalDictionary(): Promise<Record<string, string>> {
+  const records = await getAll();
+  const dict: Record<string, string> = { ...DEFAULT_GLOSSARY };
+
+  // Scan all markdown content across all records for custom [[def:explication|mot]]
+  const defRegex = /\[\[def:([^|\]]+)\|([^\]]+)\]\]/g;
+  for (const r of records) {
+    if (!r.content) continue;
+    let match;
+    while ((match = defRegex.exec(r.content)) !== null) {
+      const explanation = match[1].trim();
+      const word = match[2].trim();
+      if (word && explanation) {
+        dict[word] = explanation;
+      }
+    }
+  }
+
+  return dict;
 }
 
 // ----------------------------------------------------

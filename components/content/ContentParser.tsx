@@ -9,6 +9,7 @@ import DefinitionTooltip from './DefinitionTooltip';
 
 interface ContentParserProps {
   content: string;
+  dictionary?: Record<string, string>;
 }
 
 const renderInline = (token: InlineToken, key: string | number): React.ReactNode => {
@@ -60,8 +61,8 @@ const renderInline = (token: InlineToken, key: string | number): React.ReactNode
   }
 };
 
-const ContentParser: React.FC<ContentParserProps> = ({ content }) => {
-  const blocks = parseMarkdownBlocks(content);
+const ContentParser: React.FC<ContentParserProps> = ({ content, dictionary }) => {
+  const blocks = parseMarkdownBlocks(content, dictionary);
   const [lightboxImg, setLightboxImg] = useState<{ url: string; alt: string } | null>(null);
 
   return (

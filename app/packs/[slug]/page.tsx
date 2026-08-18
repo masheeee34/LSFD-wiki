@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { getPacks, getPackBySlug, getAll } from '@/lib/store';
+import { getPacks, getPackBySlug, getAll, getGlobalDictionary } from '@/lib/store';
 import { verifySession, SESSION_COOKIE } from '@/lib/auth';
 import PackViewer from '@/components/packs/PackViewer';
 
@@ -37,7 +37,7 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
   const sessionToken = cookieStore.get(SESSION_COOKIE)?.value;
   const isAdmin = !!(sessionToken && verifySession(sessionToken));
 
-  const allRecords = await getAll();
+  const [allRecords, dictionary] = await Promise.all([getAll(), getGlobalDictionary()]);
 
   // Resolve all wiki records in order
   const packRecords = pack.recordSlugs
@@ -91,7 +91,7 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
       </div>
 
       {/* Main Pack Viewer */}
-      <PackViewer pack={pack} records={packRecords} isAdmin={isAdmin} />
+      <PackViewer pack={pack} records={packRecords} isAdmin={isAdmin} dictionary={dictionary} />
 
       <style>{`
         .crumb-link:hover {

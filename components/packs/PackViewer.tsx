@@ -9,6 +9,7 @@ interface PackViewerProps {
   pack: InterventionPack;
   records: WikiRecord[];
   isAdmin?: boolean;
+  dictionary?: Record<string, string>;
 }
 
 const CATEGORY_NAMES: Record<string, string> = {
@@ -18,7 +19,7 @@ const CATEGORY_NAMES: Record<string, string> = {
   equipment: 'Matériel',
 };
 
-export default function PackViewer({ pack, records, isAdmin = false }: PackViewerProps) {
+export default function PackViewer({ pack, records, isAdmin = false, dictionary }: PackViewerProps) {
   const [activeTab, setActiveTab] = useState(0);
   const [viewMode, setViewMode] = useState<'tabs' | 'continuous'>('tabs');
 
@@ -304,7 +305,7 @@ export default function PackViewer({ pack, records, isAdmin = false }: PackViewe
             )}
 
             {/* Markdown Content */}
-            <ContentParser content={currentRecord.content} />
+            <ContentParser content={currentRecord.content} dictionary={dictionary} />
           </div>
 
           {/* Stepper Navigation Buttons (Précédent / Suivant) */}
@@ -443,7 +444,7 @@ export default function PackViewer({ pack, records, isAdmin = false }: PackViewe
                 </p>
               )}
 
-              <ContentParser content={rec.content} />
+              <ContentParser content={rec.content} dictionary={dictionary} />
             </div>
           ))}
         </div>
