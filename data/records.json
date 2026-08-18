@@ -734,5 +734,24 @@
     },
     "id": "dba67bc4-0860-4782-b4a3-4cd1278181fc",
     "updatedAt": "2026-08-18T22:38:25.025Z"
+  },
+  {
+    "title": "Immobilisation du râchis",
+    "slug": "immobilisation-du-rachis",
+    "category": "maneuver",
+    "severity": "routine",
+    "summary": "Protocole relatif à l'immobilisation totale.",
+    "content": "1. Évaluer les fonctions motrices et sensorielles.\n2. Retirer tout équipement ou matériel sportif si le patient en porte (skis, casque, protège-dents, …).\n3. Mettre en place le collier cervical. L'adapter à la morphologie du patient.\n4. Si le patient est bloqué, le dégager en limitant les mouvements de la colonne vertébrale.\n**PASSAGE SUR LA PLANCHE DORSALE :**\n1. Maintenir le patient, si possible à deux, au niveau des genoux et des épaules. \n2. Le faire légèrement pivoter en limitant les mouvements de la colonne vertébrale afin de dégager un espace pour la planche dorsale.\n3. Faire glisser la planche dorsale sous le dos du patient.\n4. Attacher les sangles araignées pour immobiliser le patient sur le dispositif.\n5. Envisager une surveillance de la SpO2.\n6. Évaluer de nouveau les fonctions motrices et sensorielles.\n",
+    "tags": [
+      "immobilisation"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "302d64dc-1d44-4112-ae4e-7aee6575106b",
+    "updatedAt": "2026-08-18T22:46:29.585Z"
   }
 ]
