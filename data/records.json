@@ -159,5 +159,25 @@
     },
     "id": "cb7a63f6-1b4c-4720-9ca8-756a723d27aa",
     "updatedAt": "2026-08-17T21:29:18.263Z"
+  },
+  {
+    "title": "Contention nécessaire",
+    "slug": "contention-necessaire",
+    "category": "protocol",
+    "severity": "routine",
+    "summary": "Moyens et méthodes de contention au cours d'une intervention.",
+    "content": "> [!CRITICAL] Le personnel intervenant doit tenir compte qu’**un comportement agressif peut être le symptôme de conditions médicales**, telles qu’un traumatisme crânien, une intoxication à l’alcool ou à d’autres substances, un trouble métabolique, un stress émotionnel ou des troubles comportementaux et psychiatriques.\n\nL’application de moyens de contention est une procédure risquée en raison de la possibilité de blessures, à la fois pour le patient et pour le personnel. De ce fait, la contention doit être réservée à des situations au cours desquelles le patient est violet ou présente un comportement dangereux pour les autres et pour lui-même. Ces principes doivent être suivis pour toute mise en place de moyens de contention : \n\n- L’usage de la contention ne doit intervenir que lorsque toutes les mesures moins restrictives, comme la désescalade verbale, ont échoué.\n- La sécurisation de la scène est coordonnée par les forces de l'ordre, le cas échéant.\n- La responsabilité de la gestion des soins du patient incombe à la plus haute autorité médicale sur place.\n- La modalité de contention préférée doit être coordonnée avec les forces de l’ordre, le cas échéant.\n\n> [!CRITICAL] La méthode de contention utilisée doit permettre une surveillance adéquate des signes vitaux et ne doit pas restreindre la capacité à assurer les voies respiratoires du patient ni compromettre son état neurologique ou vasculaire.\n> [!NOTE] Cette politique n'a pas pour but de nier la nécessité pour le personnel des forces de l’ordre d'utiliser un équipement de contention approprié. Des indications supplémentaires sont inscrites ci-dessous.\n\n---\n## Moyens de contention\nLes dispositifs de contention appliqués par le personnel intervenant doivent être : \n\n- soit des dispositifs de contention rigides rembourrés,\n- soit des dispositifs de contention souples (c'est-à-dire des gilets de contention, des bandes Velcro ou des ceintures de contention).\n\nLes deux méthodes doivent, dans toutes les situations, ne pas nécessiter de clé et permettre une ouverture rapide.\n\nLes dispositifs de contention doivent être appliqués sous la forme de poignets et de chevilles rembourrés à quatre points ou de poignets et de ceintures rembourrés à deux points.\n\nLes méthodes de contention suivantes NE DOIVENT PAS être utilisées par le personnel intervenant (hors forces de l’ordre) :\n\n\n- Attaches en plastique dur ou tout dispositif de contention nécessitant une clé pour être retiré,\n- Immobilisation des mains et des pieds d'un patient derrière son dos.\n- Immobilisation des patients couchés sur le ventre,\n- Placement d'un dispositif (par exemple, une planche dorsale) sur un patient couché sur un brancard ; méthode dite du « sandwich »,\n- Application de matériaux d'une manière qui pourrait entraîner une atteinte vasculaire, neurologique ou respiratoire (par exemple, restriction des membres, du cou ou de la poitrine à l'aide d'un équipement inadapté).\n\n> [!NOTE] Dans certaines situations, les forces de l’ordre peuvent être amenées à utiliser des moyens de contention qui ne sont pas adaptés à une prise en charge médicale, et/ou non approuvées. Dans ces conditions, les patients nécessitant une prise en charge médicale et/ou un transport doivent être libérés par les forces de l’ordre, au profit d’une contention approuvée par le personnel médical intervenant.\n\nLes dispositifs de contention appliqués par les forces de l’ordre nécessitent la présence continue d’un agent pour assurer la sécurité du patient et la sécurité de la scène.\n\n- L'agent doit accompagner le patient dans l'ambulance,\n- Dans un cas inhabituel où cela n'est pas possible, l'agent doit suivre l'ambulance,\n- Si le patient est menotté par l’agent, il faut envisager de passer aux moyens de contention les moins restrictifs possibles, sans danger pour le patient et les intervenants, y compris le transfert vers les moyens de contention du personnel médical.",
+    "tags": [
+      "leo",
+      "contention"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "f1b7b916-6325-4f4d-8b19-1391af39d8a3",
+    "updatedAt": "2026-08-18T14:05:28.935Z"
   }
 ]
