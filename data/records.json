@@ -607,5 +607,27 @@
     },
     "id": "273c45e7-4b8a-4e88-b72e-07015896daeb",
     "updatedAt": "2026-08-18T22:22:16.860Z"
+  },
+  {
+    "title": "Hémorragie (membre)",
+    "slug": "hemorragie-membre",
+    "category": "protocol",
+    "severity": "critical",
+    "summary": "Protocole relatif aux hémorragies situées sur un membre.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Appliquez une pression directe sur la plaie à l'aide d'un bandage : une gaze hémostatique peut être appliquée.\n2. Maintenez une pression continue ou appliquez un pansement compressif sur la plaie.\n3. Appliquez un tourniquet à 5 à 7 cm au-dessus de la plaie si : La pression directe ne permet pas de contrôler le saignement. Amputation ou quasi-amputation du membre. Saignement important inaccessible (ex : membre coincé). Saignement important provenant d’un objet encore présent (ex : couteau). Lors d'un incident impliquant plusieurs victimes. \n4. Débuter l’ABCD.\n5. Débuter la gestion des voies aériennes et l’oxygénothérapie.\n6. Immobilisez les membres blessés si nécessaire. Surélevez le membre et appliquez des compresses froides. Couvrez les plaies ouvertes avec un pansement stérile. 7. Vérifiez à nouveau les fonctions motrices/la circulation toutes les 5 minutes.\n8. Demander une ressource ALS ou transporter. \n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Débuter une gestion des voies aériennes avancée si nécessaire.\n2. Débuter la surveillance cardiaque.\n3. Établir l’accès intraveineux.\n4. Si pression artérielle <90, administrer **1L Normal Saline IV**.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n> [!CRITICAL] Mise en place du tourniquet : Noter l'heure et l'emplacement du ou des tourniquets. L'heure à laquelle le garrot a été appliqué doit être communiquée au personnel hospitalier qui prend en charge le patient. Ne pas placer le garrot sur une articulation. Le membre sur lequel le garrot est placé doit rester exposé. Ne pas retirer le garrot sans l'accord d’un médecin.\n\n> [!CRITICAL] Le traitement des hémorragies importantes est toujours prioritaire sur l’évaluation primaire.\n\n> [!CRITICAL] Si le saignement traverse un pansement, le recouvrir avec un second.",
+    "tags": [
+      "traumatisme",
+      "saignement",
+      "hemorragie",
+      "gsw"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "40d16cd7-b96f-4709-8156-ca3054fdb5a9",
+    "updatedAt": "2026-08-18T22:25:11.072Z"
   }
 ]
