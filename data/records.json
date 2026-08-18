@@ -407,5 +407,25 @@
     },
     "id": "c82252b9-1712-4dcc-a741-ed8403613520",
     "updatedAt": "2026-08-18T21:46:32.359Z"
+  },
+  {
+    "title": "Morsure/piqûre venimeuse",
+    "slug": "morsure-piqure-venimeuse",
+    "category": "protocol",
+    "summary": "Protocole relatif aux morsures et piqûres venimeuses.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Débuter l’ABCD et vérifier les signes vitaux.\n2. Débuter la gestion des voies aériennes et une oxygénothérapie si nécessaire.\n3. Garder le patient calme et limiter ses mouvements.\n4. Positionner le membre affecté au niveau ou en dessous du niveau du cœur.\n5. **En cas de morsure de serpent**, immobiliser la zone touchée à l'aide d'une attelle et surélever le membre touché à hauteur du cœur.\n6. **En cas de piqûre d’insecte**, retirer le dard s'il est visible et refroidir la zone.\n7. En cas de piqûre d’un **animal marin**, retirer l'ardillon si nécessaire et tremper la zone dans de l'eau chaude si disponible.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Effectuer une gestion des voies aériennes avancée si nécessaire.\n2. Débuter la surveillance cardiaque.\n3. Établir l’accès intraveineux.\n4. En cas de nausées ou vomissements, administrer **Ondansetron 4mg IV/IM**, peut être répété 1x après 15 minutes.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n> [!NOTE] Retirez le dard en grattant la peau du patient avec le bord d'une surface plane (carte de crédit ou similaire). N'essayez pas de retirer le dard avec vos ongles ou une pince à épiler, car cela pourrait libérer davantage de venin.",
+    "tags": [
+      "environnement",
+      "animal",
+      "venin"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "BLS",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "946da06e-9179-43f5-bd1f-da84ad23c6a0",
+    "updatedAt": "2026-08-18T21:49:36.734Z"
   }
 ]
