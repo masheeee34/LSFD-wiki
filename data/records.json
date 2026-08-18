@@ -224,7 +224,7 @@
     "slug": "bardycardie",
     "category": "protocol",
     "severity": "critical",
-    "summary": "Protocoles relatifs au rythme anormalement lent du cœur.",
+    "summary": "Protocole relatif au rythme anormalement lent du cœur.",
     "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Débuter l’ABCD et vérifier les signes vitaux.\n2. Débuter la gestion des voies aériennes et une oxygénothérapie si nécessaire.\n3. Demander une assistance ALS, ne pas retarder le transport.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Débuter la surveillance cardiaque.\n2. Réaliser, enregistrer et évaluer un électrocardiogramme (ECG) à 12 dérivations.\n3. Administrer de l’Atropine 1 mg IV.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n",
     "tags": [
       "cardiovasculaire",
@@ -238,7 +238,7 @@
       "operationalStatus": "ACTIF 2026"
     },
     "id": "30a99932-8bfe-42e0-8b45-fbc296d52cfa",
-    "updatedAt": "2026-08-18T18:05:03.337Z"
+    "updatedAt": "2026-08-18T21:13:56.707Z"
   },
   {
     "title": "Douleur thoracique",
