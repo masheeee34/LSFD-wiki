@@ -391,5 +391,21 @@
     },
     "id": "980414bf-d78c-45b3-aed4-6ba3e17296d0",
     "updatedAt": "2026-08-18T21:43:37.573Z"
+  },
+  {
+    "title": "Hypothermie",
+    "slug": "hypothermie",
+    "category": "protocol",
+    "summary": "Protocole relatif à la baisse anormale de la température corporelle.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Débuter l’ABCD et vérifier les signes vitaux.\n2. Débuter la gestion des voies aériennes et une oxygénothérapie si nécessaire.\n3. Aider le patient à se déplacer vers une zone chauffée, si possible.\n4. Si le patient est conscient et en état de boire sans assistance, lui donner une boisson tiède, si possible.\n5. **Pour les blessures liées au froid localisées** : retirer les vêtements et les bijoux de la zone affectée et la protéger.\n6. **Pour l'hypothermie généralisée** : vérifier le pouls du patient pendant une minute et débuter la RCP si nécessaire, retirer tout vêtement mouillé et les bijoux du patient, placer des poches de chaud instantanées au niveau de l’aine, du cou et sur les côtés de la poitrine du patient et recouvrir le patient avec une/des couverture(s) chauffante(s).\n7. En cas d’état mental altéré, vérifier le taux de glucose dans le sang et demander une assistance ALS.\n8. Transporter.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Effectuer une gestion des voies aériennes avancée si nécessaire.\n2. Débuter la surveillance cardiaque.\n3. Réaliser, enregistrer et évaluer un électrocardiogramme (ECG) à 12 dérivations.\n4. Établir l’accès intraveineux.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n> [!CRITICAL] Hypothermie généralisée: les signes vitaux peuvent être extrêmement difficiles à obtenir. Couvrir la tête aide efficacement à réduire la perte de chaleur. Une manipulation brusque du patient peut mener à une dysrythmie ou à un arrêt cardiaque.",
+    "tags": [],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "BLS",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "c82252b9-1712-4dcc-a741-ed8403613520",
+    "updatedAt": "2026-08-18T21:46:32.359Z"
   }
 ]
