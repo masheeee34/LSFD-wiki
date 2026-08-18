@@ -179,5 +179,22 @@
     },
     "id": "f1b7b916-6325-4f4d-8b19-1391af39d8a3",
     "updatedAt": "2026-08-18T14:05:28.935Z"
+  },
+  {
+    "title": "Transport précoce",
+    "slug": "transport-precoce",
+    "category": "protocol",
+    "severity": "urgent",
+    "summary": "Concerne le transport précoce d'un patient vers un centre hospitalier lorsque les conditions de l'intervention le recommandent.",
+    "content": "Dans certains cas, les intervenants [[def:Basic Life Support|BLS]] en charge d’un patient peuvent se retrouver face à une urgence imminente qui ne pourrait attendre l’arrivée d’une équipe [[def:Advanced Life Support|ALS]]. Ces conditions sont précisées en bas de page, et sont complétées par ces circonstances : \n\n- Si le temps de trajet entre la scène d’intervention et un établissement hospitalier adapté est plus rapide que le temps estimé d’arrivée d’une unité ALS : **transporter** et **considérer un point de rendez-vous** pour le transfert du patient avec ladite unité ALS.\n\n- Si le temps de transport estimé vers un établissement hospitalier adapté est supérieur à 10 minutes et qu’aucune unité ALS n’est disponible immédiatement : **transporter**.\n\n---\n## Éléments pouvant nécessiter un transport précoce\n\n- Détresse/arrêt respiratoire.\n- Obstruction des voies aériennes.\n- Dégradation neurologique significative depuis l’évaluation initiale.\n- Brûlures graves (deuxième ou troisième degré).\n- Accouchement imminent.\n- Hémorragie non maîtrisée.\n- Thorax/abdomen ouvert.\n- Polytraumatisme.\n- [[def:Traumatisme crânien.|TC]] avec [[def:Perte de connaissance initiale.|PCI]].\n- Pneumothorax.\n\n",
+    "tags": [],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "BLS",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "f46214d3-e042-4ce8-962e-a1b7473cee56",
+    "updatedAt": "2026-08-18T14:14:46.761Z"
   }
 ]
