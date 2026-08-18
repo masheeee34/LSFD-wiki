@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "title": "Blessure par balle/hémorragie.",
+    "slug": "blessure-par-balle-hemorragie",
+    "code": "GSW",
+    "description": "Liste des protocoles et manœuvres en lien avec les blessures par balle (ou les hémorragies).",
+    "badgeLabel": "URGENCE VITALE",
+    "recordSlugs": [
+      "evaluation-de-la-scene-d-intervention",
+      "evaluation-initiale",
+      "echelle-avpu",
+      "echelle-de-glasgow",
+      "transport-precoce",
+      "hemorragie-membre",
+      "hemorragie-thorax-abdomen-pelvis",
+      "hemorragie-tete-cou",
+      "determination-de-la-mort",
+      "scenes-de-crime-et-suicides-suspectes"
+    ],
+    "id": "pack-1a28be6a",
+    "updatedAt": "2026-08-18T22:40:42.805Z"
+  }
+]
