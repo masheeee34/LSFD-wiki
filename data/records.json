@@ -469,5 +469,25 @@
     },
     "id": "1dbb8583-31b4-48e5-9c0b-a72d8ae22f8b",
     "updatedAt": "2026-08-18T22:01:30.639Z"
+  },
+  {
+    "title": "Accident vasculaire cérébral",
+    "slug": "accident-vasculaire-cerebral",
+    "category": "protocol",
+    "severity": "critical",
+    "summary": "Protocole relatif aux AVC.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Débuter l’ABCD et vérifier les signes vitaux.\n2. Débuter la gestion des voies aériennes et l’oxygénothérapie si nécessaire.\n3. Vérifier la glycémie.\n4. Transporter.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Ne PAS retarder le transport.\n2. Débuter la surveillance cardiaque.\n3. Établir l’accès intraveineux.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n> [!NOTE] Dans la mesure du possible, transportez les patients soupçonnés d'avoir subi un AVC avec la tête du lit surélevée de 30 à 45 degrés. Cela réduit le risque d'aspiration et diminue également l'élévation de la pression intracrânienne.",
+    "tags": [
+      "neurologie",
+      "avc"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "4589a3f4-d0c9-47c8-beeb-eafbc4dd2d40",
+    "updatedAt": "2026-08-18T22:05:57.337Z"
   }
 ]
