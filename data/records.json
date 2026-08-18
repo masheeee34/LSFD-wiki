@@ -511,5 +511,24 @@
     },
     "id": "ee2dd456-6967-4e16-9244-b86590bea81a",
     "updatedAt": "2026-08-18T22:07:46.645Z"
+  },
+  {
+    "title": "Obstruction des voies aériennes",
+    "slug": "obstruction-des-voies-aeriennes",
+    "category": "protocol",
+    "severity": "critical",
+    "summary": "Protocole relatif au blocage des voies respiratoires.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Débuter l’ABCD et vérifier les signes vitaux.\n2. Débuter la gestion des voies aériennes.\n3. Débuter l’oxygénothérapie.\n4. En cas d'obstruction par un corps étranger : si le patient est incapable de parler mais conscient, effectuer 5 compressions abdominales ; réévaluer la situation.\n5. Si le patient perd connaissance, l’allonger sur le sol et commencer les compressions thoraciques.\n6. Si le patient est inconscient, commencer la RCP pendant 2 minutes.\n7. Demander une ressource ALS et se référer aux [[link:arret-cardiaque-non-traumatique|arrêts cardiaques non traumatiques]].\n8. Transporter.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Effectuez une laryngoscopie directe pour visualiser l'obstruction potentielle et retirez le corps étranger visible à l'aide d'une pince de Magill.\n2. Débuter la surveillance cardiaque.\n3. Tenir compte des symptômes spécifiques : en cas de suspicion d'[[def:Réaction allergique aiguë.|anaphylaxie]], traiter conformément au [[link:anaphylaxie|protocole adéquat]].\n4. En cas de [[def:Bruit respiratoire anormal, aigu et \"musical\".|stridor]], administrer** 5 mg (5 ml) d'Épinéphrine (solution à 1 mg/ml)**.\n5. Répéter x1 toutes les 10 min.\n6. Se préparer à gérer les voies respiratoires si l'état du patient se détériore.\n7. En cas de gonflement visible des voies respiratoires/de la langue : **Épinéphrine (1 mg/mL) administrer 0,5 mg (0,5 mL) IM**.\n9. Répéter toutes les 10 min, maximum 3 doses au total.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]",
+    "tags": [
+      "respiration"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "05a61040-c754-48e9-aa2d-8e14018fa30c",
+    "updatedAt": "2026-08-18T22:12:38.030Z"
   }
 ]
