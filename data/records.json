@@ -78,7 +78,7 @@
     "slug": "echelle-de-la-douleur",
     "category": "protocol",
     "severity": "routine",
-    "summary": "",
+    "summary": "Échelle graduée de 1 à 10 pour l'expression de la douleur.",
     "content": "[[color:#a7dbeb,bold|1 — DOUCE]]\nSensation à peine perceptible, légèrement gênante.\n\n[[color:#7bb2d1,bold|2 — MINEURE]]\nGênante, montées sporadiques, supportable.\n\n[[color:#2d4e8c,bold|3 — INCONFORTABLE]]\nPerceptible et désagréable.\n\n[[color:#50ba6e,bold|4 — MODÉRÉE]]\nDérangeante en-dehors d’une activité.\n\n[[color:#2e8f3e,bold|5 — ENNUYANTE]]\nModérément forte, mais ignorable par moment.\n\n[[color:#d9cc41,bold|6 — PÉNIBLE]]\nModérément forte, impact la concentration.\n\n[[color:gold,bold|7 — SÉVÈRE]]\nDouleur dominant les sens.\n\n[[color:#d14957,bold|8 — INTENSE]]\nGêne la parole, perte d’autonomie.\n\n[[color:red,bold|9 — ATROCE]]\nConversation impossible, position couchée nécessaire.\n\n[[color:#9c222e,bold|10 — INIMAGINABLE]]\nDouleur rare entraînant des malaises ou nausées.\n\n\n",
     "tags": [],
     "media": [],
@@ -88,7 +88,7 @@
       "operationalStatus": "ACTIF 2026"
     },
     "id": "61401600-2eca-4086-90c1-58d7b22a468d",
-    "updatedAt": "2026-08-17T20:51:22.779Z"
+    "updatedAt": "2026-08-18T13:49:44.698Z"
   },
   {
     "title": "Refus de prise en charge",
