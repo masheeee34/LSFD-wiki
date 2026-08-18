@@ -464,11 +464,12 @@
     "media": [],
     "specs": {
       "organization": "LSFD EMS",
-      "echelon": "BLS",
+      "echelon": "Tous",
       "operationalStatus": "ACTIF 2026"
     },
     "id": "1dbb8583-31b4-48e5-9c0b-a72d8ae22f8b",
-    "updatedAt": "2026-08-18T22:01:30.639Z"
+    "updatedAt": "2026-08-18T22:06:07.754Z",
+    "severity": "critical"
   },
   {
     "title": "Accident vasculaire cérébral",
