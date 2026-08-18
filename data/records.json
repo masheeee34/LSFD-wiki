@@ -55,12 +55,13 @@
     ],
     "media": [],
     "id": "583b87ec-2715-45f3-8ef9-a87c76a5fcca",
-    "updatedAt": "2026-08-17T15:05:43.230Z",
+    "updatedAt": "2026-08-18T13:47:50.319Z",
     "specs": {
       "organization": "LSFD EMS",
       "echelon": "ALS",
       "operationalStatus": "ACTIF 2026"
-    }
+    },
+    "severity": "routine"
   },
   {
     "title": "Échelle de la douleur",
