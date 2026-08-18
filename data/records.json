@@ -380,8 +380,8 @@
     "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Débuter l’ABCD et vérifier les signes vitaux.\n2. Débuter la gestion des voies aériennes et une oxygénothérapie si nécessaire.\n3. Aider le patient à se déplacer vers une zone réfrigérée, si possible.\n4. Aider le patient à retirer ses vêtements extérieurs (veste, pull, …).\n5. Si le patient est conscient et en état de boire sans assistance, lui donner de l’eau, si possible.\n6. Si l’état mental du patient est altéré, évaluer le taux de glucose dans le sang du patient et traiter si nécessaire et demander une assistance ALS.\n7. Transporter.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Établir l’accès intraveineux.\n2. Si le patient est incapable de boire, administrer **Normal Saline 1L IV**.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n> [!CRITICAL] Ne pas abaisser agressivement la température corporelles. Le refroidissement de la température corporelle du patient ne doit PAS retarder le transport.\n\n> [!CRITICAL] Les patients en situation d'urgence thermique présentant des signes de choc doivent être traités et transportés rapidement.\n\n> [!NOTE] Populations particulières présentant un risque élevé d'évolution défavorable : personnes âgées, patients présentant des comorbidités, prenant des diurétiques ou des médicaments psychiatriques, athlètes",
     "tags": [
       "environnement",
-      "froid",
-      "température"
+      "température",
+      "chaud"
     ],
     "media": [],
     "specs": {
@@ -390,7 +390,7 @@
       "operationalStatus": "ACTIF 2026"
     },
     "id": "980414bf-d78c-45b3-aed4-6ba3e17296d0",
-    "updatedAt": "2026-08-18T21:43:37.573Z"
+    "updatedAt": "2026-08-18T21:50:09.338Z"
   },
   {
     "title": "Hypothermie",
