@@ -708,10 +708,11 @@
     "media": [],
     "specs": {
       "organization": "LSFD EMS",
-      "echelon": "BLS",
+      "echelon": "Tous",
       "operationalStatus": "ACTIF 2026"
     },
     "id": "7226c836-611f-455a-8f79-a28d60a4444f",
-    "updatedAt": "2026-08-18T22:37:14.494Z"
+    "updatedAt": "2026-08-18T22:37:24.184Z",
+    "severity": "critical"
   }
 ]
