@@ -490,5 +490,26 @@
     },
     "id": "4589a3f4-d0c9-47c8-beeb-eafbc4dd2d40",
     "updatedAt": "2026-08-18T22:05:57.337Z"
+  },
+  {
+    "title": "Syncope",
+    "slug": "syncope",
+    "category": "protocol",
+    "severity": "urgent",
+    "summary": "Protocole relatif aux pertes de connaissance soudaines.",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Débuter l’ABCD et vérifier les signes vitaux.\n2. Débuter la gestion des voies aériennes et une oxygénothérapie si nécessaire.\n3. Demander une assistance ALS, ne pas retarder le transport.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Établir l’accès IV.\n2. En cas de signes de déshydratation, administrer **Normal Saline 1L IV**.\n3. Débuter la surveillance cardiaque.\n4. Réaliser, enregistrer et évaluer un électrocardiogramme (ECG) à 12 dérivations.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]",
+    "tags": [
+      "neurologie",
+      "malaise",
+      "pci"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "Tous",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "ee2dd456-6967-4e16-9244-b86590bea81a",
+    "updatedAt": "2026-08-18T22:07:46.645Z"
   }
 ]
