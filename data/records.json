@@ -753,5 +753,29 @@
     },
     "id": "302d64dc-1d44-4112-ae4e-7aee6575106b",
     "updatedAt": "2026-08-18T22:46:29.585Z"
+  },
+  {
+    "title": "Retrait du casque",
+    "slug": "retrait-du-casque",
+    "category": "protocol",
+    "summary": "Protocole relatif au retrait d'un casque.",
+    "content": "1. Si le patient est conscient, lui expliquer la procédure au patient.\n**Un premier intervenant se positionne derrière la tête du patient :**\n1. Stabiliser la tête et le cou en position neutre :\n2. Appuyer ses paumes sur les côtés du casque\n3. Tenir fermement les bords inférieurs du casque\n\n**Un deuxième intervenant se positionne à côté du patient : **\n1. Ouvrir ou retirer la visière si nécessaire.\n2. Si présence de lunettes, les retirer.\n3. Détacher et/ou couper la jugulaire du casque.\n---\n1. Saisir l'angle de la mandibule du patient avec trois doigts.\n2. Placer une main sous le nuque du patient, au niveau de l'occiput.\n3. Écarter les parties latérales du casque en le faisant tourner lentement. Ne pas toucher le nez du patient.\n4. Placer un coussin ou tout autre rembourrage sous la tête du patient pour la maintenir en position neutre dans l'axe.\n5. Immobiliser le patient au moyen d'un collier cervical.\n",
+    "tags": [
+      "casque",
+      "moto",
+      "avp",
+      "sport",
+      "traumatisme",
+      "crane",
+      "tc"
+    ],
+    "media": [],
+    "specs": {
+      "organization": "LSFD EMS",
+      "echelon": "BLS",
+      "operationalStatus": "ACTIF 2026"
+    },
+    "id": "6d741ce0-7171-4367-9119-3d85576bdad2",
+    "updatedAt": "2026-08-18T22:48:52.522Z"
   }
 ]
