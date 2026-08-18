@@ -245,7 +245,7 @@
     "slug": "douleur-thoracique",
     "category": "protocol",
     "summary": "Protocole relatif aux douleurs dans la région thoracique.",
-    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Débuter l’ABCD et vérifier les signes vitaux.\n2. Débuter la gestion des voies aériennes et une oxygénothérapie si nécessaire.\n3. Placer le patient dans une position confortable.\n4. Basculer sur les protocoles liés à la gestion de la douleur si nécessaire.\n5. Administrer de l’Aspirine 325 mg à croquer PO, si disponible.\n6. Demander une assistance ALS, ne pas retarder le transport.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Débuter la surveillance cardiaque.\n2. Réaliser, enregistrer et évaluer un électrocardiogramme (ECG) à 12 dérivations.\n3. Établir l’accès intraveineux.\n4. Vérifier les signes vitaux toutes les 2-3 minutes.\n5. Administrer de la **Nitroglycérine 0.4 mg SL** toutes les cinq (5) minutes, trois (3) doses maximum.\n6. En cas de nausées/vomissements, administrer de l’**Ondansetron 4 mg IV/IM**.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n",
+    "content": "## [[color:#1e8a3b,bold|EMERGENCY MEDICAL TECHNICIAN]]\n\n1. Débuter l’ABCD et vérifier les signes vitaux.\n2. Débuter la gestion des voies aériennes et une oxygénothérapie si nécessaire.\n3. Placer le patient dans une position confortable.\n4. Basculer sur les protocoles liés à la gestion de la douleur si nécessaire.\n5. Administrer de l’Aspirine 325 mg à croquer PO, si disponible.\n6. Demander une assistance ALS, ne pas retarder le transport.\n\n[[color:red,bold|🛑 EMT STOP]]\n\n## [[color:#1e5e96,bold|PARAMEDIC]]\n\n1. Débuter la surveillance cardiaque.\n2. Réaliser, enregistrer et évaluer un électrocardiogramme (ECG) à 12 dérivations.\n3. Établir l’accès intraveineux.\n4. Vérifier les signes vitaux toutes les 2-3 minutes.\n5. Administrer de la **Nitroglycérine 0.4 mg SL** toutes les cinq (5) minutes, trois (3) doses maximum.\n6. En cas de nausées/vomissements, administrer de l’**Ondansetron 4 mg IV/IM**.\n\n[[color:red,bold|🛑 PARAMEDIC STOP]]\n\n> [!CRITICAL] L'aspirine ne doit pas être administrée aux patients présentant une hypersensibilité connue à l'aspirine. Si disponible, le Fentanyl doit être préféré à la Morphine pour la gestion de la douleur.\n",
     "tags": [],
     "media": [],
     "specs": {
@@ -254,7 +254,7 @@
       "operationalStatus": "ACTIF 2026"
     },
     "id": "1d72fcd3-4d68-46e5-bdcb-2317be233b27",
-    "updatedAt": "2026-08-18T21:13:51.616Z",
+    "updatedAt": "2026-08-18T21:15:48.960Z",
     "severity": "urgent"
   },
   {
