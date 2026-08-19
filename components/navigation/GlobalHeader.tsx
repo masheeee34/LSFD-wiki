@@ -80,9 +80,8 @@ export default function GlobalHeader() {
               <Link href="/search?category=medication" className="global-nav-link">Pharmacologie</Link>
               <Link href="/search?category=maneuver" className="global-nav-link">Manœuvres</Link>
               <Link href="/search?category=equipment" className="global-nav-link">Matériel</Link>
-              <Link href="/packs" className="global-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                <span>📂</span>
-                <span>Packs d'Intervention</span>
+              <Link href="/packs" className="global-nav-link">
+                Packs d'Intervention
               </Link>
             </nav>
           </div>

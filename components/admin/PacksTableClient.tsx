@@ -48,7 +48,6 @@ export default function PacksTableClient({ initialPacks }: PacksTableClientProps
       }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '14px' }}>📑</span>
             <h2 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--color-text-primary)', margin: 0 }}>
               Packs d'Intervention & Classeurs Multi-Fiches ({packs.length})
             </h2>

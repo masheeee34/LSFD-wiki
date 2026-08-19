@@ -170,7 +170,7 @@ export default function PackForm({ initialData, allRecords, onSubmit, isLoading 
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--color-text-primary)', fontFamily: 'var(--font-mono)' }}>
-              📑 COMPOSITION DU PACK ({selectedSlugs.length} sélectionné{selectedSlugs.length > 1 ? 's' : ''})
+              COMPOSITION DU PACK ({selectedSlugs.length} sélectionné{selectedSlugs.length > 1 ? 's' : ''})
             </span>
             <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
               Cochez les fiches à inclure et réordonnez la séquence

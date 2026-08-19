@@ -196,7 +196,6 @@ export default function RecordForm({ initialData, onSubmit, isLoading = false }:
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '14px' }}>📋</span>
               <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--color-text-primary)', fontFamily: 'var(--font-mono)' }}>
                 SPÉCIFICATIONS MÉDICALES
               </span>

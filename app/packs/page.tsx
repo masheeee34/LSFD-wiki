@@ -15,12 +15,9 @@ export default async function PacksIndexPage() {
     <div style={{ maxWidth: '1240px', margin: '0 auto', width: '100%', padding: '24px 20px 60px' }}>
       {/* Header */}
       <div style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-          <span style={{ fontSize: '18px' }}>📂</span>
-          <h1 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--color-text-primary)', letterSpacing: '-0.02em', margin: 0 }}>
-            Packs d'Intervention Clinique
-          </h1>
-        </div>
+        <h1 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--color-text-primary)', letterSpacing: '-0.02em', margin: '0 0 4px' }}>
+          Packs d'Intervention Clinique
+        </h1>
         <p style={{ fontSize: '13.5px', color: 'var(--color-text-secondary)', margin: 0 }}>
           Séquences cliniques multi-protocoles avec navigation par onglets fixes pour les interventions courantes et d'urgence vitale.
         </p>

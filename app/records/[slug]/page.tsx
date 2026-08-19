@@ -141,7 +141,6 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
               }}
               className="admin-edit-btn"
             >
-              <span>✏️</span>
               <span>Modifier cette fiche (Admin)</span>
             </Link>
           )}
@@ -383,7 +382,7 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
-                <span>🔗 Citée dans ({citingRecords.length})</span>
+                <span>Citée dans ({citingRecords.length})</span>
                 <span style={{ fontSize: '9.5px', color: 'var(--color-text-muted)', textTransform: 'none' }}>Rétroliens</span>
               </div>
 
@@ -458,7 +457,7 @@ export default async function RecordPage({ params }: { params: Promise<{ slug: s
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
-                <span>📑 Références citées ({citedRecords.length})</span>
+                <span>Références citées ({citedRecords.length})</span>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>

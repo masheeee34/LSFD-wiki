@@ -154,13 +154,13 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
     }
   };
 
-  // Structured Major Categories with clear icons and count
+  // Structured Major Categories with clear count
   const majorCategories = [
-    { label: 'Protocoles', icon: '🚑', href: '/search?category=protocol', count: allRecords.filter(r => r.category === 'protocol').length },
-    { label: 'Pharmacologie', icon: '💊', href: '/search?category=medication', count: allRecords.filter(r => r.category === 'medication').length },
-    { label: 'Manœuvres', icon: '🖐', href: '/search?category=maneuver', count: allRecords.filter(r => r.category === 'maneuver').length },
-    { label: 'Matériel', icon: '🛠', href: '/search?category=equipment', count: allRecords.filter(r => r.category === 'equipment').length },
-    { label: 'Packs d\'Intervention', icon: '📂', href: '/packs', count: allPacks.length },
+    { label: 'Protocoles', href: '/search?category=protocol', count: allRecords.filter(r => r.category === 'protocol').length },
+    { label: 'Pharmacologie', href: '/search?category=medication', count: allRecords.filter(r => r.category === 'medication').length },
+    { label: 'Manœuvres', href: '/search?category=maneuver', count: allRecords.filter(r => r.category === 'maneuver').length },
+    { label: 'Matériel', href: '/search?category=equipment', count: allRecords.filter(r => r.category === 'equipment').length },
+    { label: 'Packs d\'Intervention', href: '/packs', count: allPacks.length },
   ];
 
   // Prioritized vital reflex protocols for quick access
@@ -427,7 +427,6 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
                 }}
                 className="category-card-btn"
               >
-                <span style={{ fontSize: '13px' }}>{cat.icon}</span>
                 <span>{cat.label}</span>
                 <span style={{
                   fontSize: '10.5px',

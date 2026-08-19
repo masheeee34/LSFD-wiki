@@ -94,7 +94,6 @@ export default function PackViewer({ pack, records, isAdmin = false, dictionary 
                   gap: '4px',
                 }}
               >
-                <span>✏️</span>
                 <span>Modifier Pack (Admin)</span>
               </Link>
             )}
@@ -123,7 +122,7 @@ export default function PackViewer({ pack, records, isAdmin = false, dictionary 
                   transition: 'all 120ms ease',
                 }}
               >
-                📑 Mode Onglets
+                Onglets
               </button>
               <button
                 type="button"
@@ -141,7 +140,7 @@ export default function PackViewer({ pack, records, isAdmin = false, dictionary 
                   transition: 'all 120ms ease',
                 }}
               >
-                📜 Vue Continue
+                Vue Continue
               </button>
             </div>
           </div>

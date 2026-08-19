@@ -219,7 +219,7 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
           title="Couleur du texte"
           className="tb-btn"
         >
-          🎨 Couleur ▾
+          Couleur ▾
         </button>
 
         {showColorPicker && (
@@ -289,16 +289,16 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
 
       {/* Image & Table & Callouts */}
       <button type="button" onClick={() => setShowImageModal(true)} style={{ ...buttonStyle, color: showImageModal ? 'var(--color-brand-red)' : 'var(--color-text-secondary)' }} title="Insérer une Image" className="tb-btn">
-        🖼️ Image
+        Image
       </button>
       <button type="button" onClick={() => insertText('\n| Paramètre | Valeur / Recommandation |\n|---|---|\n| Dose | 1 mg IVD |\n| Répétition | Toutes les 3–5 min |\n')} style={buttonStyle} title="Insérer un Tableau" className="tb-btn">
-        📊 Tableau
+        Tableau
       </button>
       <button type="button" onClick={() => insertText('\n> [!CRITICAL] ALERTE VITALE : Détail critique obligatoire...\n')} style={buttonStyle} title="Encadré d'Urgence Critique" className="tb-btn">
-        ⚠️ Alerte
+        Alerte
       </button>
       <button type="button" onClick={() => insertText('\n> [!NOTE] Information clinique complémentaire...\n')} style={buttonStyle} title="Encadré d'Information" className="tb-btn">
-        💡 Info
+        Info
       </button>
       <button type="button" onClick={() => insertText('\n---\n')} style={buttonStyle} title="Ligne de séparation" className="tb-btn">
         ---
@@ -308,10 +308,10 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
 
       {/* Smart Wiki Tags */}
       <button type="button" onClick={handleOpenLinkModal} style={{ ...buttonStyle, color: showLinkModal ? 'var(--color-brand-red)' : 'var(--color-text-secondary)' }} title="Lien intelligent vers une autre fiche" className="tb-btn">
-        🔗 [[lien]]
+        [[lien]]
       </button>
       <button type="button" onClick={handleOpenDefModal} style={{ ...buttonStyle, color: showDefModal ? 'var(--color-brand-red)' : 'var(--color-text-secondary)' }} title="Définition / Infobulle" className="tb-btn">
-        📖 [[définition]]
+        [[définition]]
       </button>
 
       {/* Insert Image Mini Modal */}
@@ -374,7 +374,7 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
           minWidth: '320px',
         }}>
           <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)', fontWeight: 700 }}>
-            🔗 CRÉER UN LIEN VERS UNE FICHE
+            CRÉER UN LIEN VERS UNE FICHE
           </div>
 
           <div>
@@ -461,7 +461,7 @@ export default function EditorToolbar({ onInsert, textareaRef }: EditorToolbarPr
           minWidth: '300px',
         }}>
           <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--color-text-muted)', fontWeight: 700 }}>
-            📖 DÉFINITION / INFOBULLE CLINIQUE
+            DÉFINITION / INFOBULLE CLINIQUE
           </div>
 
           <div>

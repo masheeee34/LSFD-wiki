@@ -329,7 +329,7 @@ const ContentParser: React.FC<ContentParserProps> = ({ content, dictionary }) =>
                       justifyContent: 'space-between',
                     }}
                   >
-                    <span>📷 {block.alt}</span>
+                    <span>{block.alt}</span>
                     <span style={{ fontSize: '10px', color: 'var(--color-text-faint)' }}>Cliquer pour agrandir</span>
                   </figcaption>
                 )}
