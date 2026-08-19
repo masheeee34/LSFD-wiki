@@ -5,19 +5,24 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { SearchResult, WikiRecord, InterventionPack } from '@/types';
+import ThemeToggle from '@/components/theme/ThemeToggle';
 
 interface Props {
   allRecords: WikiRecord[];
   allPacks?: InterventionPack[];
 }
 
-const CATEGORY_CONFIG: Record<string, { label: string; icon: string }> = {
-  all: { label: 'Tous', icon: '📋' },
-  protocol: { label: 'Protocoles', icon: '🚑' },
-  medication: { label: 'Pharmacologie', icon: '💊' },
-  maneuver: { label: 'Manœuvres', icon: '🖐' },
-  equipment: { label: 'Équipement', icon: '🛠' },
-  packs: { label: 'Packs d\'urgence', icon: '📂' },
+const CATEGORY_MAP: Record<string, string> = {
+  protocol: 'Protocole',
+  medication: 'Pharmacologie',
+  maneuver: 'Manœuvre',
+  equipment: 'Matériel',
+};
+
+const SEVERITY_MAP: Record<string, string> = {
+  critical: 'Urgence vitale',
+  urgent: 'Urgent',
+  routine: 'Routine',
 };
 
 function normalizeText(text: string): string {
@@ -29,7 +34,7 @@ function normalizeText(text: string): string {
     .trim();
 }
 
-function searchInMemory(records: WikiRecord[], packs: InterventionPack[], query: string): SearchResult[] {
+function searchInMemory(records: WikiRecord[], query: string): SearchResult[] {
   if (!query.trim()) return [];
   const qNorm = normalizeText(query);
   const scored: { record: WikiRecord; score: number; snippet: string; matchField: string }[] = [];
@@ -74,12 +79,11 @@ function searchInMemory(records: WikiRecord[], packs: InterventionPack[], query:
   }
 
   scored.sort((a, b) => b.score - a.score);
-  return scored.slice(0, 10);
+  return scored.slice(0, 8);
 }
 
 export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
   const [query, setQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isOpen, setIsOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -87,18 +91,18 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const searchResults = useMemo(() => {
-    return searchInMemory(allRecords, allPacks, query);
-  }, [allRecords, allPacks, query]);
+  const results = useMemo(() => {
+    return searchInMemory(allRecords, query);
+  }, [allRecords, query]);
 
   useEffect(() => {
-    if (query.trim() && searchResults.length > 0) {
+    if (query.trim() && results.length > 0) {
       setIsOpen(true);
       setSelectedIndex(-1);
     } else {
       setIsOpen(false);
     }
-  }, [query, searchResults]);
+  }, [query, results]);
 
   // Global shortcut Cmd+K / Ctrl+K
   useEffect(() => {
@@ -113,7 +117,7 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, []);
 
-  // Click outside to close search dropdown
+  // Click outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -128,19 +132,19 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      if (searchResults.length > 0) {
-        setSelectedIndex(prev => (prev < searchResults.length - 1 ? prev + 1 : 0));
+      if (results.length > 0) {
+        setSelectedIndex(prev => (prev < results.length - 1 ? prev + 1 : 0));
         setIsOpen(true);
       }
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      if (searchResults.length > 0) {
-        setSelectedIndex(prev => (prev > 0 ? prev - 1 : searchResults.length - 1));
+      if (results.length > 0) {
+        setSelectedIndex(prev => (prev > 0 ? prev - 1 : results.length - 1));
       }
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      if (selectedIndex >= 0 && searchResults[selectedIndex]) {
-        router.push(`/records/${searchResults[selectedIndex].record.slug}`);
+      if (selectedIndex >= 0 && results[selectedIndex]) {
+        router.push(`/records/${results[selectedIndex].record.slug}`);
       } else if (query.trim()) {
         router.push(`/search?q=${encodeURIComponent(query)}`);
       }
@@ -151,41 +155,49 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
     }
   };
 
-  // Critical emergencies for quick sidebar access
-  const criticalRecords = useMemo(() => {
-    return allRecords.filter(r => r.severity === 'critical').slice(0, 4);
+  const handleRandomRecord = () => {
+    if (allRecords.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * allRecords.length);
+    router.push(`/records/${allRecords[randomIndex].slug}`);
+  };
+
+  // Direct quick emergency reflex records
+  const criticalCardio = useMemo(() => {
+    return allRecords.find(r => r.slug.includes('arret') || r.slug.includes('cardio') || r.slug.includes('acls')) || allRecords.find(r => r.severity === 'critical') || allRecords[0];
   }, [allRecords]);
 
-  // Filtered records by category
-  const filteredRecords = useMemo(() => {
-    if (selectedCategory === 'all') return allRecords;
-    if (selectedCategory === 'packs') return [];
-    return allRecords.filter(r => r.category === selectedCategory);
-  }, [allRecords, selectedCategory]);
+  // Primary categories
+  const categoryPills = [
+    { label: 'Protocoles ACLS & Soins', href: '/search?category=protocol' },
+    { label: 'Pharmacologie & Molécules', href: '/search?category=medication' },
+    { label: 'Manœuvres & Gestes', href: '/search?category=maneuver' },
+    { label: 'Dotation Matériel', href: '/search?category=equipment' },
+    { label: 'Packs d\'Intervention', href: allPacks.length > 0 ? `/packs/${allPacks[0].slug}` : '/search' },
+  ];
 
-  const counts = useMemo(() => ({
-    all: allRecords.length,
-    protocol: allRecords.filter(r => r.category === 'protocol').length,
-    medication: allRecords.filter(r => r.category === 'medication').length,
-    maneuver: allRecords.filter(r => r.category === 'maneuver').length,
-    equipment: allRecords.filter(r => r.category === 'equipment').length,
-    packs: allPacks.length,
-  }), [allRecords, allPacks]);
+  // Specific high-frequency clinical shortcut pills
+  const protocolPills = useMemo(() => {
+    return allRecords.slice(0, 8);
+  }, [allRecords]);
 
   return (
-    <div style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--color-bg-base)' }}>
+    <div style={{
+      width: '100%',
+      minHeight: 'calc(100vh - 45px)',
+      display: 'flex',
+      flexDirection: 'column',
+      backgroundColor: 'var(--color-bg-base)',
+    }}>
       
-      {/* 1. TOPBAR (56px) — Fixed height, integrated Cmd+K search */}
+      {/* 1. TOPBAR NAVIGATION */}
       <header style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
+        width: '100%',
         height: '56px',
-        backgroundColor: 'var(--color-bg-surface)',
         borderBottom: '1px solid var(--color-border)',
+        backgroundColor: 'var(--color-bg-surface)',
         display: 'flex',
         alignItems: 'center',
-        padding: '0 20px',
+        padding: '0 24px',
       }}>
         <div style={{
           width: '100%',
@@ -196,178 +208,54 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
           justifyContent: 'space-between',
           gap: '16px',
         }}>
-          {/* Left: Compact Logo + Title */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', color: 'inherit', flexShrink: 0 }}>
-            <div style={{ width: '28px', height: '28px', position: 'relative' }}>
-              <Image
-                src="/lsfd-logo.png"
-                alt="LSFD"
-                width={28}
-                height={28}
-                style={{ objectFit: 'contain' }}
-                priority
-              />
-            </div>
-            <span style={{ fontSize: '14.5px', fontWeight: 700, color: 'var(--color-text-primary)', letterSpacing: '-0.01em' }}>
-              LSFD <span style={{ color: 'var(--color-brand-red)' }}>Medilog</span>
-            </span>
-          </Link>
-
-          {/* Center: Integrated Cmd+K Search Bar (max 480px) */}
-          <div ref={containerRef} style={{ flex: '1 1 360px', maxWidth: '480px', position: 'relative' }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              backgroundColor: 'var(--color-bg-base)',
-              border: isFocused ? '1px solid var(--color-border-hover)' : '1px solid var(--color-border)',
-              borderRadius: isOpen && searchResults.length > 0 ? '6px 6px 0 0' : '6px',
-              padding: '6px 12px',
-              transition: 'all 120ms ease',
-            }}>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--color-text-muted)"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                style={{ marginRight: '8px', flexShrink: 0 }}
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-
-              <input
-                ref={inputRef}
-                type="text"
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-                onFocus={() => { setIsFocused(true); if (searchResults.length > 0) setIsOpen(true); }}
-                onBlur={() => { if (!isOpen) setIsFocused(false); }}
-                onKeyDown={handleKeyDown}
-                placeholder="Rechercher dans les protocoles... (⌘K)"
-                style={{
-                  flex: 1,
-                  border: 'none',
-                  outline: 'none',
-                  background: 'transparent',
-                  fontSize: '13px',
-                  color: 'var(--color-text-primary)',
-                  fontFamily: 'var(--font-sans)',
-                }}
-              />
-
-              {query && (
-                <button
-                  type="button"
-                  onClick={() => { setQuery(''); setIsOpen(false); inputRef.current?.focus(); }}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: 'var(--color-text-faint)',
-                    cursor: 'pointer',
-                    fontSize: '12px',
-                    padding: '0 4px',
-                  }}
-                >
-                  ✕
-                </button>
-              )}
-
-              <kbd style={{
-                fontSize: '10px',
-                fontFamily: 'var(--font-mono)',
-                color: 'var(--color-text-muted)',
-                backgroundColor: 'var(--color-bg-surface)',
-                border: '1px solid var(--color-border)',
-                borderRadius: '3px',
-                padding: '1px 5px',
-                marginLeft: '4px',
-                userSelect: 'none',
-              }}>
-                ⌘K
-              </kbd>
-            </div>
-
-            {/* Live Search Results Dropdown */}
-            {isOpen && searchResults.length > 0 && (
-              <div style={{
-                position: 'absolute',
-                top: '100%',
-                left: 0,
-                right: 0,
-                backgroundColor: 'var(--color-bg-surface)',
-                border: '1px solid var(--color-border)',
-                borderTop: 'none',
-                borderRadius: '0 0 6px 6px',
-                boxShadow: '0 12px 28px rgba(0, 0, 0, 0.4)',
-                zIndex: 50,
-                maxHeight: '320px',
-                overflowY: 'auto',
-              }}>
-                {searchResults.map((result, idx) => {
-                  const isSelected = idx === selectedIndex;
-                  return (
-                    <div
-                      key={result.record.id}
-                      onClick={() => router.push(`/records/${result.record.slug}`)}
-                      onMouseEnter={() => setSelectedIndex(idx)}
-                      style={{
-                        padding: '8px 14px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        cursor: 'pointer',
-                        backgroundColor: isSelected ? 'var(--color-bg-hover)' : 'transparent',
-                        borderBottom: '1px solid var(--color-border-subtle)',
-                        fontSize: '12.5px',
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
-                        <span style={{ fontWeight: 600, color: 'var(--color-text-primary)' }}>
-                          {result.record.title}
-                        </span>
-                      </div>
-                      <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
-                        {CATEGORY_CONFIG[result.record.category]?.label || result.record.category}
-                      </span>
-                    </div>
-                  );
-                })}
+          {/* Left: Brand + Domain Links */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', color: 'inherit' }}>
+              <div style={{ width: '30px', height: '30px', position: 'relative' }}>
+                <Image
+                  src="/lsfd-logo.png"
+                  alt="LSFD"
+                  width={30}
+                  height={30}
+                  style={{ objectFit: 'contain' }}
+                  priority
+                />
               </div>
-            )}
+              <span style={{ fontSize: '15px', fontWeight: 800, color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}>
+                LSFD <span style={{ color: 'var(--color-brand-blue)' }}>Medilog</span>
+              </span>
+            </Link>
+
+            <nav style={{ display: 'flex', alignItems: 'center', gap: '4px' }} className="topbar-nav-links">
+              <Link href="/search?category=protocol" className="top-nav-link">Protocoles</Link>
+              <Link href="/search?category=medication" className="top-nav-link">Pharmacologie</Link>
+              <Link href="/search?category=maneuver" className="top-nav-link">Manœuvres</Link>
+              <Link href="/search?category=equipment" className="top-nav-link">Matériel</Link>
+              {allPacks.length > 0 && (
+                <Link href={`/packs/${allPacks[0].slug}`} className="top-nav-link">Packs d'urgence</Link>
+              )}
+            </nav>
           </div>
 
-          {/* Right: Operational Status & Admin */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontSize: '11.5px',
-              color: 'var(--color-text-muted)',
-              fontFamily: 'var(--font-sans)',
-            }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
-              <span>En service</span>
-            </div>
+          {/* Right: Theme Toggle + Admin */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {/* Mode White & Black Switcher Toggle */}
+            <ThemeToggle />
 
             <Link
               href="/admin"
               style={{
-                fontSize: '12px',
+                fontSize: '12.5px',
                 color: 'var(--color-text-secondary)',
                 textDecoration: 'none',
-                padding: '4px 10px',
-                borderRadius: '5px',
-                backgroundColor: 'var(--color-bg-base)',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                backgroundColor: 'var(--color-bg-surface)',
                 border: '1px solid var(--color-border)',
                 fontWeight: 500,
                 transition: 'all 120ms ease',
               }}
-              className="admin-btn"
+              className="topbar-admin-btn"
             >
               Admin
             </Link>
@@ -375,533 +263,372 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
         </div>
       </header>
 
-      {/* 2. BODY: 2-COLUMN LAYOUT (SIDEBAR 240px + MAIN AREA FLEX-1) */}
-      <div style={{
-        maxWidth: '1440px',
-        width: '100%',
-        margin: '0 auto',
-        padding: '20px',
-        display: 'flex',
-        gap: '24px',
+      {/* 2. CENTRAL DISPATCH PORTAL (Format Google / Hub Central Image 1) */}
+      <main style={{
         flex: 1,
-      }} className="app-body-container">
-        
-        {/* SIDEBAR GAUCHE (240px, Sticky) */}
-        <aside style={{
-          width: '240px',
-          flexShrink: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '20px',
-        }} className="app-sidebar">
-          
-          {/* Section 1: Urgences Vitales */}
-          {criticalRecords.length > 0 && (
-            <div>
-              <div style={{
-                fontSize: '11px',
-                fontWeight: 600,
-                color: 'var(--color-text-muted)',
-                marginBottom: '8px',
-                paddingLeft: '6px',
-                letterSpacing: '0.02em',
-              }}>
-                Urgences vitales
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                {criticalRecords.map(r => (
-                  <Link
-                    key={r.id}
-                    href={`/records/${r.slug}`}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      padding: '6px 8px',
-                      borderRadius: '5px',
-                      color: 'var(--color-text-secondary)',
-                      textDecoration: 'none',
-                      fontSize: '12.5px',
-                      fontWeight: 500,
-                      transition: 'all 100ms ease',
-                    }}
-                    className="sidebar-item"
-                  >
-                    <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: 'var(--color-brand-red)', flexShrink: 0 }} />
-                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {r.title}
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '40px 20px 60px',
+        maxWidth: '860px',
+        margin: '0 auto',
+        width: '100%',
+        textAlign: 'center',
+      }}>
 
-          {/* Section 2: Packs d'urgence directs dans la sidebar */}
-          {allPacks.length > 0 && (
-            <div>
-              <div style={{
-                fontSize: '11px',
-                fontWeight: 600,
-                color: 'var(--color-text-muted)',
-                marginBottom: '8px',
-                paddingLeft: '6px',
-                letterSpacing: '0.02em',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}>
-                <span>Packs d'urgence</span>
-                <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--color-text-faint)' }}>
-                  {allPacks.length}
-                </span>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                {allPacks.map(pack => (
-                  <Link
-                    key={pack.id}
-                    href={`/packs/${pack.slug}`}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      gap: '8px',
-                      padding: '6px 8px',
-                      borderRadius: '5px',
-                      color: 'var(--color-text-secondary)',
-                      textDecoration: 'none',
-                      fontSize: '12.5px',
-                      fontWeight: 500,
-                      transition: 'all 100ms ease',
-                    }}
-                    className="sidebar-item"
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '7px', minWidth: 0 }}>
-                      <span style={{ fontSize: '11.5px', opacity: 0.8 }}>📂</span>
-                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {pack.title}
-                      </span>
-                    </div>
-                    <span style={{
-                      fontSize: '10.5px',
-                      fontFamily: 'var(--font-mono)',
-                      color: 'var(--color-text-muted)',
-                      flexShrink: 0,
-                    }}>
-                      {pack.recordSlugs.length}
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
+        {/* Central LSFD Emblem */}
+        <div style={{
+          width: '76px',
+          height: '76px',
+          position: 'relative',
+          marginBottom: '14px',
+        }}>
+          <Image
+            src="/lsfd-logo.png"
+            alt="LSFD EMS"
+            width={76}
+            height={76}
+            style={{ objectFit: 'contain' }}
+            priority
+          />
+        </div>
 
-          {/* Section 3: Catégories & Navigation */}
-          <div>
-            <div style={{
-              fontSize: '11px',
-              fontWeight: 600,
-              color: 'var(--color-text-muted)',
-              marginBottom: '8px',
-              paddingLeft: '6px',
-              letterSpacing: '0.02em',
-            }}>
-              Référentiel clinique
-            </div>
+        {/* Main Title */}
+        <h1 style={{
+          fontSize: '32px',
+          fontWeight: 800,
+          letterSpacing: '-0.025em',
+          color: 'var(--color-text-primary)',
+          margin: '0 0 6px',
+          lineHeight: 1.2,
+        }}>
+          LSFD <span style={{ color: 'var(--color-brand-blue)' }}>Medilog</span>
+        </h1>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              {(['all', 'protocol', 'medication', 'maneuver', 'equipment', 'packs'] as const).map(catKey => {
-                const isSelected = selectedCategory === catKey;
-                const config = CATEGORY_CONFIG[catKey];
-                const count = counts[catKey];
-                return (
-                  <button
-                    key={catKey}
-                    type="button"
-                    onClick={() => setSelectedCategory(catKey)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '6px 8px',
-                      borderRadius: '5px',
-                      border: 'none',
-                      backgroundColor: isSelected ? 'var(--color-bg-hover)' : 'transparent',
-                      color: isSelected ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
-                      fontSize: '12.5px',
-                      fontWeight: isSelected ? 600 : 500,
-                      cursor: 'pointer',
-                      textAlign: 'left',
-                      transition: 'all 100ms ease',
-                    }}
-                    className="sidebar-nav-btn"
-                  >
-                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {config.label}
-                    </span>
-                    <span style={{
-                      fontSize: '11px',
-                      fontFamily: 'var(--font-mono)',
-                      color: isSelected ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
-                    }}>
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </aside>
+        {/* Subtitle */}
+        <p style={{
+          fontSize: '13.5px',
+          color: 'var(--color-text-secondary)',
+          margin: '0 0 28px',
+          maxWidth: '540px',
+        }}>
+          Moteur de recherche des protocoles d'urgence et pharmacopée EMS
+        </p>
 
-        {/* ZONE PRINCIPALE (flex-1, Haute Densité Style Linear / GitBook) */}
-        <main style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          
-          {/* Header & Filter Tabs */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingBottom: '12px',
-            borderBottom: '1px solid var(--color-border)',
-            flexWrap: 'wrap',
-            gap: '12px',
-          }}>
-            <div>
-              <h1 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--color-text-primary)', margin: 0, letterSpacing: '-0.02em' }}>
-                {CATEGORY_CONFIG[selectedCategory]?.label || 'Tous les protocoles'}
-              </h1>
-              <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', margin: '2px 0 0' }}>
-                {selectedCategory === 'packs' 
-                  ? `${allPacks.length} classeurs d'urgence multi-fiches`
-                  : `${filteredRecords.length} fiches répertoriées`
-                }
-              </p>
-            </div>
-
-            {/* Filter Pills */}
-            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-              {(['all', 'protocol', 'medication', 'maneuver', 'equipment', 'packs'] as const).map(k => (
-                <button
-                  key={k}
-                  type="button"
-                  onClick={() => setSelectedCategory(k)}
-                  style={{
-                    padding: '4px 10px',
-                    borderRadius: '4px',
-                    border: 'none',
-                    backgroundColor: selectedCategory === k ? 'var(--color-bg-subtle)' : 'transparent',
-                    color: selectedCategory === k ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
-                    fontSize: '12px',
-                    fontWeight: selectedCategory === k ? 600 : 500,
-                    cursor: 'pointer',
-                    transition: 'all 100ms ease',
-                  }}
-                  className="filter-pill-btn"
-                >
-                  {CATEGORY_CONFIG[k].label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* AFFICHAGE DES PACKS DIRECTEMENT SUR LA HOMEPAGE (Quand "Tous" est sélectionné et qu'il y a des packs) */}
-          {selectedCategory === 'all' && allPacks.length > 0 && (
-            <div style={{ marginBottom: '8px' }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: '8px',
-                padding: '0 2px',
-              }}>
-                <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--color-text-muted)', letterSpacing: '0.02em' }}>
-                  Packs d'urgence ({allPacks.length})
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setSelectedCategory('packs')}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    fontSize: '11px',
-                    color: 'var(--color-brand-blue)',
-                    cursor: 'pointer',
-                    padding: 0,
-                  }}
-                >
-                  Voir tous les packs →
-                </button>
-              </div>
-
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: allPacks.length > 1 ? 'repeat(2, 1fr)' : '1fr',
-                gap: '8px',
-              }} className="home-packs-grid">
-                {allPacks.map(pack => (
-                  <Link
-                    key={pack.id}
-                    href={`/packs/${pack.slug}`}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '10px 14px',
-                      borderRadius: '6px',
-                      backgroundColor: 'var(--color-bg-surface)',
-                      border: '1px solid var(--color-border)',
-                      textDecoration: 'none',
-                      color: 'inherit',
-                      transition: 'all 100ms ease',
-                      gap: '12px',
-                    }}
-                    className="clean-pack-card"
-                  >
-                    <div style={{ minWidth: 0, flex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
-                        <span style={{ fontSize: '12px' }}>📂</span>
-                        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {pack.title}
-                        </span>
-                        {pack.badgeLabel && (
-                          <span style={{ fontSize: '10px', color: 'var(--color-brand-red)', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                            <span style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: 'var(--color-brand-red)' }} />
-                            {pack.badgeLabel}
-                          </span>
-                        )}
-                      </div>
-                      {pack.description && (
-                        <div style={{ fontSize: '11.5px', color: 'var(--color-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {pack.description}
-                        </div>
-                      )}
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                      <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono)' }}>
-                        {pack.recordSlugs.length} fiches
-                      </span>
-                      <span style={{ fontSize: '12px', color: 'var(--color-text-faint)' }} className="row-chevron">
-                        →
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* VUE 1: PACKS D'INTERVENTION (Si catégorie "packs" sélectionnée) */}
-          {selectedCategory === 'packs' ? (
-            <div style={{
+        {/* Central Search Box */}
+        <div ref={containerRef} style={{ width: '100%', maxWidth: '640px', position: 'relative', marginBottom: '18px' }}>
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
               backgroundColor: 'var(--color-bg-surface)',
+              border: isFocused ? '1px solid var(--color-brand-blue)' : '1px solid var(--color-border)',
+              borderRadius: isOpen && results.length > 0 ? '24px 24px 0 0' : '24px',
+              padding: '11px 18px',
+              boxShadow: 'var(--card-shadow)',
+              transition: 'all 120ms ease',
+            }}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke={isFocused ? 'var(--color-brand-blue)' : 'var(--color-text-muted)'}
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ marginRight: '12px', flexShrink: 0 }}
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              onFocus={() => { setIsFocused(true); if (results.length > 0) setIsOpen(true); }}
+              onBlur={() => { if (!isOpen) setIsFocused(false); }}
+              onKeyDown={handleKeyDown}
+              placeholder="Rechercher un protocole, une molécule, un geste..."
+              autoFocus
+              style={{
+                flex: 1,
+                border: 'none',
+                outline: 'none',
+                background: 'transparent',
+                fontSize: '14.5px',
+                color: 'var(--color-text-primary)',
+                fontFamily: 'var(--font-sans)',
+              }}
+            />
+
+            {query && (
+              <button
+                type="button"
+                onClick={() => { setQuery(''); setIsOpen(false); inputRef.current?.focus(); }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--color-text-faint)',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  padding: '0 6px',
+                }}
+              >
+                ✕
+              </button>
+            )}
+
+            <kbd style={{
+              backgroundColor: 'var(--color-bg-subtle)',
               border: '1px solid var(--color-border)',
-              borderRadius: '6px',
-              overflow: 'hidden',
+              borderRadius: '4px',
+              padding: '2px 7px',
+              fontSize: '11px',
+              fontFamily: 'var(--font-mono)',
+              color: 'var(--color-text-muted)',
+              flexShrink: 0,
+              userSelect: 'none',
             }}>
-              {allPacks.map((pack, idx) => (
-                <Link
-                  key={pack.id}
-                  href={`/packs/${pack.slug}`}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '12px 16px',
-                    borderBottom: idx < allPacks.length - 1 ? '1px solid var(--color-border-subtle)' : 'none',
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    transition: 'background-color 100ms ease',
-                    gap: '16px',
-                  }}
-                  className="data-row"
-                >
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
-                      <span style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--color-text-primary)' }}>
-                        {pack.title}
+              Entrée ↵
+            </kbd>
+          </div>
+
+          {/* Autocomplete Dropdown */}
+          {isOpen && results.length > 0 && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                right: 0,
+                backgroundColor: 'var(--color-bg-surface)',
+                border: '1px solid var(--color-brand-blue)',
+                borderTop: 'none',
+                borderRadius: '0 0 20px 20px',
+                boxShadow: '0 16px 36px rgba(0, 0, 0, 0.4)',
+                zIndex: 50,
+                maxHeight: '340px',
+                overflowY: 'auto',
+                padding: '6px 0',
+                textAlign: 'left',
+              }}
+            >
+              {results.map((result, idx) => {
+                const isSelected = idx === selectedIndex;
+                return (
+                  <div
+                    key={result.record.id}
+                    onClick={() => router.push(`/records/${result.record.slug}`)}
+                    onMouseEnter={() => setSelectedIndex(idx)}
+                    style={{
+                      padding: '10px 18px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      cursor: 'pointer',
+                      backgroundColor: isSelected ? 'var(--color-bg-hover)' : 'transparent',
+                      borderLeft: isSelected ? '3px solid var(--color-brand-blue)' : '3px solid transparent',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+                      <span className="badge badge-category" style={{ fontSize: '10px', padding: '1px 6px' }}>
+                        {CATEGORY_MAP[result.record.category] || result.record.category}
                       </span>
-                      {pack.badgeLabel && (
-                        <span style={{ fontSize: '11px', color: 'var(--color-brand-red)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                          <span style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: 'var(--color-brand-red)' }} />
-                          {pack.badgeLabel}
-                        </span>
-                      )}
+                      <span style={{
+                        fontSize: '13.5px',
+                        fontWeight: 600,
+                        color: 'var(--color-text-primary)',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}>
+                        {result.record.title}
+                      </span>
                     </div>
-                    {pack.description && (
-                      <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {pack.description}
-                      </div>
+                    {result.record.severity && (
+                      <span className={`badge badge-${result.record.severity}`} style={{ fontSize: '10px', padding: '1px 6px', flexShrink: 0 }}>
+                        {SEVERITY_MAP[result.record.severity] || result.record.severity}
+                      </span>
                     )}
                   </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-                    <span style={{ fontSize: '11.5px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono)' }}>
-                      {pack.recordSlugs.length} protocoles
-                    </span>
-                    <span style={{ fontSize: '13px', color: 'var(--color-text-muted)' }} className="row-chevron">
-                      →
-                    </span>
-                  </div>
-                </Link>
-              ))}
-
-              {allPacks.length === 0 && (
-                <div style={{ padding: '32px', textAlign: 'center', color: 'var(--color-text-muted)', fontSize: '13px' }}>
-                  Aucun pack d'urgence créé pour le moment.
-                </div>
-              )}
-            </div>
-          ) : (
-            /* VUE 2: TABLE INTERACTIVE HAUTE DENSITÉ (Style Linear / GitBook) */
-            <div style={{
-              backgroundColor: 'var(--color-bg-surface)',
-              border: '1px solid var(--color-border)',
-              borderRadius: '6px',
-              overflow: 'hidden',
-            }}>
-              {/* Header row */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'minmax(220px, 2fr) 110px minmax(200px, 3fr) 80px 30px',
-                padding: '8px 16px',
-                backgroundColor: 'var(--color-bg-subtle)',
-                borderBottom: '1px solid var(--color-border)',
-                fontSize: '11px',
-                fontWeight: 600,
-                color: 'var(--color-text-muted)',
-                letterSpacing: '0.02em',
-              }} className="table-header-grid">
-                <div>Procédure</div>
-                <div>Domaine</div>
-                <div>Résumé clinique</div>
-                <div>Gravité</div>
-                <div style={{ textAlign: 'right' }}></div>
-              </div>
-
-              {/* Data rows */}
-              {filteredRecords.map((record, idx) => {
-                const isCritical = record.severity === 'critical';
-                const isUrgent = record.severity === 'urgent';
-
-                return (
-                  <Link
-                    key={record.id}
-                    href={`/records/${record.slug}`}
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'minmax(220px, 2fr) 110px minmax(200px, 3fr) 80px 30px',
-                      padding: '10px 16px',
-                      borderBottom: idx < filteredRecords.length - 1 ? '1px solid var(--color-border-subtle)' : 'none',
-                      textDecoration: 'none',
-                      color: 'inherit',
-                      alignItems: 'center',
-                      transition: 'background-color 100ms ease',
-                      fontSize: '12.5px',
-                    }}
-                    className="data-row"
-                  >
-                    {/* Title */}
-                    <div style={{ fontWeight: 600, color: 'var(--color-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingRight: '12px' }}>
-                      {record.title}
-                    </div>
-
-                    {/* Category */}
-                    <div style={{ color: 'var(--color-text-muted)', fontSize: '11.5px' }}>
-                      {CATEGORY_CONFIG[record.category]?.label || record.category}
-                    </div>
-
-                    {/* Summary */}
-                    <div style={{ color: 'var(--color-text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingRight: '12px', fontSize: '12px' }}>
-                      {record.summary || '—'}
-                    </div>
-
-                    {/* Severity (discreet dot) */}
-                    <div>
-                      {isCritical ? (
-                        <span style={{ fontSize: '11.5px', color: 'var(--color-brand-red)', display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: 500 }}>
-                          <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: 'var(--color-brand-red)' }} />
-                          Critique
-                        </span>
-                      ) : isUrgent ? (
-                        <span style={{ fontSize: '11.5px', color: '#fbbf24', display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: 500 }}>
-                          <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#f59e0b' }} />
-                          Urgent
-                        </span>
-                      ) : (
-                        <span style={{ color: 'var(--color-text-faint)', fontSize: '11.5px' }}>—</span>
-                      )}
-                    </div>
-
-                    {/* Arrow */}
-                    <div style={{ textAlign: 'right', color: 'var(--color-text-faint)', fontSize: '12px' }} className="row-chevron">
-                      →
-                    </div>
-                  </Link>
                 );
               })}
-
-              {filteredRecords.length === 0 && (
-                <div style={{ padding: '32px', textAlign: 'center', color: 'var(--color-text-muted)', fontSize: '13px' }}>
-                  Aucun protocole trouvé dans cette catégorie.
-                </div>
-              )}
             </div>
           )}
-        </main>
-      </div>
+        </div>
+
+        {/* Action Buttons (Recherche Medilog | Protocole Arrêt Cardiaque (ACLS) | Fiche au hasard) */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '10px',
+          flexWrap: 'wrap',
+          marginBottom: '32px',
+        }}>
+          <button
+            type="button"
+            onClick={() => {
+              if (query.trim()) router.push(`/search?q=${encodeURIComponent(query)}`);
+              else inputRef.current?.focus();
+            }}
+            style={{
+              padding: '8px 16px',
+              borderRadius: '6px',
+              backgroundColor: 'var(--color-bg-surface)',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-text-primary)',
+              fontSize: '12.5px',
+              fontWeight: 500,
+              cursor: 'pointer',
+              transition: 'all 120ms ease',
+            }}
+            className="action-portal-btn"
+          >
+            Recherche Medilog
+          </button>
+
+          {criticalCardio && (
+            <Link
+              href={`/records/${criticalCardio.slug}`}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '6px',
+                backgroundColor: 'var(--color-bg-surface)',
+                border: '1px solid rgba(239, 68, 68, 0.4)',
+                color: 'var(--color-brand-red)',
+                fontSize: '12.5px',
+                fontWeight: 600,
+                textDecoration: 'none',
+                transition: 'all 120ms ease',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+              }}
+              className="critical-portal-btn"
+            >
+              <span>Protocole Arrêt Cardiaque (ACLS)</span>
+            </Link>
+          )}
+
+          <button
+            type="button"
+            onClick={handleRandomRecord}
+            style={{
+              padding: '8px 16px',
+              borderRadius: '6px',
+              backgroundColor: 'var(--color-bg-surface)',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-text-primary)',
+              fontSize: '12.5px',
+              fontWeight: 500,
+              cursor: 'pointer',
+              transition: 'all 120ms ease',
+            }}
+            className="action-portal-btn"
+          >
+            Fiche au hasard
+          </button>
+        </div>
+
+        {/* Accès rapide aux référentiels */}
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+          <div style={{ fontSize: '11.5px', color: 'var(--color-text-muted)', fontWeight: 500 }}>
+            Accès rapide aux référentiels :
+          </div>
+
+          {/* Row 1: Main Category Pills */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px' }}>
+            {categoryPills.map(cat => (
+              <Link
+                key={cat.label}
+                href={cat.href}
+                style={{
+                  fontSize: '12px',
+                  fontWeight: 500,
+                  color: 'var(--color-text-secondary)',
+                  backgroundColor: 'var(--color-bg-surface)',
+                  border: '1px solid var(--color-border)',
+                  padding: '5px 12px',
+                  borderRadius: '16px',
+                  textDecoration: 'none',
+                  transition: 'all 120ms ease',
+                }}
+                className="shortcut-pill"
+              >
+                {cat.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Row 2: Clinical Emergency Protocols */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px', maxWidth: '720px' }}>
+            {protocolPills.map(record => (
+              <Link
+                key={record.id}
+                href={`/records/${record.slug}`}
+                style={{
+                  fontSize: '11.5px',
+                  fontWeight: 500,
+                  color: 'var(--color-text-secondary)',
+                  backgroundColor: 'var(--color-bg-surface)',
+                  border: '1px solid var(--color-border)',
+                  padding: '4px 11px',
+                  borderRadius: '16px',
+                  textDecoration: 'none',
+                  transition: 'all 120ms ease',
+                }}
+                className="shortcut-pill"
+              >
+                {record.title}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+      </main>
 
       <style>{`
-        .sidebar-item:hover {
-          background-color: var(--color-bg-hover) !important;
-          color: var(--color-text-primary) !important;
+        .top-nav-link {
+          padding: 5px 10px;
+          font-size: 12.5px;
+          color: var(--color-text-secondary);
+          text-decoration: none;
+          border-radius: 5px;
+          font-weight: 500;
+          transition: all 120ms ease;
         }
-        .sidebar-nav-btn:hover {
-          background-color: var(--color-bg-hover) !important;
-          color: var(--color-text-primary) !important;
+        .top-nav-link:hover {
+          color: var(--color-brand-blue);
+          background-color: var(--color-bg-hover);
         }
-        .filter-pill-btn:hover {
-          color: var(--color-text-primary) !important;
-        }
-        .clean-pack-card:hover {
+        .topbar-admin-btn:hover {
+          color: var(--color-brand-blue) !important;
+          border-color: var(--color-brand-blue) !important;
           background-color: var(--color-bg-hover) !important;
+        }
+        .action-portal-btn:hover {
           border-color: var(--color-border-hover) !important;
-        }
-        .clean-pack-card:hover .row-chevron {
-          color: var(--color-text-primary) !important;
-          transform: translateX(2px);
-        }
-        .data-row:hover {
           background-color: var(--color-bg-hover) !important;
         }
-        .data-row:hover .row-chevron {
+        .critical-portal-btn:hover {
+          border-color: var(--color-brand-red) !important;
+          background-color: rgba(239, 68, 68, 0.08) !important;
+        }
+        .shortcut-pill:hover {
+          border-color: var(--color-brand-blue) !important;
           color: var(--color-text-primary) !important;
-          transform: translateX(2px);
-        }
-        .row-chevron {
-          transition: transform 100ms ease, color 100ms ease;
-        }
-        .admin-btn:hover {
           background-color: var(--color-bg-hover) !important;
-          color: var(--color-text-primary) !important;
-          border-color: var(--color-border-hover) !important;
         }
-        @media (max-width: 860px) {
-          .app-body-container {
-            flex-direction: column !important;
-          }
-          .app-sidebar {
-            width: 100% !important;
-          }
-          .home-packs-grid {
-            grid-template-columns: 1fr !important;
-          }
-          .table-header-grid {
+        @media (max-width: 768px) {
+          .topbar-nav-links {
             display: none !important;
-          }
-          .data-row {
-            grid-template-columns: 1fr auto !important;
-            gap: 6px !important;
           }
         }
       `}</style>
