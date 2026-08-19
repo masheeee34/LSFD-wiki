@@ -396,46 +396,107 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
         }} className="app-sidebar">
           
           {/* Section 1: Urgences Vitales */}
-          <div>
-            <div style={{
-              fontSize: '11px',
-              fontWeight: 600,
-              color: 'var(--color-text-muted)',
-              marginBottom: '8px',
-              paddingLeft: '6px',
-              letterSpacing: '0.02em',
-            }}>
-              Urgences vitales
+          {criticalRecords.length > 0 && (
+            <div>
+              <div style={{
+                fontSize: '11px',
+                fontWeight: 600,
+                color: 'var(--color-text-muted)',
+                marginBottom: '8px',
+                paddingLeft: '6px',
+                letterSpacing: '0.02em',
+              }}>
+                Urgences vitales
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                {criticalRecords.map(r => (
+                  <Link
+                    key={r.id}
+                    href={`/records/${r.slug}`}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '6px 8px',
+                      borderRadius: '5px',
+                      color: 'var(--color-text-secondary)',
+                      textDecoration: 'none',
+                      fontSize: '12.5px',
+                      fontWeight: 500,
+                      transition: 'all 100ms ease',
+                    }}
+                    className="sidebar-item"
+                  >
+                    <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: 'var(--color-brand-red)', flexShrink: 0 }} />
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {r.title}
+                    </span>
+                  </Link>
+                ))}
+              </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              {criticalRecords.map(r => (
-                <Link
-                  key={r.id}
-                  href={`/records/${r.slug}`}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '6px 8px',
-                    borderRadius: '5px',
-                    color: 'var(--color-text-secondary)',
-                    textDecoration: 'none',
-                    fontSize: '12.5px',
-                    fontWeight: 500,
-                    transition: 'all 100ms ease',
-                  }}
-                  className="sidebar-item"
-                >
-                  <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: 'var(--color-brand-red)', flexShrink: 0 }} />
-                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {r.title}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
+          )}
 
-          {/* Section 2: Catégories & Navigation */}
+          {/* Section 2: Packs d'urgence directs dans la sidebar */}
+          {allPacks.length > 0 && (
+            <div>
+              <div style={{
+                fontSize: '11px',
+                fontWeight: 600,
+                color: 'var(--color-text-muted)',
+                marginBottom: '8px',
+                paddingLeft: '6px',
+                letterSpacing: '0.02em',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+                <span>Packs d'urgence</span>
+                <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--color-text-faint)' }}>
+                  {allPacks.length}
+                </span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                {allPacks.map(pack => (
+                  <Link
+                    key={pack.id}
+                    href={`/packs/${pack.slug}`}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '8px',
+                      padding: '6px 8px',
+                      borderRadius: '5px',
+                      color: 'var(--color-text-secondary)',
+                      textDecoration: 'none',
+                      fontSize: '12.5px',
+                      fontWeight: 500,
+                      transition: 'all 100ms ease',
+                    }}
+                    className="sidebar-item"
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '7px', minWidth: 0 }}>
+                      <span style={{ fontSize: '11.5px', opacity: 0.8 }}>📂</span>
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {pack.title}
+                      </span>
+                    </div>
+                    <span style={{
+                      fontSize: '10.5px',
+                      fontFamily: 'var(--font-mono)',
+                      color: 'var(--color-text-muted)',
+                      flexShrink: 0,
+                    }}>
+                      {pack.recordSlugs.length}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Section 3: Catégories & Navigation */}
           <div>
             <div style={{
               fontSize: '11px',
@@ -543,6 +604,93 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
             </div>
           </div>
 
+          {/* AFFICHAGE DES PACKS DIRECTEMENT SUR LA HOMEPAGE (Quand "Tous" est sélectionné et qu'il y a des packs) */}
+          {selectedCategory === 'all' && allPacks.length > 0 && (
+            <div style={{ marginBottom: '8px' }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: '8px',
+                padding: '0 2px',
+              }}>
+                <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--color-text-muted)', letterSpacing: '0.02em' }}>
+                  Packs d'urgence ({allPacks.length})
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategory('packs')}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '11px',
+                    color: 'var(--color-brand-blue)',
+                    cursor: 'pointer',
+                    padding: 0,
+                  }}
+                >
+                  Voir tous les packs →
+                </button>
+              </div>
+
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: allPacks.length > 1 ? 'repeat(2, 1fr)' : '1fr',
+                gap: '8px',
+              }} className="home-packs-grid">
+                {allPacks.map(pack => (
+                  <Link
+                    key={pack.id}
+                    href={`/packs/${pack.slug}`}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '10px 14px',
+                      borderRadius: '6px',
+                      backgroundColor: 'var(--color-bg-surface)',
+                      border: '1px solid var(--color-border)',
+                      textDecoration: 'none',
+                      color: 'inherit',
+                      transition: 'all 100ms ease',
+                      gap: '12px',
+                    }}
+                    className="clean-pack-card"
+                  >
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+                        <span style={{ fontSize: '12px' }}>📂</span>
+                        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {pack.title}
+                        </span>
+                        {pack.badgeLabel && (
+                          <span style={{ fontSize: '10px', color: 'var(--color-brand-red)', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                            <span style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: 'var(--color-brand-red)' }} />
+                            {pack.badgeLabel}
+                          </span>
+                        )}
+                      </div>
+                      {pack.description && (
+                        <div style={{ fontSize: '11.5px', color: 'var(--color-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {pack.description}
+                        </div>
+                      )}
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                      <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono)' }}>
+                        {pack.recordSlugs.length} fiches
+                      </span>
+                      <span style={{ fontSize: '12px', color: 'var(--color-text-faint)' }} className="row-chevron">
+                        →
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* VUE 1: PACKS D'INTERVENTION (Si catégorie "packs" sélectionnée) */}
           {selectedCategory === 'packs' ? (
             <div style={{
@@ -597,6 +745,12 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
                   </div>
                 </Link>
               ))}
+
+              {allPacks.length === 0 && (
+                <div style={{ padding: '32px', textAlign: 'center', color: 'var(--color-text-muted)', fontSize: '13px' }}>
+                  Aucun pack d'urgence créé pour le moment.
+                </div>
+              )}
             </div>
           ) : (
             /* VUE 2: TABLE INTERACTIVE HAUTE DENSITÉ (Style Linear / GitBook) */
@@ -709,6 +863,14 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
         .filter-pill-btn:hover {
           color: var(--color-text-primary) !important;
         }
+        .clean-pack-card:hover {
+          background-color: var(--color-bg-hover) !important;
+          border-color: var(--color-border-hover) !important;
+        }
+        .clean-pack-card:hover .row-chevron {
+          color: var(--color-text-primary) !important;
+          transform: translateX(2px);
+        }
         .data-row:hover {
           background-color: var(--color-bg-hover) !important;
         }
@@ -730,6 +892,9 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
           }
           .app-sidebar {
             width: 100% !important;
+          }
+          .home-packs-grid {
+            grid-template-columns: 1fr !important;
           }
           .table-header-grid {
             display: none !important;
