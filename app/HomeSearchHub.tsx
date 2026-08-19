@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { SearchResult, WikiRecord, InterventionPack } from '@/types';
-import ThemeToggle from '@/components/theme/ThemeToggle';
 
 interface Props {
   allRecords: WikiRecord[];
@@ -155,29 +154,40 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
     }
   };
 
-  const handleRandomRecord = () => {
-    if (allRecords.length === 0) return;
-    const randomIndex = Math.floor(Math.random() * allRecords.length);
-    router.push(`/records/${allRecords[randomIndex].slug}`);
-  };
-
-  // Direct quick emergency reflex records
-  const criticalCardio = useMemo(() => {
-    return allRecords.find(r => r.slug.includes('arret') || r.slug.includes('cardio') || r.slug.includes('acls')) || allRecords.find(r => r.severity === 'critical') || allRecords[0];
-  }, [allRecords]);
-
-  // Primary categories
-  const categoryPills = [
-    { label: 'Protocoles ACLS & Soins', href: '/search?category=protocol' },
-    { label: 'Pharmacologie & Molécules', href: '/search?category=medication' },
-    { label: 'Manœuvres & Gestes', href: '/search?category=maneuver' },
-    { label: 'Dotation Matériel', href: '/search?category=equipment' },
-    { label: 'Packs d\'Intervention', href: allPacks.length > 0 ? `/packs/${allPacks[0].slug}` : '/search' },
+  // Structured Major Categories with clear icons and count
+  const majorCategories = [
+    { label: 'Protocoles', icon: '🚑', href: '/search?category=protocol', count: allRecords.filter(r => r.category === 'protocol').length },
+    { label: 'Pharmacologie', icon: '💊', href: '/search?category=medication', count: allRecords.filter(r => r.category === 'medication').length },
+    { label: 'Manœuvres', icon: '🖐', href: '/search?category=maneuver', count: allRecords.filter(r => r.category === 'maneuver').length },
+    { label: 'Matériel', icon: '🛠', href: '/search?category=equipment', count: allRecords.filter(r => r.category === 'equipment').length },
+    { label: 'Packs d\'Intervention', icon: '📂', href: '/packs', count: allPacks.length },
   ];
 
-  // Specific high-frequency clinical shortcut pills
-  const protocolPills = useMemo(() => {
-    return allRecords.slice(0, 8);
+  // Prioritized vital reflex protocols for quick access
+  const reflexProtocols = useMemo(() => {
+    // Keywords for essential emergency reflexes
+    const priorityKeywords = ['arret', 'cardio', 'abcde', 'polytrauma', 'scene', 'detresse', 'respiratoire', 'rsi', 'choc', 'glasgow', 'avpu', 'douleur', 'thoracique', 'pneumothorax', 'brulure', 'hemorragie'];
+    
+    const matched = allRecords.filter(r => {
+      const norm = normalizeText(`${r.slug} ${r.title} ${r.tags.join(' ')}`);
+      return priorityKeywords.some(kw => norm.includes(kw));
+    });
+
+    const criticals = allRecords.filter(r => r.severity === 'critical');
+    const combined = [...matched, ...criticals, ...allRecords];
+
+    const unique: WikiRecord[] = [];
+    const seen = new Set<string>();
+
+    for (const r of combined) {
+      if (!seen.has(r.id)) {
+        seen.add(r.id);
+        unique.push(r);
+      }
+      if (unique.length >= 8) break;
+    }
+
+    return unique;
   }, [allRecords]);
 
   return (
@@ -189,39 +199,36 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: 'var(--color-bg-base)',
+      padding: '40px 20px 60px',
     }}>
-      {/* CENTRAL DISPATCH PORTAL (Format Google / Hub Central Image 1) */}
-      <main style={{
-        flex: 1,
+      <div style={{
+        maxWidth: '820px',
+        width: '100%',
+        margin: '0 auto',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        padding: '40px 20px 60px',
-        maxWidth: '860px',
-        margin: '0 auto',
-        width: '100%',
         textAlign: 'center',
       }}>
 
         {/* Central LSFD Emblem */}
         <div style={{
-          width: '76px',
-          height: '76px',
+          width: '72px',
+          height: '72px',
           position: 'relative',
           marginBottom: '14px',
         }}>
           <Image
             src="/lsfd-logo.png"
             alt="LSFD EMS"
-            width={76}
-            height={76}
+            width={72}
+            height={72}
             style={{ objectFit: 'contain' }}
             priority
           />
         </div>
 
-        {/* Main Title */}
+        {/* Main Title (Clean White & Crimson Institutional, No Neon Blue Clash) */}
         <h1 style={{
           fontSize: '32px',
           fontWeight: 800,
@@ -230,40 +237,41 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
           margin: '0 0 6px',
           lineHeight: 1.2,
         }}>
-          LSFD <span style={{ color: 'var(--color-brand-blue)' }}>Medilog</span>
+          LSFD <span style={{ color: 'var(--color-brand-red)' }}>Medilog</span>
         </h1>
 
         {/* Subtitle */}
         <p style={{
           fontSize: '13.5px',
           color: 'var(--color-text-secondary)',
-          margin: '0 0 28px',
-          maxWidth: '540px',
+          margin: '0 0 26px',
+          maxWidth: '520px',
+          lineHeight: 1.5,
         }}>
           Moteur de recherche des protocoles d'urgence et pharmacopée EMS
         </p>
 
-        {/* Central Search Box */}
-        <div ref={containerRef} style={{ width: '100%', maxWidth: '640px', position: 'relative', marginBottom: '18px' }}>
+        {/* Central Search Bar */}
+        <div ref={containerRef} style={{ width: '100%', maxWidth: '620px', position: 'relative', marginBottom: '28px' }}>
           <div
             style={{
               width: '100%',
               display: 'flex',
               alignItems: 'center',
               backgroundColor: 'var(--color-bg-surface)',
-              border: isFocused ? '1px solid var(--color-brand-blue)' : '1px solid var(--color-border)',
-              borderRadius: isOpen && results.length > 0 ? '24px 24px 0 0' : '24px',
-              padding: '11px 18px',
+              border: isFocused ? '1px solid var(--color-brand-red)' : '1px solid var(--color-border)',
+              borderRadius: isOpen && results.length > 0 ? '22px 22px 0 0' : '22px',
+              padding: '10px 18px',
               boxShadow: 'var(--card-shadow)',
               transition: 'all 120ms ease',
             }}
           >
             <svg
-              width="16"
-              height="16"
+              width="15"
+              height="15"
               viewBox="0 0 24 24"
               fill="none"
-              stroke={isFocused ? 'var(--color-brand-blue)' : 'var(--color-text-muted)'}
+              stroke={isFocused ? 'var(--color-brand-red)' : 'var(--color-text-muted)'}
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -288,7 +296,7 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
                 border: 'none',
                 outline: 'none',
                 background: 'transparent',
-                fontSize: '14.5px',
+                fontSize: '14px',
                 color: 'var(--color-text-primary)',
                 fontFamily: 'var(--font-sans)',
               }}
@@ -303,7 +311,7 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
                   border: 'none',
                   color: 'var(--color-text-faint)',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '13px',
                   padding: '0 6px',
                 }}
               >
@@ -316,13 +324,13 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
               border: '1px solid var(--color-border)',
               borderRadius: '4px',
               padding: '2px 7px',
-              fontSize: '11px',
+              fontSize: '10.5px',
               fontFamily: 'var(--font-mono)',
               color: 'var(--color-text-muted)',
               flexShrink: 0,
               userSelect: 'none',
             }}>
-              Entrée ↵
+              {query.trim() ? '↵ Entrée' : '⌘K'}
             </kbd>
           </div>
 
@@ -335,12 +343,12 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
                 left: 0,
                 right: 0,
                 backgroundColor: 'var(--color-bg-surface)',
-                border: '1px solid var(--color-brand-blue)',
+                border: '1px solid var(--color-brand-red)',
                 borderTop: 'none',
                 borderRadius: '0 0 20px 20px',
                 boxShadow: '0 16px 36px rgba(0, 0, 0, 0.4)',
                 zIndex: 50,
-                maxHeight: '340px',
+                maxHeight: '320px',
                 overflowY: 'auto',
                 padding: '6px 0',
                 textAlign: 'left',
@@ -360,15 +368,15 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
                       justifyContent: 'space-between',
                       cursor: 'pointer',
                       backgroundColor: isSelected ? 'var(--color-bg-hover)' : 'transparent',
-                      borderLeft: isSelected ? '3px solid var(--color-brand-blue)' : '3px solid transparent',
+                      borderLeft: isSelected ? '3px solid var(--color-brand-red)' : '3px solid transparent',
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
-                      <span className="badge badge-category" style={{ fontSize: '10px', padding: '1px 6px' }}>
+                      <span className="badge badge-category" style={{ fontSize: '9.5px', padding: '1px 5px' }}>
                         {CATEGORY_MAP[result.record.category] || result.record.category}
                       </span>
                       <span style={{
-                        fontSize: '13.5px',
+                        fontSize: '13px',
                         fontWeight: 600,
                         color: 'var(--color-text-primary)',
                         whiteSpace: 'nowrap',
@@ -379,7 +387,7 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
                       </span>
                     </div>
                     {result.record.severity && (
-                      <span className={`badge badge-${result.record.severity}`} style={{ fontSize: '10px', padding: '1px 6px', flexShrink: 0 }}>
+                      <span className={`badge badge-${result.record.severity}`} style={{ fontSize: '9.5px', padding: '1px 5px', flexShrink: 0 }}>
                         {SEVERITY_MAP[result.record.severity] || result.record.severity}
                       </span>
                     )}
@@ -390,113 +398,73 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
           )}
         </div>
 
-        {/* Action Buttons (Recherche Medilog | Protocole Arrêt Cardiaque (ACLS) | Fiche au hasard) */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '10px',
-          flexWrap: 'wrap',
-          marginBottom: '32px',
-        }}>
-          <button
-            type="button"
-            onClick={() => {
-              if (query.trim()) router.push(`/search?q=${encodeURIComponent(query)}`);
-              else inputRef.current?.focus();
-            }}
-            style={{
-              padding: '8px 16px',
-              borderRadius: '6px',
-              backgroundColor: 'var(--color-bg-surface)',
-              border: '1px solid var(--color-border)',
-              color: 'var(--color-text-primary)',
-              fontSize: '12.5px',
-              fontWeight: 500,
-              cursor: 'pointer',
-              transition: 'all 120ms ease',
-            }}
-            className="action-portal-btn"
-          >
-            Recherche Medilog
-          </button>
-
-          {criticalCardio && (
-            <Link
-              href={`/records/${criticalCardio.slug}`}
-              style={{
-                padding: '8px 16px',
-                borderRadius: '6px',
-                backgroundColor: 'var(--color-bg-surface)',
-                border: '1px solid rgba(239, 68, 68, 0.4)',
-                color: 'var(--color-brand-red)',
-                fontSize: '12.5px',
-                fontWeight: 600,
-                textDecoration: 'none',
-                transition: 'all 120ms ease',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-              }}
-              className="critical-portal-btn"
-            >
-              <span>Protocole Arrêt Cardiaque (ACLS)</span>
-            </Link>
-          )}
-
-          <button
-            type="button"
-            onClick={handleRandomRecord}
-            style={{
-              padding: '8px 16px',
-              borderRadius: '6px',
-              backgroundColor: 'var(--color-bg-surface)',
-              border: '1px solid var(--color-border)',
-              color: 'var(--color-text-primary)',
-              fontSize: '12.5px',
-              fontWeight: 500,
-              cursor: 'pointer',
-              transition: 'all 120ms ease',
-            }}
-            className="action-portal-btn"
-          >
-            Fiche au hasard
-          </button>
-        </div>
-
-        {/* Accès rapide aux référentiels */}
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-          <div style={{ fontSize: '11.5px', color: 'var(--color-text-muted)', fontWeight: 500 }}>
-            Accès rapide aux référentiels :
-          </div>
-
-          {/* Row 1: Main Category Pills */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px' }}>
-            {categoryPills.map(cat => (
+        {/* 1. DOMAINES & CATÉGORIES (Distinct Category Cards) */}
+        <div style={{ width: '100%', marginBottom: '22px' }}>
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '8px',
+          }}>
+            {majorCategories.map(cat => (
               <Link
                 key={cat.label}
                 href={cat.href}
                 style={{
-                  fontSize: '12px',
-                  fontWeight: 500,
-                  color: 'var(--color-text-secondary)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '7px',
+                  padding: '7px 14px',
+                  borderRadius: '8px',
                   backgroundColor: 'var(--color-bg-surface)',
                   border: '1px solid var(--color-border)',
-                  padding: '5px 12px',
-                  borderRadius: '16px',
+                  color: 'var(--color-text-primary)',
+                  fontSize: '12.5px',
+                  fontWeight: 600,
                   textDecoration: 'none',
                   transition: 'all 120ms ease',
+                  boxShadow: 'var(--card-shadow)',
                 }}
-                className="shortcut-pill"
+                className="category-card-btn"
               >
-                {cat.label}
+                <span style={{ fontSize: '13px' }}>{cat.icon}</span>
+                <span>{cat.label}</span>
+                <span style={{
+                  fontSize: '10.5px',
+                  fontFamily: 'var(--font-mono)',
+                  color: 'var(--color-text-muted)',
+                  backgroundColor: 'var(--color-bg-subtle)',
+                  padding: '1px 5px',
+                  borderRadius: '4px',
+                }}>
+                  {cat.count}
+                </span>
               </Link>
             ))}
           </div>
+        </div>
 
-          {/* Row 2: Clinical Emergency Protocols */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px', maxWidth: '720px' }}>
-            {protocolPills.map(record => (
+        {/* 2. ACCÈS RAPIDE AUX PROTOCOLES RÉFLEXES (Distinct Emergency Pills) */}
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <div style={{
+            fontSize: '11px',
+            color: 'var(--color-text-muted)',
+            fontWeight: 600,
+            letterSpacing: '0.03em',
+            textTransform: 'uppercase',
+            fontFamily: 'var(--font-mono)',
+          }}>
+            Protocoles réflexes d'urgence
+          </div>
+
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '6px',
+            maxWidth: '720px',
+          }}>
+            {reflexProtocols.map(record => (
               <Link
                 key={record.id}
                 href={`/records/${record.slug}`}
@@ -504,59 +472,43 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
                   fontSize: '11.5px',
                   fontWeight: 500,
                   color: 'var(--color-text-secondary)',
-                  backgroundColor: 'var(--color-bg-surface)',
+                  backgroundColor: 'var(--color-bg-subtle)',
                   border: '1px solid var(--color-border)',
                   padding: '4px 11px',
                   borderRadius: '16px',
                   textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
                   transition: 'all 120ms ease',
                 }}
-                className="shortcut-pill"
+                className="reflex-protocol-pill"
               >
-                {record.title}
+                <span style={{
+                  width: '5px',
+                  height: '5px',
+                  borderRadius: '50%',
+                  backgroundColor: record.severity === 'critical' ? 'var(--color-brand-red)' : record.severity === 'urgent' ? '#f59e0b' : '#3b82f6',
+                  display: 'inline-block',
+                }} />
+                <span>{record.title}</span>
               </Link>
             ))}
           </div>
         </div>
 
-      </main>
+      </div>
 
       <style>{`
-        .top-nav-link {
-          padding: 5px 10px;
-          font-size: 12.5px;
-          color: var(--color-text-secondary);
-          text-decoration: none;
-          border-radius: 5px;
-          font-weight: 500;
-          transition: all 120ms ease;
-        }
-        .top-nav-link:hover {
-          color: var(--color-brand-blue);
-          background-color: var(--color-bg-hover);
-        }
-        .topbar-admin-btn:hover {
-          color: var(--color-brand-blue) !important;
-          border-color: var(--color-brand-blue) !important;
-          background-color: var(--color-bg-hover) !important;
-        }
-        .action-portal-btn:hover {
+        .category-card-btn:hover {
           border-color: var(--color-border-hover) !important;
           background-color: var(--color-bg-hover) !important;
+          transform: translateY(-1px);
         }
-        .critical-portal-btn:hover {
+        .reflex-protocol-pill:hover {
           border-color: var(--color-brand-red) !important;
-          background-color: rgba(239, 68, 68, 0.08) !important;
-        }
-        .shortcut-pill:hover {
-          border-color: var(--color-brand-blue) !important;
           color: var(--color-text-primary) !important;
           background-color: var(--color-bg-hover) !important;
-        }
-        @media (max-width: 768px) {
-          .topbar-nav-links {
-            display: none !important;
-          }
         }
       `}</style>
     </div>

@@ -71,7 +71,7 @@ export default function GlobalHeader() {
                 />
               </div>
               <span style={{ fontSize: '15px', fontWeight: 800, color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}>
-                LSFD <span style={{ color: 'var(--color-brand-blue)' }}>Medilog</span>
+                LSFD <span style={{ color: 'var(--color-brand-red)' }}>Medilog</span>
               </span>
             </Link>
 
@@ -80,6 +80,10 @@ export default function GlobalHeader() {
               <Link href="/search?category=medication" className="global-nav-link">Pharmacologie</Link>
               <Link href="/search?category=maneuver" className="global-nav-link">Manœuvres</Link>
               <Link href="/search?category=equipment" className="global-nav-link">Matériel</Link>
+              <Link href="/packs" className="global-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                <span>📂</span>
+                <span>Packs d'Intervention</span>
+              </Link>
             </nav>
           </div>
 
