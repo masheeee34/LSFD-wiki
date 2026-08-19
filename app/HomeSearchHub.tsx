@@ -183,87 +183,14 @@ export default function HomeSearchHub({ allRecords, allPacks = [] }: Props) {
   return (
     <div style={{
       width: '100%',
-      minHeight: 'calc(100vh - 45px)',
+      minHeight: 'calc(100vh - 110px)',
       display: 'flex',
       flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
       backgroundColor: 'var(--color-bg-base)',
     }}>
-      
-      {/* 1. TOPBAR NAVIGATION */}
-      <header style={{
-        width: '100%',
-        height: '56px',
-        borderBottom: '1px solid var(--color-border)',
-        backgroundColor: 'var(--color-bg-surface)',
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 24px',
-      }}>
-        <div style={{
-          width: '100%',
-          maxWidth: '1440px',
-          margin: '0 auto',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '16px',
-        }}>
-          {/* Left: Brand + Domain Links */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', color: 'inherit' }}>
-              <div style={{ width: '30px', height: '30px', position: 'relative' }}>
-                <Image
-                  src="/lsfd-logo.png"
-                  alt="LSFD"
-                  width={30}
-                  height={30}
-                  style={{ objectFit: 'contain' }}
-                  priority
-                />
-              </div>
-              <span style={{ fontSize: '15px', fontWeight: 800, color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}>
-                LSFD <span style={{ color: 'var(--color-brand-blue)' }}>Medilog</span>
-              </span>
-            </Link>
-
-            <nav style={{ display: 'flex', alignItems: 'center', gap: '4px' }} className="topbar-nav-links">
-              <Link href="/search?category=protocol" className="top-nav-link">Protocoles</Link>
-              <Link href="/search?category=medication" className="top-nav-link">Pharmacologie</Link>
-              <Link href="/search?category=maneuver" className="top-nav-link">Manœuvres</Link>
-              <Link href="/search?category=equipment" className="top-nav-link">Matériel</Link>
-              {allPacks.length > 0 && (
-                <Link href={`/packs/${allPacks[0].slug}`} className="top-nav-link">Packs d'urgence</Link>
-              )}
-            </nav>
-          </div>
-
-          {/* Right: Theme Toggle + Admin */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {/* Mode White & Black Switcher Toggle */}
-            <ThemeToggle />
-
-            <Link
-              href="/admin"
-              style={{
-                fontSize: '12.5px',
-                color: 'var(--color-text-secondary)',
-                textDecoration: 'none',
-                padding: '6px 12px',
-                borderRadius: '6px',
-                backgroundColor: 'var(--color-bg-surface)',
-                border: '1px solid var(--color-border)',
-                fontWeight: 500,
-                transition: 'all 120ms ease',
-              }}
-              className="topbar-admin-btn"
-            >
-              Admin
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* 2. CENTRAL DISPATCH PORTAL (Format Google / Hub Central Image 1) */}
+      {/* CENTRAL DISPATCH PORTAL (Format Google / Hub Central Image 1) */}
       <main style={{
         flex: 1,
         display: 'flex',

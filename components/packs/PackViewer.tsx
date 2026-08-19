@@ -172,12 +172,12 @@ export default function PackViewer({ pack, records, isAdmin = false, dictionary 
       {/* 24/7 STICKY INTERACTIVE TOP TABS BAR */}
       <div style={{
         position: 'sticky',
-        top: 0,
-        zIndex: 50,
+        top: '56px',
+        zIndex: 40,
         backgroundColor: 'var(--color-bg-base)',
         borderBottom: '1px solid var(--color-border)',
         padding: '10px 0',
-        marginBottom: '16px',
+        marginBottom: '20px',
       }}>
         <div style={{
           display: 'flex',

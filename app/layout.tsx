@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { fontSans, fontMono } from '@/app/fonts';
+import GlobalHeader from '@/components/navigation/GlobalHeader';
 
 export const metadata: Metadata = {
   title: {
@@ -32,6 +33,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--color-bg-base)' }}>
+          {/* Universal Global Header with Navigation, Theme Toggle, and Search */}
+          <GlobalHeader />
+
           <main style={{ flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>
             {children}
           </main>
