@@ -54,11 +54,11 @@
     "updatedAt": "2026-08-17T14:48:58.138Z"
   },
   {
-    "title": "Échelle de Glasgow",
+    "title": "Échelle de Glasgow (GCS)",
     "slug": "echelle-de-glasgow",
     "category": "protocol",
-    "summary": "Échelle utilisée pour noter l'état de conscience d'un patient.",
-    "content": "\n> Additionner le score de chaque catégorie pour obtenir le score total.\n![Illustration](https://i.imgur.com/Epfdawg.png)\n",
+    "summary": "Échelle clinique d'évaluation de la conscience et de l'état neurologique d'un patient (Score de 3 à 15).",
+    "content": "> [!NOTE] Additionner le score des 3 composantes (Yeux Y + Verbal V + Moteur M) pour obtenir le score total de 3 à 15.\n\n## [[color:#0b4e9c|INTERPRÉTATION CLINIQUE & CONDUITE À TENIR]]\n- **GCS 13 à 15 (Traumatisme crânien léger) :** Patient conscient, surveillance neurologique régulière.\n- **GCS 9 à 12 (Traumatisme crânien modéré) :** Altération modérée, oxygénothérapie à haut débit, surveillance rapprochée des pupilles.\n- **GCS 3 à 8 (Coma grave / Traumatisme crânien sévère) :** [[color:#ef4444|DÉTRESSE NEUROLOGIQUE MAJEURE]]. Voies aériennes supérieures menacées, engagement ALS immédiat et préparation à l'intubation (RSI).\n\n![Illustration du Score de Glasgow](https://i.imgur.com/Epfdawg.png)\n",
     "tags": [
       "conscience",
       "als"
@@ -220,8 +220,8 @@
     "updatedAt": "2026-08-18T21:14:02.587Z"
   },
   {
-    "title": "Bardycardie",
-    "slug": "bardycardie",
+    "title": "Bradycardie",
+    "slug": "bradycardie",
     "category": "protocol",
     "severity": "critical",
     "summary": "Protocoles relatifs au rythme anormalement lent du cœur.",
@@ -238,7 +238,7 @@
       "operationalStatus": "ACTIF 2026"
     },
     "id": "30a99932-8bfe-42e0-8b45-fbc296d52cfa",
-    "updatedAt": "2026-08-18T21:22:54.944Z"
+    "updatedAt": "2026-09-02T13:32:14.678Z"
   },
   {
     "title": "Douleur thoracique",
